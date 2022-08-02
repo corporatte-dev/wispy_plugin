@@ -24,9 +24,9 @@ function updateAvatar(avatar, goal)
 	local bobbleVector = Vector3.new(bobbleX, bobbleY, 0)
 	
 	--BodyParts
-	avatar.PrimaryPart.CFrame = avatar.PrimaryPart.CFrame:Lerp(goal.CFrame.Position, 0.25)
-	avatar["Left Arm"].CFrame = avatar["Left Arm"].CFrame:Lerp(avatar.PrimaryPart.CFrame.Position + offsets["Left Arm"], 0.5)
-	avatar["Right Arm"].CFrame = avatar["Right Arm"].CFrame:Lerp(avatar.PrimaryPart.CFrame.Position + offsets["Right Arm"], 0.5)
+	avatar.PrimaryPart.CFrame = avatar.PrimaryPart.CFrame:Lerp(goal.CFrame, 0.25)
+	avatar["Left Arm"].CFrame = avatar["Left Arm"].CFrame:Lerp(avatar.PrimaryPart.CFrame + CFrame.new(offsets["Left Arm"]), 0.5)
+	avatar["Right Arm"].CFrame = avatar["Right Arm"].CFrame:Lerp(avatar.PrimaryPart.CFrame + CFrame.new(offsets["Right Arm"]), 0.5)
 end
 
 function module.createAvatar(playerName)
