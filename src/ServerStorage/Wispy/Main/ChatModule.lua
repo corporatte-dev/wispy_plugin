@@ -136,7 +136,7 @@ local function updateChat(chat_widget)
 		local bounds = TS:GetTextSize(message.Value, 20, Enum.Font.Code, Vector2.new())
 
 		messageTemplate.Message.Text = message.Value
-		messageTemplate.Size.Y = UDim.new(0, bounds.Y + sizeY)
+		messageTemplate.Size = UDim2.new(messageTemplate.Size.X.Scale, messageTemplate.Size.X.Offset, 0, bounds.Y + sizeY)
 		messageTemplate.Author.Text = player.Name
 		messageTemplate.Author.TextColor3 = module.ColorShortcuts[devAvatars:FindFirstChild(player.Name).Value]
 		LoadAvatar(player.Name, chat_widget, messageTemplate.Viewport)
