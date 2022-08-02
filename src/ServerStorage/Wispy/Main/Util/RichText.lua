@@ -1,3 +1,12 @@
+--# selene: allow(empty_if)
+--# selene: allow(shadowing)
+--# selene: allow(unused_variable)
+--# selene: allow(incorrect_standard_library_use)
+--# selene: allow(multiple_statements)
+
+
+
+
 --[[
 	
 Rich text markup with support for modifying any TextLabel property per character + inline images + entrance animations
