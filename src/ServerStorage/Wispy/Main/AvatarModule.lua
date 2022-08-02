@@ -14,8 +14,8 @@ function updateAvatar(avatar, goal)
 	--local currentTime = tick()
 	local offsets = {
 		HMR = Vector3.new(0, -1, 0),
-		["Left Arm"] = {Position = Vector3.new(1, -0.5, 1), Orientation = CFrame.Angles(math.rad(-22.13), 0, 0)},
-		["Right Arm"] = {Position = Vector3.new(-1, -0.5, 1), Orientation = CFrame.Angles(math.rad(-22.13), 0, 0)},
+		["Left Arm"] = {Position = CFrame.new(Vector3.new(1, -0.5, 1)), Orientation = CFrame.Angles(math.rad(-22.13), 0, 0)},
+		["Right Arm"] = {Position = CFrame.new(Vector3.new(-1, -0.5, 1)), Orientation = CFrame.Angles(math.rad(-22.13), 0, 0)},
 	}
 	
 	--Bobble CFrame (HumanoidRootPart)
@@ -24,9 +24,9 @@ function updateAvatar(avatar, goal)
 	--local bobbleVector = Vector3.new(bobbleX, bobbleY, 0)
 	
 	--BodyParts
-	avatar.PrimaryPart.CFrame = avatar.PrimaryPart.CFrame:Lerp(goal.CFrame, 0.25)
-	avatar["Left Arm"].CFrame = avatar["Left Arm"].CFrame:Lerp(avatar.PrimaryPart.CFrame + CFrame.new(offsets["Left Arm"]), 0.5)
-	avatar["Right Arm"].CFrame = avatar["Right Arm"].CFrame:Lerp(avatar.PrimaryPart.CFrame + CFrame.new(offsets["Right Arm"]), 0.5)
+	avatar.PrimaryPart.CFrame = avatar.PrimaryPart.CFrame:Lerp(goal.CFrame, 0.75)
+	avatar["Left Arm"].CFrame = avatar["Left Arm"].CFrame:Lerp(avatar.PrimaryPart.CFrame + offsets["Left Arm"].Position + offsets["Left Arm"].Orientation, 0.5)
+	avatar["Right Arm"].CFrame = avatar["Right Arm"].CFrame:Lerp(avatar.PrimaryPart.CFrame + offsets["Right Arm"].Position + offsets["Right Arm"].Orientation, 0.5)
 end
 
 function module.createAvatar(playerName)
@@ -58,6 +58,10 @@ function module:Init(avatar_widget, plugin, Maid)
 	charValue.Name = game.Players.LocalPlayer.Name
 	charValue.Value = plugin:GetSetting("UserAvatar")
 	
+	local info = TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.In, -1, false, 0)
+	local tween = game:GetService("TweenService"):Create(avatar_widget.AvatarUI.Background, info, {Position = UDim2.new(0, -100, 0, 0)})
+	tween:Play()
+
 	for i, char in pairs(characters) do
 		--clones the template and adds it to the list
 		local displayChar = char:Clone()
@@ -67,6 +71,7 @@ function module:Init(avatar_widget, plugin, Maid)
 		local cam = Instance.new("Camera")
 		cam.Parent = button.CharacterViewer
 		button.CharacterViewer.CurrentCamera = cam
+		button.Name = "button_"..i
 
 		displayChar.Parent = button.CharacterViewer
 		cam.CFrame = CFrame.new(displayChar.HumanoidRootPart.Position + Vector3.new(0, 0, 1.5), displayChar.HumanoidRootPart.Position)
@@ -81,7 +86,6 @@ function module:Init(avatar_widget, plugin, Maid)
 	end
 	
 	Maid:Add(game.Chat.Wispy.dev_avatars.ChildAdded:Connect(function(child)
-		local newChar = child.Value
 		module.createAvatar(child.Name)
 	end))
 end

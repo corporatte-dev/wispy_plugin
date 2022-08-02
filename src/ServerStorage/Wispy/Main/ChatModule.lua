@@ -3,7 +3,22 @@
 
 local module = {
 	plugin_ID = 10422380892;
-	anim_Folder = script.Parent.Parent.Assets.Animations
+	anim_Folder = script.Parent.Parent.Assets.Animations;
+
+	ColorShortcuts = {
+		Angel = Color3.fromRGB(255, 255, 255),
+		Cooltergiest = Color3.fromRGB(0, 0, 170),
+		Dizzey = Color3.fromRGB(85, 170, 0),
+		Happy = Color3.fromRGB(255, 255, 0),
+		Impy = Color3.fromRGB(170, 0, 0),
+		Nekospecter = Color3.fromRGB(255, 170, 0),
+		Pupper = Color3.fromRGB(0, 170, 255),
+		Robo = Color3.fromRGB(70, 70, 70),
+		Spooky = Color3.fromRGB(0, 0, 0),
+		Wispy = Color3.fromRGB(170, 85, 255),
+		Willow = Color3.fromRGB(191, 118, 191)
+	}
+	
 }
 
 local HTTP = game:GetService("HttpService")
@@ -23,13 +38,12 @@ local messageLimit = 200
 --	end
 --end)
 
-local function LoadAvatar(player, chat_widget)
+local function LoadAvatar(player, chat_widget, template)
 	if chat_widget.ChatUI.PlayerList:FindFirstChild("plr_"..player) then
 		--coroutine.yield(renderAvatarLoop)
 		chat_widget.ChatUI.PlayerList:FindFirstChild("plr_"..player):Destroy()
 	end
 	
-	local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
 	local playerData = game.Chat.Wispy.dev_avatars:FindFirstChild(player)
 	local wispData = playerData.Value
 	local wisp = script.Parent.Parent.Assets.Characters[wispData]:Clone()
@@ -39,11 +53,9 @@ local function LoadAvatar(player, chat_widget)
 	cam.Parent = template
 	template.CurrentCamera = cam
 	template.Name = "plr_"..player
-	template.PlayerName.Text = player
 	cam.CFrame = CFrame.new(hrp.Position + (hrp.CFrame.LookVector * 5), hrp.Position)
 	cam.FieldOfView = 30
 	wisp.Parent = template
-	template.Parent = chat_widget.ChatUI.PlayerList
 end
 
 local function createMessage(chat_widget, text: string, author: Player, isMuted: boolean?)
@@ -55,7 +67,6 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	end)
 	if not filtered then return end
 	
-	local fullMessage = "<Color=".. game.Chat.Wispy.dev_avatars[author].Value .. ">" .. author.Name .. ": <Color=/> " .. filtered
 	local str = Instance.new("StringValue")
 	local auth = Instance.new("StringValue")
 	auth.Parent = str
@@ -68,12 +79,14 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	local messageTemplate = script.Parent.Parent.Assets.UITemplates.RecentMessageTemplate:Clone()
 	local messageContainer = chat_widget.ChatUI.MessageContainer
 	messageTemplate.Parent = messageContainer
-	local textObject = richText:New(messageTemplate, fullMessage)
+	messageTemplate.Author.Text = author.Name
+	messageTemplate.Author.TextColor3 = module.ColorShortcuts[game.Chat.Wispy.dev_avatars:FindFirstChild(author.Name).Value]
+	local textObject = richText:New(messageTemplate.TextBox, filtered)
 
 	messageContainer.CanvasSize = UDim2.new(0, 0, 0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
 	messageContainer.CanvasPosition = Vector2.new(0, 9999)
 	textObject:Animate(true)
-	task.wait(#fullMessage / 100)
+	task.wait(#filtered / 100)
 	
 	--if isMuted == false then
 	--	local soundClone = script.Parent.Parent.Assets.SFX.TalkSound:Clone()
@@ -109,14 +122,24 @@ local function updateChat(chat_widget)
 	end
 	
 	for i, dev_ava in pairs(devAvatars:GetChildren()) do
-		LoadAvatar(dev_ava.Name, chat_widget)
+		local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
+		LoadAvatar(dev_ava.Name, chat_widget, template)
+		template.Parent = chat_widget.ChatUI.PlayerList
 	end
 	
 	for i, message in pairs(messageLogs:GetChildren()) do
+		local TS = game:GetService("TextService")
 		local messageTemplate = script.Parent.Parent.Assets.UITemplates.MessageTemplate:Clone()
+		local player = message:GetChildren()[1]
 		local messageContainer = chat_widget.ChatUI.MessageContainer
-		
-		messageTemplate.Text = message.Value
+		local sizeY = messageTemplate.AbsoluteSize.Y
+		local bounds = TS:GetTextSize(message.Value, 20, Enum.Font.Code, Vector2.new())
+
+		messageTemplate.Message.Text = message.Value
+		messageTemplate.Size.Y.Offset = bounds.Y + sizeY
+		messageTemplate.Author.Text = player.Name
+		messageTemplate.Author.TextColor3 = module.ColorShortcuts[devAvatars:FindFirstChild(player.Name).Value]
+		LoadAvatar(player.Name, chat_widget, messageTemplate.Viewport)
 		messageTemplate.Parent = messageContainer
 		messageContainer.CanvasSize = UDim2.new(0, 0, 0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
 		messageContainer.CanvasPosition = Vector2.new(0, 9999)
@@ -128,9 +151,16 @@ function module:Init(chat_widget, plugin, Maid)
 	local msg_Folder = game.Chat.Wispy:FindFirstChild("message_logs") or Instance.new("Folder")
 	msg_Folder.Name = "message_logs"
 	msg_Folder.Parent = game.Chat.Wispy
-		
+
+	local bg = chat_widget.ChatUI.Background
+	local info = TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.In, -1, false, 0)
+	local tween = game:GetService("TweenService"):Create(bg, info, {Position = UDim2.new(0, -100, 0, 0)})
+	tween:Play()	
+
 	if plugin:GetSetting("UserAvatar") ~= nil then
-		LoadAvatar(game.Players.LocalPlayer.Name, chat_widget)
+		local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
+		LoadAvatar(game.Players.LocalPlayer.Name, chat_widget, template)
+		template.Parent = chat_widget.ChatUI.PlayerList
 	end
 		
 		--loads old messages from past session
@@ -160,7 +190,9 @@ function module:Init(chat_widget, plugin, Maid)
 	end))
 	
 	Maid:Add(game.Chat.Wispy.dev_avatars.ChildAdded:Connect(function(newValue)
-		LoadAvatar(newValue.Name, chat_widget)
+		local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
+		LoadAvatar(newValue.Name, chat_widget, template)
+		template.Parent = chat_widget.ChatUI.PlayerList
 	end))
 	
 	Maid:Add(game.Chat.Wispy.dev_avatars.ChildRemoved:Connect(function(oldValue)
