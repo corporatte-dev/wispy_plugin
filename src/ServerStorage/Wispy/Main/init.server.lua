@@ -31,9 +31,6 @@ print(mute_pref)
 local avatarWidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Float, false, false, 300, 350, 300, 350)
 local chatWidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Right, false, false, 400, 600, 200, 400)
 
-local wispyFolder = Instance.new("Folder", game.Chat)
-wispyFolder.Name = "Wispy"
-
 local avatarWidget = main_plugin:CreateDockWidgetPluginGui("AvatarUI", avatarWidgetInfo)
 avatarWidget.Title = "Avatar Menu"
 script.Parent.Assets.AvatarUI.Parent = avatarWidget
@@ -51,6 +48,8 @@ chatButton.ClickableWhenViewportHidden = true
 avatarButton.ClickableWhenViewportHidden = true
 
 if game['Run Service']:IsStudio() and game['Run Service']:IsRunMode() == false then
+	local wispyFolder = Instance.new("Folder", game.Chat)
+	wispyFolder.Name = "Wispy"
 	avatarModule:Init(avatarWidget, main_plugin, Maid)
 	chatModule:Init(chatWidget, main_plugin, Maid)
 elseif game['Run Service']:IsRunMode() then
