@@ -184,7 +184,7 @@ function module:Init(chat_widget, plugin, Maid)
 	
 	Maid:Add(chat_widget.ChatUI.ChatBox.FocusLost:Connect(function(enterPressed)
 		if not enterPressed then return end
-		createMessage(chat_widget, chat_widget.ChatUI.ChatBox.Text, game.Players.LocalPlayer)
+		createMessage(chat_widget, chat_widget.ChatUI.ChatBox.ChatBox2.Input.Text, game.Players.LocalPlayer)
 		chat_widget.ChatUI.ChatBox.Text = ""
 		chat_widget.ChatUI.ChatBox:CaptureFocus()
 	end))
