@@ -51,6 +51,7 @@ local function LoadAvatar(player, chat_widget, template)
 	local cam = Instance.new("Camera")
 	
 	cam.Parent = template
+	template.bg.BackgroundColor3 = module.ColorShortcuts[game.Chat.Wispy.dev_avatars:FindFirstChild(player).Value]
 	template.CurrentCamera = cam
 	template.Name = "plr_"..player
 	cam.CFrame = CFrame.new(hrp.Position + (hrp.CFrame.LookVector * 5), hrp.Position)
