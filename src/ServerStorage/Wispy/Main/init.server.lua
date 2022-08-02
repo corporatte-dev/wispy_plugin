@@ -1,18 +1,24 @@
 --!strict
 
---Corporatte & frriend
---Wispy Plugin
---July 30, 2022
+--[=[
+	|> Wispy Plugin Core
 
---secret message number 2, corp was here
+	This script will handle the plugins overall state and setup.
 
--- nice pull request :D
+	Developed by Corporatte with assistance from frriend.
+	July 30, 2022
+]=]
 
--- Dependancies --
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--| Dependancies |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 local Maid = require(script.Util.Maid).new()
 local chatModule = require(script.ChatModule)
 local avatarModule = require(script.AvatarModule)
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--| Plugin Setup |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 local main_plugin = plugin or getfenv.PluginManager():CreatePlugin()
 
 local toolbar = plugin:CreateToolbar("Wispy")
@@ -21,18 +27,8 @@ local chatButton = toolbar:CreateButton("Toggle Chat Window", "Opens and closes 
 local avatarButton = toolbar:CreateButton("Change Avatar", "Gives you a list of avatars to choose from", "rbxassetid://10417795038")
 local clearButton = toolbar:CreateButton("Clear Log", "Wipes all messages from the message log", "rbxassetid://10429312452")
 
---User preferences
-local avatar_pref = main_plugin:GetSetting("UserAvatar")
-local mute_pref = main_plugin:GetSetting("IsMuted")
-
-print(avatar_pref)
-print(mute_pref)
-
 local avatarWidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Float, false, false, 300, 350, 300, 350)
 local chatWidgetInfo = DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Right, false, false, 400, 600, 200, 400)
-
-local wispyFolder = Instance.new("Folder", game.Chat)
-wispyFolder.Name = "Wispy"
 
 local avatarWidget = main_plugin:CreateDockWidgetPluginGui("AvatarUI", avatarWidgetInfo)
 avatarWidget.Title = "Avatar Menu"
@@ -42,14 +38,29 @@ local chatWidget = main_plugin:CreateDockWidgetPluginGui("ChatUI", chatWidgetInf
 chatWidget.Title = "Chat Window"
 script.Parent.Assets.ChatUI.Parent = chatWidget
 
-local muteToggle = true
-local avatarUI_open = false
-local chatUI_open = false
-
+--> Ensure that the plugin is usable in script editor mode.
 muteButton.ClickableWhenViewportHidden = true
 chatButton.ClickableWhenViewportHidden = true
 avatarButton.ClickableWhenViewportHidden = true
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--| Get User Preferences |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+local avatar_pref = main_plugin:GetSetting("UserAvatar")
+local mute_pref = main_plugin:GetSetting("IsMuted")
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--| Variables |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+local muteToggle = true
+local avatarUI_open = false
+local chatUI_open = false
+
+--> Create a new folder for the chat system (if it doesn't already exist)
+local wispyFolder = game.Chat:FindFirstChild("Wispy") or Instance.new("Folder", game.Chat)
+wispyFolder.Name = "Wispy" 
+
+--> Detect if the game is running in studio mode.
 if game['Run Service']:IsStudio() and game['Run Service']:IsRunMode() == false then
 	avatarModule:Init(avatarWidget, main_plugin, Maid)
 	chatModule:Init(chatWidget, main_plugin, Maid)
@@ -57,6 +68,9 @@ elseif game['Run Service']:IsRunMode() then
 	workspace.Camera:FindFirstChild("cam_avatars"):Destroy()
 end
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--| OnClick Events |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Maid:Add(muteButton.Click:Connect(function()
 	if muteToggle == true then
 		muteToggle = false
@@ -93,6 +107,9 @@ Maid:Add(clearButton.Click:Connect(function()
 	chatModule:ClearLogs(plugin, chatWidget)
 end))
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--| On Plugin Unload |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Maid:Add(main_plugin.Unloading:Connect(function()
 	print('Plugin Unloaded')
 	Maid:Clean()
