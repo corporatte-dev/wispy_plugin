@@ -55,7 +55,7 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	end)
 	if not filtered then return end
 	
-	local fullMessage = "<TextColor3="..game.Chat.dev_avatars[author].Value..">" .. author.Name .. ": <TextColor3=/> " .. filtered
+	local fullMessage = "<TextColor3="..game.Chat.Wispy.dev_avatars[author].Value..">" .. author.Name .. ": <TextColor3=/> " .. filtered
 	local str = Instance.new("StringValue")
 	local auth = Instance.new("StringValue")
 	auth.Parent = str
