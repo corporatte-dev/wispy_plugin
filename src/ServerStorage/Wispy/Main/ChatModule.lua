@@ -136,7 +136,7 @@ local function updateChat(chat_widget)
 		local bounds = TS:GetTextSize(message.Value, 20, Enum.Font.Code, Vector2.new())
 
 		messageTemplate.Message.Text = message.Value
-		messageTemplate.Size.Y.Offset = bounds.Y + sizeY
+		messageTemplate.Size.Y = UDim.new(0, bounds.Y + sizeY)
 		messageTemplate.Author.Text = player.Name
 		messageTemplate.Author.TextColor3 = module.ColorShortcuts[devAvatars:FindFirstChild(player.Name).Value]
 		LoadAvatar(player.Name, chat_widget, messageTemplate.Viewport)
@@ -185,8 +185,8 @@ function module:Init(chat_widget, plugin, Maid)
 	Maid:Add(chat_widget.ChatUI.ChatBox.ChatBox2.Input.FocusLost:Connect(function(enterPressed)
 		if not enterPressed then return end
 		createMessage(chat_widget, chat_widget.ChatUI.ChatBox.ChatBox2.Input.Text, game.Players.LocalPlayer)
-		chat_widget.ChatUI.ChatBox.Text = ""
-		chat_widget.ChatUI.ChatBox:CaptureFocus()
+		chat_widget.ChatUI.ChatBox.ChatBox2.Input.Text = ""
+		chat_widget.ChatUI.ChatBox.ChatBox2.Input:CaptureFocus()
 	end))
 	
 	Maid:Add(game.Chat.Wispy.dev_avatars.ChildAdded:Connect(function(newValue)
