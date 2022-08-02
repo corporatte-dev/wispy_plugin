@@ -67,6 +67,7 @@ function module:Init(avatar_widget, plugin, Maid)
 		local displayChar = char:Clone()
 		local button = avatar_template:Clone()
 		button.Name = char.Name
+		button.ZIndex = 2
 
 		local cam = Instance.new("Camera")
 		cam.Parent = button.CharacterViewer
