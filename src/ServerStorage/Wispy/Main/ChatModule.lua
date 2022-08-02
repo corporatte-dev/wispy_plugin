@@ -3,31 +3,12 @@
 
 local module = {
 	plugin_ID = 10422380892;
-	
-	avatar_dict = {
-		Angel = Color3.fromRGB(255, 255, 255),
-		Cooltergiest = Color3.fromRGB(0, 0, 170),
-		Dizzey = Color3.fromRGB(85, 170, 0),
-		Happy = Color3.fromRGB(255, 255, 0),
-		Impy = Color3.fromRGB(170, 0, 0),
-		Nekospecter = Color3.fromRGB(255, 170, 0),
-		Pupper = Color3.fromRGB(0, 170, 255),
-		Robo = Color3.fromRGB(70, 70, 70),
-		Spooky = Color3.fromRGB(0, 0, 0),
-		Wispy = Color3.fromRGB(170, 85, 255),
-		Willow = Color3.fromRGB(191, 118, 191)
-	};
-	
-	text_black = Color3.fromRGB(0,0,0);
-	text_white = Color3.fromRGB(255,255,255);
-	
 	anim_Folder = script.Parent.Parent.Assets.Animations
 }
 
 local HTTP = game:GetService("HttpService")
 local richText = require(script.Parent.Util.RichText)
 
-local userList = {}
 local msg_bundle = {}
 local messageLimit = 200
 
@@ -74,9 +55,10 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	end)
 	if not filtered then return end
 	
-	local fullMessage = author.Name .. ": " .. filtered
+	local fullMessage = "<TextColor3="..game.Chat.dev_avatars[author].Value..">" .. author.Name .. ": <TextColor3=/> " .. filtered
 	local str = Instance.new("StringValue")
-	local auth = Instance.new("StringValue", str)
+	local auth = Instance.new("StringValue")
+	auth.Parent = str
 	auth.Name = author.Name
 	
 	local newIndex = tostring(#game.Chat["Wispy"].message_logs:GetChildren() + 1)
@@ -142,14 +124,14 @@ local function updateChat(chat_widget)
 end
 
 function module:Init(chat_widget, plugin, Maid)
-	if not game.Chat["Wispy"]:FindFirstChild("message_logs") then
-		local previous_messages = plugin:GetSetting(game.PlaceId.."_messages")
-		local msg_Folder = game.Chat:FindFirstChild("Wispy") or Instance.new("Folder", game.Chat["Wispy"])
-		msg_Folder.Name = "message_logs"
+	--local previous_messages = plugin:GetSetting(game.PlaceId.."_messages")
+	local msg_Folder = game.Chat.Wispy:FindFirstChild("message_logs") or Instance.new("Folder")
+	msg_Folder.Name = "message_logs"
+	msg_Folder.Parent = game.Chat.Wispy
 		
-		if plugin:GetSetting("UserAvatar") ~= nil then
-			LoadAvatar(game.Players.LocalPlayer.Name, chat_widget)
-		end
+	if plugin:GetSetting("UserAvatar") ~= nil then
+		LoadAvatar(game.Players.LocalPlayer.Name, chat_widget)
+	end
 		
 		--loads old messages from past session
 		--if previous_messages then
@@ -167,7 +149,6 @@ function module:Init(chat_widget, plugin, Maid)
 		--		end
 		--	end
 		--end
-	end
 	
 	updateChat(chat_widget)
 	

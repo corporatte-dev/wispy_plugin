@@ -153,14 +153,18 @@ propertyShortcuts.ImageColor = "ImageColor3"
 
 -- Color shortcuts: you can use these strings instead of defining exact color values
 richText.ColorShortcuts = {}
-richText.ColorShortcuts.White = Color3.new(1, 1, 1)
-richText.ColorShortcuts.Black = Color3.new(0, 0, 0)
-richText.ColorShortcuts.Red = Color3.new(1, 0.4, 0.4)
-richText.ColorShortcuts.Green = Color3.new(0.4, 1, 0.4)
-richText.ColorShortcuts.Blue = Color3.new(0.4, 0.4, 1)
-richText.ColorShortcuts.Cyan = Color3.new(0.4, 0.85, 1)
-richText.ColorShortcuts.Orange = Color3.new(1, 0.5, 0.2)
-richText.ColorShortcuts.Yellow = Color3.new(1, 0.9, 0.2)
+richText.ColorShortcuts.White = Color3.fromRGB(255, 255, 255)
+richText.ColorShortcuts.Angel = Color3.fromRGB(255, 255, 255)
+richText.ColorShortcuts.Cooltergiest = Color3.fromRGB(0, 0, 170)
+richText.ColorShortcuts.Dizzey = Color3.fromRGB(85, 170, 0)
+richText.ColorShortcuts.Happy = Color3.fromRGB(255, 255, 0)
+richText.ColorShortcuts.Impy = Color3.fromRGB(170, 0, 0)
+richText.ColorShortcuts.Nekospecter = Color3.fromRGB(255, 170, 0)
+richText.ColorShortcuts.Pupper = Color3.fromRGB(0, 170, 255)
+richText.ColorShortcuts.Robo = Color3.fromRGB(70, 70, 70)
+richText.ColorShortcuts.Spooky = Color3.fromRGB(0, 0, 0)
+richText.ColorShortcuts.Wispy = Color3.fromRGB(170, 85, 255)
+richText.ColorShortcuts.Willow = Color3.fromRGB(191, 118, 191)
 
 -- Image shortcuts: you can use these string instead of using image ids
 richText.ImageShortcuts = {}
@@ -188,7 +192,7 @@ defaults.TextSize = 14 -- Only applicable if TextScaled = false
 -- TextLabel default properties
 defaults.Font = "Code"
 defaults.TextColor3 = "White"
-defaults.TextStrokeColor3 = "Black"
+defaults.TextStrokeColor3 = "White"
 defaults.TextTransparency = 0
 defaults.TextStrokeTransparency = 1
 defaults.BackgroundTransparency = 1

@@ -19,7 +19,7 @@ local avatarModule = require(script.AvatarModule)
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --| Plugin Setup |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-local main_plugin = plugin or getfenv.PluginManager():CreatePlugin()
+local main_plugin = plugin
 
 local toolbar = plugin:CreateToolbar("Wispy")
 local muteButton = toolbar:CreateButton("Toggle Sounds", "Decides if you can hear the talking sounds", "rbxassetid://10410245041")
@@ -57,15 +57,16 @@ local avatarUI_open = false
 local chatUI_open = false
 
 --> Create a new folder for the chat system (if it doesn't already exist)
-local wispyFolder = game.Chat:FindFirstChild("Wispy") or Instance.new("Folder", game.Chat)
+local wispyFolder = game.Chat:FindFirstChild("Wispy") or Instance.new("Folder")
 wispyFolder.Name = "Wispy" 
+wispyFolder.Parent = game.Chat
 
 --> Detect if the game is running in studio mode.
 if game['Run Service']:IsStudio() and game['Run Service']:IsRunMode() == false then
-	local wispyFolder = Instance.new("Folder", game.Chat)
-	wispyFolder.Name = "Wispy"
-	avatarModule:Init(avatarWidget, main_plugin, Maid)
-	chatModule:Init(chatWidget, main_plugin, Maid)
+	if avatar_pref ~= nil and mute_pref ~= nil then
+		avatarModule:Init(avatarWidget, main_plugin, Maid)
+		chatModule:Init(chatWidget, main_plugin, Maid)
+	end
 elseif game['Run Service']:IsRunMode() then
 	workspace.Camera:FindFirstChild("cam_avatars"):Destroy()
 end
