@@ -182,7 +182,7 @@ function module:Init(chat_widget, plugin, Maid)
 	
 	updateChat(chat_widget)
 	
-	Maid:Add(chat_widget.ChatUI.ChatBox.FocusLost:Connect(function(enterPressed)
+	Maid:Add(chat_widget.ChatUI.ChatBox.ChatBox2.Input.FocusLost:Connect(function(enterPressed)
 		if not enterPressed then return end
 		createMessage(chat_widget, chat_widget.ChatUI.ChatBox.ChatBox2.Input.Text, game.Players.LocalPlayer)
 		chat_widget.ChatUI.ChatBox.Text = ""
