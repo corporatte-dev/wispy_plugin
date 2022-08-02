@@ -460,10 +460,11 @@ function richText:New(frame, text, startingProperties, allowOverflow, prevTextOb
 		lineFrame.Name = string.format("Line%03d", #lineFrames + 1)
 		lineFrame.Size = UDim2.new(0, 0, 0, 0)
 		lineFrame.BackgroundTransparency = 1		
-		local textContainer = Instance.new("Frame", lineFrame)
+		local textContainer = Instance.new("Frame")
 		textContainer.Name = "Container"
 		textContainer.Size = UDim2.new(0, 0, 0, 0)
 		textContainer.BackgroundTransparency = 1
+		textContainer.Parent = lineFrame
 		setHorizontalAlignment(textContainer, properties.ContainerHorizontalAlignment)
 		lineFrame.Parent = frame
 		table.insert(lineFrames, lineFrame)
