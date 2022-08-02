@@ -4,6 +4,8 @@
 --Wispy Plugin
 --July 30, 2022
 
+-- Oh no, we have a merge conflict!
+
 -- Dependancies --
 local Maid = require(script.Util.Maid).new()
 local chatModule = require(script.ChatModule)
@@ -13,7 +15,7 @@ local main_plugin = plugin or getfenv.PluginManager():CreatePlugin()
 
 local toolbar = plugin:CreateToolbar("Wispy")
 local muteButton = toolbar:CreateButton("Toggle Sounds", "Decides if you can hear the talking sounds", "rbxassetid://10410245041")
-local chatButton = toolbar:CreateButton("Toggle Chat Window", "Opens and closes the chat widget", "rbxassetid://10417191274")
+local chatButton = toolgibar:CreateButton("Toggle Chat Window", "Opens and closes the chat widget", "rbxassetid://10417191274")
 local avatarButton = toolbar:CreateButton("Change Avatar", "Gives you a list of avatars to choose from", "rbxassetid://10417795038")
 local clearButton = toolbar:CreateButton("Clear Log", "Wipes all messages from the message log", "rbxassetid://10429312452")
 
