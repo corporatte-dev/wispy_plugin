@@ -209,7 +209,9 @@ function module:Init(chat_widget, plugin, Maid)
 	
 	for i, value in pairs(game.Chat.Wispy.dev_avatars:GetChildren()) do
 		value.Changed:Connect(function()
-			LoadAvatar(value.Name, chat_widget)
+			local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
+			LoadAvatar(value.Name, chat_widget, template)
+			template.Parent = chat_widget.ChatUI.PlayerList
 		end)
 	end
 end
