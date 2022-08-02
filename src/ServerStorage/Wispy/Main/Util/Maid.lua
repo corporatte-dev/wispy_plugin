@@ -16,7 +16,7 @@ end
 
 -- Hand over a connection for the maid to remember.
 function Maid:Add(Event: RBXScriptConnection)
-	if (self.Events ~= nil) then
+	if self.Events ~= nil then
 		table.insert(self.Events, Event)
 	else
 		warn("Maid: You need to call Maid.new().")
