@@ -55,7 +55,7 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	end)
 	if not filtered then return end
 	
-	local fullMessage = "<TextColor3="..game.Chat.Wispy.dev_avatars[author].Value..">" .. author.Name .. ": <TextColor3=/> " .. filtered
+	local fullMessage = "<Color=".. game.Chat.Wispy.dev_avatars[author].Value .. ">" .. author.Name .. ": <Color=/> " .. filtered
 	local str = Instance.new("StringValue")
 	local auth = Instance.new("StringValue")
 	auth.Parent = str
@@ -63,7 +63,7 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	
 	local newIndex = tostring(#game.Chat["Wispy"].message_logs:GetChildren() + 1)
 	str.Name = "message_"..newIndex
-	str.Value = fullMessage
+	str.Value = filtered
 	
 	local messageTemplate = script.Parent.Parent.Assets.UITemplates.RecentMessageTemplate:Clone()
 	local messageContainer = chat_widget.ChatUI.MessageContainer
