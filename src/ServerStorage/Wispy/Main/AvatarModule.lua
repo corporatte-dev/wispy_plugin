@@ -52,7 +52,7 @@ function module:Init(avatar_widget, plugin, Maid)
 
 	local characters = characterFolder:GetChildren()
 	local charValue = Instance.new("StringValue")
-	charValue.Parent = game.Chat["Wispy"].dev_avatars
+	charValue.Parent = game.Chat.Wispy.dev_avatars
 	
 	--Just sets the settings when a new player joins the team create and inits the plugin
 	charValue.Name = game.Players.LocalPlayer.Name
