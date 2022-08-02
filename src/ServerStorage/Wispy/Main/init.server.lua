@@ -6,6 +6,8 @@
 
 --secret message number 2, corp was here
 
+-- nice pull request :D
+
 -- Dependancies --
 local Maid = require(script.Util.Maid).new()
 local chatModule = require(script.ChatModule)
