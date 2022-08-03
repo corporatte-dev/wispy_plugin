@@ -1,8 +1,8 @@
 --[=[
     |> Avatar Class
 
-    The avatar class contains raw data about each avatar rendering instance. It contains a 
-    get/set API to easily manipulate this from anywhere in code.
+    This class allows the creation of data-only instances to be created for the avatar manager to use. These
+    simple classes store the state of each viewport frame within the plugin.
 
     ! Bear in mind that the core variables are not read-only (as they should be). Avoid setting these variables.
 ]=]

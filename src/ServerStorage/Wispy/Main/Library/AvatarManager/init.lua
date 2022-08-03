@@ -3,7 +3,13 @@
 --[=[
     |> Avatar Manager
 
-    Handles creation, state, and deletion of avatar instances.
+    Handles creation, state, and deletion of avatar instances. 
+
+    Keep in mind that orb characters are completely independant from this system in 
+    its current state, so we may need to refactor a bit to include this.
+
+    A possible solution would to use the Avatar as the dummy model to mimic, then 
+    passing (or retrieving) a reference of these characters to this system.
 
     Written in ~1 hour so it may be a little scuffed lol
 ]=]
@@ -47,16 +53,15 @@ function AvatarManager:UseAvatar(ViewportFrame: ViewportFrame, PlayerName: strin
 
     --> Finally, set the avatar to PLAY when on screen.
     _ = Animated ~= nil and Avatar:Play()
-
 end
 
 --> Main Runtime to apply transformations.
 --! Hand this over to the maid at some point.
 RunService.RenderStepped:Connect(function()
-    --? There are ways to optimize this, but it shouldn't be too expensive.
-    --? It would be best to have a setting to disable animations in the future. In that case, we would skip the
-    --? following lines to keep the image static.
-
+    --? There are ways to optimize this, but it shouldn't be too expensive as it is.
+    --? It would be best to have a setting to disable animations in the future. In that 
+    --? case, we would skip the following lines to keep the image static.
+    --? (i.e.) if not AnimateEnabled then return end
 
     --> Loop through all avatar AvatarInstances within the AvatarInstances table.
     for _, Avatar in pairs(AvatarManager.AvatarInstances) do
@@ -76,7 +81,5 @@ RunService.RenderStepped:Connect(function()
         --> Apply CFrames.
     end 
 end)
-
-
 
 return AvatarManager
