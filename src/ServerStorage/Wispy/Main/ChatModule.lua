@@ -110,38 +110,43 @@ local function updateChat(chat_widget)
 	local chatContainer = chat_widget.ChatUI.MessageContainer
 	local playerList = chat_widget.ChatUI.PlayerList
 	
-	for i, avatar in pairs(playerList:GetChildren()) do
+	for _, avatar in pairs(playerList:GetChildren()) do
 		if avatar:IsA("ViewportFrame") then
 			avatar:Destroy()
 		end
 	end
 	
-	for i, UI_msg in pairs(chatContainer:GetChildren()) do
+	for _, UI_msg in pairs(chatContainer:GetChildren()) do
 		if UI_msg:IsA("TextLabel") or UI_msg:IsA("Frame") then
 			UI_msg:Destroy()
 		end
 	end
 	
-	for i, dev_ava in pairs(devAvatars:GetChildren()) do
+	for _, dev_ava in pairs(devAvatars:GetChildren()) do
 		local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
 		LoadAvatar(dev_ava.Name, chat_widget, template)
 		template.Parent = chat_widget.ChatUI.PlayerList
 	end
 	
-	for i, message in pairs(messageLogs:GetChildren()) do
+	for _, message in pairs(messageLogs:GetChildren()) do
 		local TS = game:GetService("TextService")
 		local messageTemplate = script.Parent.Parent.Assets.UITemplates.MessageTemplate:Clone()
 		local player = message:GetChildren()[1]
-		local messageContainer = chat_widget.ChatUI.MessageContainer
-		local sizeY = messageTemplate.AbsoluteSize.Y
-		local bounds = TS:GetTextSize(message.Value, 20, Enum.Font.Code, Vector2.new())
+		local messageContainer: Frame = chat_widget.ChatUI.MessageContainer
+
+		local Message: Frame = messageTemplate.Message
+		messageTemplate.Parent = messageContainer
+
+		--> Calculate the bounds of the text within it's container.
+		local bounds = TS:GetTextSize(message.Value, 20, Enum.Font.SourceSans, Vector2.new(Message.AbsoluteSize.X, math.huge))
+		
+		--> Then, use the Y axis of bounds to calculate the new size for the message template.
+		messageTemplate.Size = UDim2.new(messageTemplate.Size.X.Scale, messageTemplate.Size.X.Offset, 0, math.clamp(bounds.Y + 40, 60, math.huge))
 
 		messageTemplate.Message.Text = message.Value
-		messageTemplate.Size = UDim2.new(messageTemplate.Size.X.Scale, messageTemplate.Size.X.Offset, 0, bounds.Y + sizeY)
 		messageTemplate.Author.Text = player.Name
 		messageTemplate.Author.TextColor3 = module.ColorShortcuts[devAvatars:FindFirstChild(player.Name).Value]
 		LoadAvatar(player.Name, chat_widget, messageTemplate.Viewport)
-		messageTemplate.Parent = messageContainer
 		messageContainer.CanvasSize = UDim2.new(0, 0, 0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
 		messageContainer.CanvasPosition = Vector2.new(0, 9999)
 	end
@@ -208,7 +213,7 @@ function module:Init(chat_widget, plugin, Maid)
 		updateChat(chat_widget)
 	end))
 	
-	for i, value in pairs(game.Chat.Wispy.dev_avatars:GetChildren()) do
+	for _, value in pairs(game.Chat.Wispy.dev_avatars:GetChildren()) do
 		value.Changed:Connect(function()
 			local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
 			LoadAvatar(value.Name, chat_widget, template)
