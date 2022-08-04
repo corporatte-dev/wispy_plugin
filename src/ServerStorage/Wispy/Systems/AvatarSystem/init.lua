@@ -1,14 +1,15 @@
---[[Corporatte, AvatarModule, Wispy Plugin]]--
+local Types = require(script.Parent.Parent.Types)
+local AvatarSystem = {} :: Types.AvatarSystem
 
-local module = {}
-
---local mainScript = script.Parent
 local avatar_template = script.Parent.Parent.Assets.UITemplates.CharacterTemplate
 local characterFolder = script.Parent.Parent.Assets.Characters
 
---local function customLerp(a, b, c)
---	return a + (b - a) * c
----end
+local ChatSystem: Types.ChatSystem
+local PluginUI: Types.PluginUI
+local Maid: Types.MaidObject
+local Plugin: Plugin
+local DevAvatarFolder: Folder
+local CamAvatarFolder: Folder
 
 function updateAvatar(avatar, goal)
 	--local currentTime = tick()
@@ -29,8 +30,8 @@ function updateAvatar(avatar, goal)
 	avatar["Right Arm"].CFrame = avatar["Right Arm"].CFrame:Lerp(avatar.PrimaryPart.CFrame + offsets["Right Arm"].Position + offsets["Right Arm"].Orientation, 0.5)
 end
 
-function module.createAvatar(playerName)
-	local avatarData = game.Chat.Wispy.dev_avatars[playerName].Value
+function AvatarSystem:createAvatar(playerName)
+	local avatarData = DevAvatarFolder[playerName].Value
 	local avatar = characterFolder:FindFirstChild(avatarData):Clone()
 	
 	avatar.Parent = workspace.Camera.cam_avatars
@@ -40,26 +41,30 @@ function module.createAvatar(playerName)
 	updateCoro()
 end
 
---Creates the plugin folders and handles the avatar change
-function module:Init(avatar_widget, plugin, Maid)
-	local widget_avatarFolder = game.Chat.Wispy:FindFirstChild("dev_avatars") or Instance.new("Folder")
-	widget_avatarFolder.Name = "dev_avatars"
-	widget_avatarFolder.Parent = game.Chat.Wispy
+function AvatarSystem:Mount()
+    ChatSystem = self:GetSystem("ChatSystem")
+    PluginUI = self:GetSystem("PluginUI")
 
-	local camera_avatarFolder = workspace.Camera:FindFirstChild("cam_avatars") or Instance.new("Folder")
-	camera_avatarFolder.Name = "cam_avatars"
-	camera_avatarFolder.Parent = workspace.Camera
+    local FileSystem = self:GetSystem("FileSystem")
+
+	DevAvatarFolder = FileSystem:Get("DevAvatars")
+    CamAvatarFolder = FileSystem:Get("CamAvatars")
+
+    local AvatarWidget = PluginUI:GetWidget("Avatar")
+    
+    Plugin = self.Plugin
+    Maid = self.Maid
 
 	local characters = characterFolder:GetChildren()
 	local charValue = Instance.new("StringValue")
-	charValue.Parent = game.Chat.Wispy.dev_avatars
+	charValue.Parent = DevAvatarFolder
 	
 	--Just sets the settings when a new player joins the team create and inits the plugin
 	charValue.Name = game.Players.LocalPlayer.Name
-	charValue.Value = plugin:GetSetting("UserAvatar")
+	charValue.Value = Plugin:GetSetting("UserAvatar")
 	
 	local info = TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.In, -1, false, 0)
-	local tween = game:GetService("TweenService"):Create(avatar_widget.AvatarUI.Background, info, {Position = UDim2.new(0, -100, 0, 0)})
+	local tween = game:GetService("TweenService"):Create(AvatarWidget.AvatarUI.Background, info, {Position = UDim2.new(0, -100, 0, 0)})
 	tween:Play()
 
 	for i, char in pairs(characters) do
@@ -76,19 +81,23 @@ function module:Init(avatar_widget, plugin, Maid)
 
 		displayChar.Parent = button.CharacterViewer
 		cam.CFrame = CFrame.new(displayChar.HumanoidRootPart.Position + Vector3.new(0, 0, 1.5), displayChar.HumanoidRootPart.Position)
-		button.Parent = avatar_widget.AvatarUI.CharacterSelector
+		button.Parent = AvatarWidget.AvatarUI.CharacterSelector
 
 		Maid:Add(button.MouseButton1Click:Connect(function()
 			--Change the character value
-			plugin:SetSetting("UserAvatar", displayChar.Name)
-			game.Chat.Wispy.dev_avatars:FindFirstChild(game.Players.LocalPlayer.Name).Value = displayChar.Name
-			avatar_widget.AvatarUI.Title.Text = "Current Avatar: "..displayChar.Name
+			Plugin:SetSetting("UserAvatar", displayChar.Name)
+			DevAvatarFolder:FindFirstChild(game.Players.LocalPlayer.Name).Value = displayChar.Name
+			AvatarWidget.AvatarUI.Title.Text = "Current Avatar: "..displayChar.Name
 		end))
 	end
 	
-	Maid:Add(game.Chat.Wispy.dev_avatars.ChildAdded:Connect(function(child)
-		module.createAvatar(child.Name)
+	Maid:Add(DevAvatarFolder.ChildAdded:Connect(function(child)
+		self:createAvatar(child.Name)
 	end))
 end
 
-return module
+function AvatarSystem:OnClose()
+    
+end
+
+return AvatarSystem
