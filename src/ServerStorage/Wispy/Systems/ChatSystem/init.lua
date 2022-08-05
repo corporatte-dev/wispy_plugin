@@ -33,6 +33,7 @@ local Constants = {
 --> Typed Modules to be Loaded on Mount
 local RichText: Types.RichText
 local Maid: Types.MaidObject
+local Avatar: Types.AvatarSystem
 local Plugin: Plugin
 local PluginUI: Types.PluginUI
 
@@ -57,6 +58,8 @@ local function LoadAvatar(player, chat_widget, template)
 	local hrp = wisp:FindFirstChild("HumanoidRootPart")
 	local cam = Instance.new("Camera")
 	
+	Avatar:createAvatar(player)
+
 	cam.Parent = template
 	template.bg.BackgroundColor3 = Constants.ColorShortcuts[DevAvatarFolder:FindFirstChild(player).Value]
 	template.CurrentCamera = cam
@@ -111,7 +114,6 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 end
 
 local function updateChat(chat_widget)
-
 	local chatContainer = chat_widget.ChatUI.MessageContainer
 	local playerList = chat_widget.ChatUI.PlayerList
 	

@@ -34,8 +34,8 @@ function AvatarSystem:createAvatar(playerName)
 	local avatarData = DevAvatarFolder[playerName].Value
 	local avatar = characterFolder:FindFirstChild(avatarData):Clone()
 	
-	avatar.Parent = workspace.Camera.cam_avatars
-	
+	avatar.Parent = CamAvatarFolder
+
 	local updateCoro = coroutine.wrap(updateAvatar(avatar, workspace.CurrentCamera))
 	
 	updateCoro()
@@ -56,7 +56,7 @@ function AvatarSystem:Mount()
     Maid = self.Maid
 
 	local characters = characterFolder:GetChildren()
-	local charValue = Instance.new("StringValue")
+	local charValue = DevAvatarFolder:FindFirstChild(game.LocalPlayer.Name) or Instance.new("StringValue")
 	charValue.Parent = DevAvatarFolder
 	
 	--Just sets the settings when a new player joins the team create and inits the plugin
