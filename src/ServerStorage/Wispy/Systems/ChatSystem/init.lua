@@ -113,10 +113,12 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	str.Parent = MessagesFolder
 end
 
-local function updateChat(chat_widget)
-	local chatContainer = chat_widget.ChatUI.MessageContainer
-	local playerList = chat_widget.ChatUI.PlayerList
+function ChatSystem:UpdateChat()
+	local chatContainer = ChatWidget.ChatUI.MessageContainer
+	local playerList = ChatWidget.ChatUI.PlayerList
 	
+	ChatWidget.ChatUI.MessageContainer.CanvasPosition = Vector2.new(0, math.huge)
+
 	for _, avatar in pairs(playerList:GetChildren()) do
 		if avatar:IsA("ViewportFrame") then
 			avatar:Destroy()
@@ -131,15 +133,15 @@ local function updateChat(chat_widget)
 	
 	for _, dev_ava in pairs(DevAvatarFolder:GetChildren()) do
 		local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
-		LoadAvatar(dev_ava.Name, chat_widget, template)
-		template.Parent = chat_widget.ChatUI.PlayerList
+		LoadAvatar(dev_ava.Name, ChatWidget, template)
+		template.Parent = ChatWidget.ChatUI.PlayerList
 	end
 	
 	for _, message in pairs(MessagesFolder:GetChildren()) do
 		local TS = game:GetService("TextService")
 		local messageTemplate = script.Parent.Parent.Assets.UITemplates.MessageTemplate:Clone()
 		local player = message:GetChildren()[1]
-		local messageContainer: Frame = chat_widget.ChatUI.MessageContainer
+		local messageContainer: Frame = ChatWidget.ChatUI.MessageContainer
 
 		local Message: Frame = messageTemplate.Message
 		messageTemplate.Parent = messageContainer
@@ -152,7 +154,7 @@ local function updateChat(chat_widget)
 		messageTemplate.Message.Text = message.Value
 		messageTemplate.Author.Text = player.Name
 		messageTemplate.Author.TextColor3 = Constants.ColorShortcuts[DevAvatarFolder:FindFirstChild(player.Name).Value]
-		LoadAvatar(player.Name, chat_widget, messageTemplate.Viewport)
+		LoadAvatar(player.Name, ChatWidget, messageTemplate.Viewport)
 		messageContainer.CanvasSize = UDim2.new(0, 0, 0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
 		messageContainer.CanvasPosition = Vector2.new(0, 9999)
 	end
@@ -202,7 +204,7 @@ function ChatSystem:Mount()
 		--	end
 		--end
 	
-	updateChat(ChatWidget)
+	self:UpdateChat()
 	
 	Maid:Add(ChatWidget.ChatUI.ChatBox.ChatBox2.Input.FocusLost:Connect(function(enterPressed)
 		if not enterPressed then return end
@@ -218,15 +220,15 @@ function ChatSystem:Mount()
 	end))
 	
 	Maid:Add(DevAvatarFolder.ChildRemoved:Connect(function()
-		updateChat(ChatWidget)
+		self:UpdateChat()
 	end))
 	
 	Maid:Add(MessagesFolder.ChildAdded:Connect(function()
-		updateChat(ChatWidget)
+		self:UpdateChat()
 	end))
 	
 	Maid:Add(MessagesFolder.ChildRemoved:Connect(function()
-		updateChat(ChatWidget)
+		self:UpdateChat()
 	end))
 	
 	for _, value in pairs(DevAvatarFolder:GetChildren()) do
@@ -241,7 +243,7 @@ end
 function ChatSystem:ClearLogs()
 	Plugin:SetSetting(game.PlaceId.."_messages", "")
 	MessagesFolder:ClearAllChildren()
-	updateChat(ChatWidget)
+	self:UpdateChat()
 end
 
 --> Optional method to clean up when Plugin.Unloading() is called.
