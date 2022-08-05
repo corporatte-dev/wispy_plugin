@@ -31,7 +31,8 @@ export type AvatarSystem = {
 
 export type ChatSystem = {
     ClearLogs: (self: ChatSystem) -> nil,
-    UpdateChat: (self: ChatSystem) -> nil
+    UpdateChat: (self: ChatSystem) -> nil,
+    UpdatePlrList: (self: ChatSystem) -> nil
 } & System
 
 export type FileSystem = {

@@ -46,12 +46,7 @@ local ChatWidget: DockWidgetPluginGui
 local msg_bundle = {}
 
 --> Internal Methods
-local function LoadAvatar(player: string, chat_widget, template)
-	if chat_widget.ChatUI.PlayerList:FindFirstChild("plr_"..player) then
-		--coroutine.yield(renderAvatarLoop)
-		chat_widget.ChatUI.PlayerList:FindFirstChild("plr_"..player):Destroy()
-	end
-	
+local function LoadAvatar(player: string, template)
 	local playerData = DevAvatarFolder:FindFirstChild(player)
 	local wispData = playerData.Value
 	local wisp = script.Parent.Parent.Assets.Characters[wispData]:Clone()
@@ -93,7 +88,7 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	messageTemplate.Parent = messageContainer
 	messageTemplate.Author.Text = author.Name
 	messageTemplate.Author.TextColor3 = Constants.ColorShortcuts[DevAvatarFolder:FindFirstChild(author.Name).Value]
-	LoadAvatar(author.Name, ChatWidget, messageTemplate.Viewport)
+	LoadAvatar(author.Name, messageTemplate.Viewport)
 	local textObject = RichText:New(messageTemplate.TextBox, filtered)
 
 	messageContainer.CanvasSize = UDim2.new(0, 0, 0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
@@ -126,21 +121,22 @@ function ChatSystem:UpdatePlrList()
 
 	for _, dev_ava in pairs(DevAvatarFolder:GetChildren()) do
 		local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
-		LoadAvatar(dev_ava.Name, ChatWidget, template)
+		LoadAvatar(dev_ava.Name, template)
 		template.Parent = ChatWidget.ChatUI.PlayerList
 	end
 end
 
 function ChatSystem:UpdateChat()
 	local chatContainer = ChatWidget.ChatUI.MessageContainer
-	ChatWidget.ChatUI.MessageContainer.CanvasPosition = Vector2.new(0, math.huge)
 	
+	--> clears the whole chat container of messages
 	for _, UI_msg in pairs(chatContainer:GetChildren()) do
 		if UI_msg:IsA("TextLabel") or UI_msg:IsA("Frame") then
 			UI_msg:Destroy()
 		end
 	end
 
+	--> remakes the messages from the message logs
 	for _, message in pairs(MessagesFolder:GetChildren()) do
 		local TS = game:GetService("TextService")
 		local messageTemplate = script.Parent.Parent.Assets.UITemplates.MessageTemplate:Clone()
@@ -158,9 +154,9 @@ function ChatSystem:UpdateChat()
 		messageTemplate.Message.Text = message.Value
 		messageTemplate.Author.Text = player
 		messageTemplate.Author.TextColor3 = Constants.ColorShortcuts[DevAvatarFolder:FindFirstChild(player).Value]
-		LoadAvatar(player, ChatWidget, messageTemplate.Viewport)
+		LoadAvatar(player, messageTemplate.Viewport)
 		messageContainer.CanvasSize = UDim2.new(0, 0, 0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
-		messageContainer.CanvasPosition = Vector2.new(0, 9999)
+		messageContainer.CanvasPosition = Vector2.new(0, math.huge)
 	end
 end
 
@@ -187,7 +183,7 @@ function ChatSystem:Mount()
 
 	if Plugin:GetSetting("UserAvatar") ~= nil then
 		local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
-		LoadAvatar(self.LocalPlayer.Name, ChatWidget, template)
+		LoadAvatar(self.LocalPlayer.Name, template)
 		template.Parent = ChatWidget.ChatUI.PlayerList
 	end
 		
@@ -220,7 +216,7 @@ function ChatSystem:Mount()
 	
 	Maid:Add(DevAvatarFolder.ChildAdded:Connect(function(newValue)
 		local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
-		LoadAvatar(newValue.Name, ChatWidget, template)
+		LoadAvatar(newValue.Name, template)
 		template.Parent = ChatWidget.ChatUI.PlayerList
 	end))
 	
