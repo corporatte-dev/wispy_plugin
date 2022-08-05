@@ -115,30 +115,32 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	str.Parent = MessagesFolder
 end
 
-function ChatSystem:UpdateChat()
-	local chatContainer = ChatWidget.ChatUI.MessageContainer
+function ChatSystem:UpdatePlrList()
 	local playerList = ChatWidget.ChatUI.PlayerList
-	
-	ChatWidget.ChatUI.MessageContainer.CanvasPosition = Vector2.new(0, math.huge)
 
 	for _, avatar in pairs(playerList:GetChildren()) do
 		if avatar:IsA("ViewportFrame") then
 			avatar:Destroy()
 		end
 	end
+
+	for _, dev_ava in pairs(DevAvatarFolder:GetChildren()) do
+		local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
+		LoadAvatar(dev_ava.Name, ChatWidget, template)
+		template.Parent = ChatWidget.ChatUI.PlayerList
+	end
+end
+
+function ChatSystem:UpdateChat()
+	local chatContainer = ChatWidget.ChatUI.MessageContainer
+	ChatWidget.ChatUI.MessageContainer.CanvasPosition = Vector2.new(0, math.huge)
 	
 	for _, UI_msg in pairs(chatContainer:GetChildren()) do
 		if UI_msg:IsA("TextLabel") or UI_msg:IsA("Frame") then
 			UI_msg:Destroy()
 		end
 	end
-	
-	for _, dev_ava in pairs(DevAvatarFolder:GetChildren()) do
-		local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
-		LoadAvatar(dev_ava.Name, ChatWidget, template)
-		template.Parent = ChatWidget.ChatUI.PlayerList
-	end
-	
+
 	for _, message in pairs(MessagesFolder:GetChildren()) do
 		local TS = game:GetService("TextService")
 		local messageTemplate = script.Parent.Parent.Assets.UITemplates.MessageTemplate:Clone()
@@ -207,6 +209,7 @@ function ChatSystem:Mount()
 		--end
 	
 	self:UpdateChat()
+	self:UpdatePlrList()
 	
 	Maid:Add(ChatWidget.ChatUI.ChatBox.ChatBox2.Input.FocusLost:Connect(function(enterPressed)
 		if not enterPressed then return end
@@ -222,7 +225,7 @@ function ChatSystem:Mount()
 	end))
 	
 	Maid:Add(DevAvatarFolder.ChildRemoved:Connect(function()
-		self:UpdateChat()
+		self:UpdatePlrList()
 	end))
 	
 	Maid:Add(MessagesFolder.ChildAdded:Connect(function()
@@ -234,11 +237,7 @@ function ChatSystem:Mount()
 	end))
 	
 	for _, value in pairs(DevAvatarFolder:GetChildren()) do
-		value.Changed:Connect(function()
-			local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
-			LoadAvatar(value.Name, ChatWidget, template)
-			template.Parent = ChatWidget.ChatUI.PlayerList
-		end)
+		value.Changed:Connect(self:UpdatePlrList())
 	end
 end
 
