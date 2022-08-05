@@ -103,7 +103,7 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	
 	--if isMuted == false then
 	--	local soundClone = script.Parent.Parent.Assets.SFX.TalkSound:Clone()
-	--	soundClone.Parent = game.Chat
+	--	soundClone.Parent = game.SoundService
 	--	for i = 1, #filtered, 1 do
 	--		game.SoundService:PlayLocalSound(soundClone)
 	--		task.wait(0.125)
