@@ -214,16 +214,6 @@ function ChatSystem:Mount()
 		ChatWidget.ChatUI.ChatBox.ChatBox2.Input:CaptureFocus()
 	end))
 	
-	Maid:Add(DevAvatarFolder.ChildAdded:Connect(function(newValue)
-		local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
-		LoadAvatar(newValue.Name, template)
-		template.Parent = ChatWidget.ChatUI.PlayerList
-	end))
-	
-	Maid:Add(DevAvatarFolder.ChildRemoved:Connect(function()
-		self:UpdatePlrList()
-	end))
-	
 	Maid:Add(MessagesFolder.ChildAdded:Connect(function()
 		self:UpdateChat()
 	end))
@@ -241,7 +231,7 @@ end
 
 --> Optional method to clean up when Plugin.Unloading() is called.
 function ChatSystem:OnClose()
-	local avatar = DevAvatarFolder[self.LocalPlayer]
+	local avatar = DevAvatarFolder[self.LocalPlayer.Name]
 	avatar:Destroy()
 	
 	for i, msg in pairs(MessagesFolder:GetChildren()) do
