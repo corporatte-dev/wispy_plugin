@@ -121,8 +121,8 @@ function ChatSystem:UpdatePlrList()
 
 	for _, dev_ava in pairs(DevAvatarFolder:GetChildren()) do
 		local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
-		LoadAvatar(dev_ava.Name, template)
 		template.Parent = ChatWidget.ChatUI.PlayerList
+		LoadAvatar(dev_ava.Name, template)
 	end
 end
 
