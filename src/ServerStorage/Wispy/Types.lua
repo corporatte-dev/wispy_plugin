@@ -30,7 +30,8 @@ export type AvatarSystem = {
 } & System
 
 export type ChatSystem = {
-    ClearLogs: (self: ChatSystem) -> nil
+    ClearLogs: (self: ChatSystem) -> nil,
+    UpdateChat: (self: ChatSystem) -> nil
 } & System
 
 export type FileSystem = {
@@ -61,6 +62,15 @@ export type RichTextObject = {
 
 export type RichText = {
     New: <frame, text, startingProperties, allowOverflow, prevTextObject>(self: RichText, frame: Frame, startingProperties: any, allowOverflow: boolean, prevTextObject: any) -> RichTextObject
+}
+
+export type DeferObject = {
+    Call: (self: DeferObject) -> nil,
+    Clean: (self: DeferObject) -> nil
+}
+
+export type Defer = {
+    new: <Callback, Timeout>(Callback: (any) -> any, Timeout: number) -> DeferObject    
 }
 
 return {}

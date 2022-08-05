@@ -1,6 +1,5 @@
 local Types = require(script.Parent.Parent.Types)
 local PluginUI = {} :: Types.PluginUI
-PluginUI.NoMount = true
 
 --[=[
     |> PluginUI
@@ -20,12 +19,21 @@ local chatUI_open = false
 
 local Maid: Types.MaidObject
 local Plugin: Plugin
+local ChatSystem: Types.ChatSystem
+local DeferRefresh: Types.DeferObject
 
 --> Internal Functions
 function CreateWidget(ID: string, WidgetInfo: DockWidgetPluginGuiInfo, Title: string, UI: ScreenGui)
     local Widget = Plugin:CreateDockWidgetPluginGui(ID, WidgetInfo)
     Widget.Title = Title
     UI.Parent = Widget
+
+    Maid:Add(UI:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+        if DeferRefresh then
+            DeferRefresh:Call()
+        end
+    end))
+    
     return Widget
 end
 
@@ -42,7 +50,6 @@ end
 function PluginUI:Preload()
     Plugin = self.Plugin
     Maid = self.Maid
-
     Toolbar = Plugin:CreateToolbar("Wispy")
     
     --> Create Buttons
@@ -112,4 +119,18 @@ function PluginUI:Preload()
     end))
 end
     
+function PluginUI:Mount()
+    local DeferLib: Types.Defer = self:GetLib("Defer")
+    ChatSystem = self:GetSystem("ChatSystem")
+
+    DeferRefresh = DeferLib.new(function()
+        print 'refreshed'
+        ChatSystem:UpdateChat()
+    end, 0.5)
+end
+
+function PluginUI:OnClose()
+    DeferRefresh:Clean()
+end
+
 return PluginUI
