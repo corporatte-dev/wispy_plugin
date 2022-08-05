@@ -231,12 +231,6 @@ function ChatSystem:Mount()
 	Maid:Add(MessagesFolder.ChildRemoved:Connect(function()
 		self:UpdateChat()
 	end))
-	
-	for _, value in pairs(DevAvatarFolder:GetChildren()) do
-		value.Changed:Connect(function()
-			self:UpdatePlrList()
-		end)
-	end
 end
 
 function ChatSystem:ClearLogs()
