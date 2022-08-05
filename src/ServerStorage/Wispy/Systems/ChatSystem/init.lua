@@ -33,7 +33,7 @@ local Constants = {
 --> Typed Modules to be Loaded on Mount
 local RichText: Types.RichText
 local Maid: Types.MaidObject
-local Avatar: Types.AvatarSystem
+local AvatarSystem: Types.AvatarSystem
 local Plugin: Plugin
 local PluginUI: Types.PluginUI
 
@@ -58,7 +58,7 @@ local function LoadAvatar(player, chat_widget, template)
 	local hrp = wisp:FindFirstChild("HumanoidRootPart")
 	local cam = Instance.new("Camera")
 	
-	Avatar:createAvatar(player)
+	AvatarSystem:createAvatar(player)
 
 	cam.Parent = template
 	template.bg.BackgroundColor3 = Constants.ColorShortcuts[DevAvatarFolder:FindFirstChild(player).Value]
@@ -165,6 +165,7 @@ function ChatSystem:Mount()
 	--> Load Dependancies
 	local FileSystem = self:GetSystem("FileSystem")
 	PluginUI = self:GetSystem("PluginUI")
+	AvatarSystem = self:GetSystem("AvatarSystem")
 	RichText = self:GetLib("RichText")
     Plugin = self.Plugin
     Maid = self.Maid
@@ -181,7 +182,7 @@ function ChatSystem:Mount()
 
 	if Plugin:GetSetting("UserAvatar") ~= nil then
 		local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
-		LoadAvatar(game.Players.LocalPlayer.Name, ChatWidget, template)
+		LoadAvatar(self.LocalPlayer.Name, ChatWidget, template)
 		template.Parent = ChatWidget.ChatUI.PlayerList
 	end
 		
@@ -206,7 +207,7 @@ function ChatSystem:Mount()
 	
 	Maid:Add(ChatWidget.ChatUI.ChatBox.ChatBox2.Input.FocusLost:Connect(function(enterPressed)
 		if not enterPressed then return end
-		createMessage(ChatWidget, ChatWidget.ChatUI.ChatBox.ChatBox2.Input.Text, game.Players.LocalPlayer)
+		createMessage(ChatWidget, ChatWidget.ChatUI.ChatBox.ChatBox2.Input.Text, self.LocalPlayer)
 		ChatWidget.ChatUI.ChatBox.ChatBox2.Input.Text = ""
 		ChatWidget.ChatUI.ChatBox.ChatBox2.Input:CaptureFocus()
 	end))
@@ -246,7 +247,7 @@ end
 
 --> Optional method to clean up when Plugin.Unloading() is called.
 function ChatSystem:OnClose()
-	local avatar = DevAvatarFolder[game.Players.LocalPlayer]
+	local avatar = DevAvatarFolder[self.LocalPlayer]
 	avatar:Destroy()
 	
 	for i, msg in pairs(MessagesFolder:GetChildren()) do

@@ -29,8 +29,6 @@ end
 function AvatarSystem:createAvatar(playerName)
 	local avatarData = DevAvatarFolder[playerName].Value
 	local avatar = characterFolder:FindFirstChild(avatarData):Clone()
-	
-	
 end
 
 function AvatarSystem.visualizeAvatar(playerName)
@@ -59,11 +57,11 @@ function AvatarSystem:Mount()
     Maid = self.Maid
 
 	local characters = characterFolder:GetChildren()
-	local charValue = DevAvatarFolder:FindFirstChild(game.LocalPlayer.Name) or Instance.new("StringValue")
+	local charValue = DevAvatarFolder:FindFirstChild(self.LocalPlayer.Name) or Instance.new("StringValue")
 	charValue.Parent = DevAvatarFolder
 	
 	--Just sets the settings when a new player joins the team create and inits the plugin
-	charValue.Name = game.Players.LocalPlayer.Name
+	charValue.Name = self.LocalPlayer.Name
 	charValue.Value = Plugin:GetSetting("UserAvatar")
 	
 	local info = TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.In, -1, false, 0)

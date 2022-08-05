@@ -1,7 +1,13 @@
+local RunService = game:GetService("RunService")
+local StudioService = game:GetService("StudioService")
+
+local Config = require(script.Parent.Config)
+
 --[=[
     |> Plugin Core
 
-    This is the framework that handles the plugin's inner workings.
+    This is the plugin framework that handles the plugin's inner workings. Haven't thought of a cool name for
+    it yet.
 ]=]
 
 type Base = {}
@@ -9,6 +15,37 @@ type Base = {}
 local Systems = {}
 local Libraries = {}
 local Core = {}
+
+--> Check for Updates
+if Config.AssetID then
+    task.spawn(function()
+        local S, E = pcall(function()
+            local Copy = game:GetObjects(("rbxassetid://%i"):format(Config.AssetID))[1]
+            local CopyConfig = require(Copy:FindFirstChild("Config"))
+    
+            if CopyConfig then
+                if CopyConfig.Version ~= Config.Version then
+                    warn(("[%s] Version %s is Released! Please update in your plugin manager."):format(Config.Name, CopyConfig.Version))
+                    --> Do something here?...
+                end
+            end
+    
+            CopyConfig = nil
+            Copy.Parent = nil
+            Copy:Destroy()
+        end)
+    
+        if not S then
+            warn(("[%s] An internal error occurred when checking for updates."):format(Config.Name))
+            warn(E) --! TEST ONLY
+        end
+    end)
+end
+
+if RunService:IsRunning() then
+    print(("[%s] Disabled during Playtesting."):format(Config.Name))
+    return
+end
 
 --> Core API to be Injected into Systems and Libraries
 function Core:GetSystem(Name: string)
@@ -38,10 +75,23 @@ for _, System: ModuleScript in ipairs(script.Parent.Systems:GetChildren()) do
 end
 
 --> Almost there, lets manually inject other globals.
-local Maid = require(script.Parent.Library.Maid)
-Core.Maid = Maid.new()
+do
+    --? Maid Instance
+    local Maid = require(script.Parent.Library.Maid)
+    Core.Maid = Maid.new()
 
-Core.Plugin = plugin
+    --? Plugin
+    Core.Plugin = plugin
+
+    --? Local Player
+    local LocalUserID = StudioService:GetUserId()
+    local Player = game.Players:GetPlayerByUserId(LocalUserID) or game.Players.LocalPlayer
+    assert(Player ~= nil, ("[%s] Local Developer not found."):format(Config.Name))
+    Core.LocalPlayer = Player
+
+    --? Config
+    Core.Config = Config
+end
 
 --> Before we finish, we need to call any (optional) preload methods that may be present.
 for _, System: any in pairs(Systems) do
