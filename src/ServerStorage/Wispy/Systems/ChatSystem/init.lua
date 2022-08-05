@@ -149,7 +149,6 @@ local function updateChat(chat_widget)
 		
 		--> Then, use the Y axis of bounds to calculate the new size for the message template.
 		messageTemplate.Size = UDim2.new(messageTemplate.Size.X.Scale, messageTemplate.Size.X.Offset, 0, math.clamp(bounds.Y + 40, 60, math.huge))
-
 		messageTemplate.Message.Text = message.Value
 		messageTemplate.Author.Text = player.Name
 		messageTemplate.Author.TextColor3 = Constants.ColorShortcuts[DevAvatarFolder:FindFirstChild(player.Name).Value]
@@ -218,8 +217,8 @@ function ChatSystem:Mount()
 		template.Parent = ChatWidget.ChatUI.PlayerList
 	end))
 	
-	Maid:Add(DevAvatarFolder.ChildRemoved:Connect(function(oldValue)
-		ChatWidget.ChatUI.PlayerList:FindFirstChild("plr_"..oldValue.Name):Destroy()
+	Maid:Add(DevAvatarFolder.ChildRemoved:Connect(function()
+		updateChat(ChatWidget)
 	end))
 	
 	Maid:Add(MessagesFolder.ChildAdded:Connect(function()
