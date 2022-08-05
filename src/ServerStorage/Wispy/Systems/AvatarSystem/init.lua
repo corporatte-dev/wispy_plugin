@@ -18,25 +18,28 @@ function updateAvatar(avatar, goal)
 		["Left Arm"] = {Position = CFrame.new(Vector3.new(1, -0.5, 1)), Orientation = CFrame.Angles(math.rad(-22.13), 0, 0)},
 		["Right Arm"] = {Position = CFrame.new(Vector3.new(-1, -0.5, 1)), Orientation = CFrame.Angles(math.rad(-22.13), 0, 0)},
 	}
-	
-	--Bobble CFrame (HumanoidRootPart)
-	--local bobbleX = math.cos(currentTime * 10) * 0.25
-	--local bobbleY = math.abs(math.sin(currentTime * 10)) * 0.25
-	--local bobbleVector = Vector3.new(bobbleX, bobbleY, 0)
-	
-	--BodyParts
-	avatar.PrimaryPart.CFrame = avatar.PrimaryPart.CFrame:Lerp(goal.CFrame, 0.75)
-	avatar["Left Arm"].CFrame = avatar["Left Arm"].CFrame:Lerp(avatar.PrimaryPart.CFrame + offsets["Left Arm"].Position + offsets["Left Arm"].Orientation, 0.5)
-	avatar["Right Arm"].CFrame = avatar["Right Arm"].CFrame:Lerp(avatar.PrimaryPart.CFrame + offsets["Right Arm"].Position + offsets["Right Arm"].Orientation, 0.5)
+
+	avatar.Torso.CFrame = avatar.Torso.CFrame:Lerp(CFrame.new(goal.Position, Vector3.new(goal.LookVector, 0, 0)))
+
+    avatar.Head.CFrame = goal
+	avatar["Left Arm"].CFrame = avatar["Left Arm"].CFrame:Lerp(goal + offsets["Left Arm"].Position, 0.75)
+	avatar["Right Arm"].CFrame = avatar["Right Arm"].CFrame:Lerp(goal + offsets["Right Arm"].Position, 0.75)
 end
 
 function AvatarSystem:createAvatar(playerName)
 	local avatarData = DevAvatarFolder[playerName].Value
 	local avatar = characterFolder:FindFirstChild(avatarData):Clone()
 	
+	
+end
+
+function AvatarSystem.visualizeAvatar(playerName)
+	local avatarData = DevAvatarFolder[playerName].Value
+	local avatar = characterFolder:FindFirstChild(avatarData):Clone()
+	
 	avatar.Parent = CamAvatarFolder
 
-	local updateCoro = coroutine.wrap(updateAvatar(avatar, workspace.CurrentCamera))
+	local updateCoro = coroutine.wrap(updateAvatar(avatar, workspace.CurrentCamera.CFrame))
 	
 	updateCoro()
 end
