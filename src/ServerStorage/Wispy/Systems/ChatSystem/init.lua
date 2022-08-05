@@ -81,11 +81,12 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	local str = Instance.new("StringValue")
 	local auth = Instance.new("StringValue")
 	auth.Parent = str
-	auth.Name = author.Name
 	
 	local newIndex = tostring(#MessagesFolder:GetChildren() + 1)
 	str.Name = "message_"..newIndex
+	auth.Name = "author"
 	str.Value = filtered
+	auth.Value = author.Name
 	
 	local messageTemplate = script.Parent.Parent.Assets.UITemplates.RecentMessageTemplate:Clone()
 	local messageContainer = chat_widget.ChatUI.MessageContainer
@@ -140,7 +141,7 @@ function ChatSystem:UpdateChat()
 	for _, message in pairs(MessagesFolder:GetChildren()) do
 		local TS = game:GetService("TextService")
 		local messageTemplate = script.Parent.Parent.Assets.UITemplates.MessageTemplate:Clone()
-		local player = message:GetChildren()[1]
+		local player = message.author.Value
 		local messageContainer: Frame = ChatWidget.ChatUI.MessageContainer
 
 		local Message: Frame = messageTemplate.Message
@@ -152,9 +153,9 @@ function ChatSystem:UpdateChat()
 		--> Then, use the Y axis of bounds to calculate the new size for the message template.
 		messageTemplate.Size = UDim2.new(messageTemplate.Size.X.Scale, messageTemplate.Size.X.Offset, 0, math.clamp(bounds.Y + 40, 60, math.huge))
 		messageTemplate.Message.Text = message.Value
-		messageTemplate.Author.Text = player.Name
-		messageTemplate.Author.TextColor3 = Constants.ColorShortcuts[DevAvatarFolder:FindFirstChild(player.Name).Value]
-		LoadAvatar(player.Name, ChatWidget, messageTemplate.Viewport)
+		messageTemplate.Author.Text = player
+		messageTemplate.Author.TextColor3 = Constants.ColorShortcuts[DevAvatarFolder:FindFirstChild(player).Value]
+		LoadAvatar(player, ChatWidget, messageTemplate.Viewport)
 		messageContainer.CanvasSize = UDim2.new(0, 0, 0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
 		messageContainer.CanvasPosition = Vector2.new(0, 9999)
 	end
