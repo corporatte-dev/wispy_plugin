@@ -214,16 +214,6 @@ function ChatSystem:Mount()
 		ChatWidget.ChatUI.ChatBox.ChatBox2.Input:CaptureFocus()
 	end))
 	
-	Maid:Add(DevAvatarFolder.ChildAdded:Connect(function(newValue)
-		local template = script.Parent.Parent.Assets.UITemplates.PlayerTemplate:Clone()
-		LoadAvatar(newValue.Name, template)
-		template.Parent = ChatWidget.ChatUI.PlayerList
-	end))
-	
-	Maid:Add(DevAvatarFolder.ChildRemoved:Connect(function()
-		self:UpdatePlrList()
-	end))
-	
 	Maid:Add(MessagesFolder.ChildAdded:Connect(function()
 		self:UpdateChat()
 	end))
