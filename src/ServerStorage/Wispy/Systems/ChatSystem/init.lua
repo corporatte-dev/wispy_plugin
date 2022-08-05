@@ -92,7 +92,7 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	local textObject = RichText:New(messageTemplate.TextBox, filtered)
 
 	messageContainer.CanvasSize = UDim2.new(0, 0, 0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
-	messageContainer.CanvasPosition = Vector2.new(0, 9999)
+	messageContainer.CanvasPosition = Vector2.new(0, math.huge)
 	textObject:Animate(true)
 	task.wait(#filtered / 100)
 	
