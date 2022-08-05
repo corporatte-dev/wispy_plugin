@@ -26,10 +26,10 @@ function updateAvatar(avatar, goal)
 	avatar["Right Arm"].CFrame = avatar["Right Arm"].CFrame:Lerp(goal + offsets["Right Arm"].Position, 0.75)
 end
 
---function AvatarSystem:createAvatar(playerName)
---	local avatarData = DevAvatarFolder[playerName].Value
---	local avatar = characterFolder:FindFirstChild(avatarData):Clone()
---end
+function AvatarSystem:createAvatar(playerName)
+	local avatarData = DevAvatarFolder[playerName].Value
+	local avatar = characterFolder:FindFirstChild(avatarData):Clone()
+end
 
 function AvatarSystem.visualizeAvatar(playerName)
 	local avatarData = DevAvatarFolder[playerName].Value
