@@ -46,7 +46,7 @@ local ChatWidget: DockWidgetPluginGui
 local msg_bundle = {}
 
 --> Internal Methods
-local function LoadAvatar(player, chat_widget, template)
+local function LoadAvatar(player: string, chat_widget, template)
 	if chat_widget.ChatUI.PlayerList:FindFirstChild("plr_"..player) then
 		--coroutine.yield(renderAvatarLoop)
 		chat_widget.ChatUI.PlayerList:FindFirstChild("plr_"..player):Destroy()
@@ -93,6 +93,7 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	messageTemplate.Parent = messageContainer
 	messageTemplate.Author.Text = author.Name
 	messageTemplate.Author.TextColor3 = Constants.ColorShortcuts[DevAvatarFolder:FindFirstChild(author.Name).Value]
+	LoadAvatar(author.Name, ChatWidget, messageTemplate.Viewport)
 	local textObject = RichText:New(messageTemplate.TextBox, filtered)
 
 	messageContainer.CanvasSize = UDim2.new(0, 0, 0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
