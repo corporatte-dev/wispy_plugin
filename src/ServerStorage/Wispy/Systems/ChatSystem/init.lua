@@ -231,7 +231,7 @@ end
 
 --> Optional method to clean up when Plugin.Unloading() is called.
 function ChatSystem:OnClose()
-	local avatar = DevAvatarFolder[self.LocalPlayer]
+	local avatar = DevAvatarFolder[self.LocalPlayer.Name]
 	avatar:Destroy()
 	
 	for i, msg in pairs(MessagesFolder:GetChildren()) do
