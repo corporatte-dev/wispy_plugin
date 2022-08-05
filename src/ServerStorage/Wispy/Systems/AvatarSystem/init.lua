@@ -91,6 +91,12 @@ function AvatarSystem:Mount()
 		end))
 	end
 	
+	for i, value in pairs(DevAvatarFolder:GetChildren()) do
+		Maid:Add(value.Changed:Connect(function()
+			ChatSystem:UpdatePlrList()
+		end))
+	end
+
 	Maid:Add(DevAvatarFolder.ChildAdded:Connect(function(child)
 		--self:visualizeAvatar(child.Name)
 		ChatSystem:UpdatePlrList()
