@@ -26,15 +26,15 @@ function updateAvatar(avatar, goal)
 	avatar["Right Arm"].CFrame = avatar["Right Arm"].CFrame:Lerp(goal + offsets["Right Arm"].Position, 0.75)
 end
 
-function AvatarSystem:createAvatar(playerName)
-	local avatarData = DevAvatarFolder[playerName].Value
-	local avatar = characterFolder:FindFirstChild(avatarData):Clone()
-end
+--function AvatarSystem:createAvatar(playerName)
+--	local avatarData = DevAvatarFolder[playerName].Value
+--	local avatar = characterFolder:FindFirstChild(avatarData):Clone()
+--end
 
 function AvatarSystem.visualizeAvatar(playerName)
 	local avatarData = DevAvatarFolder[playerName].Value
-	local avatar = characterFolder:FindFirstChild(avatarData):Clone()
-	
+	local avatar = characterFolder:FindFirstChild(avatarData):Clone() or CamAvatarFolder:FindFirstChild("avatar_"..playerName)
+	avatar.Name = "avatar_"..playerName
 	avatar.Parent = CamAvatarFolder
 
 	local updateCoro = coroutine.wrap(updateAvatar(avatar, workspace.CurrentCamera.CFrame))
@@ -60,7 +60,7 @@ function AvatarSystem:Mount()
 	local charValue = DevAvatarFolder:FindFirstChild(self.LocalPlayer.Name) or Instance.new("StringValue")
 	charValue.Parent = DevAvatarFolder
 	
-	--Just sets the settings when a new player joins the team create and inits the plugin
+	--> Just sets the settings when a new player joins the team create and inits the plugin
 	charValue.Name = self.LocalPlayer.Name
 	charValue.Value = Plugin:GetSetting("UserAvatar")
 	
@@ -69,11 +69,10 @@ function AvatarSystem:Mount()
 	tween:Play()
 
 	for i, char in pairs(characters) do
-		--clones the template and adds it to the list
+		--> clones the template and adds it to the list
 		local displayChar = char:Clone()
 		local button = avatar_template:Clone()
 		button.Name = char.Name
-		button.ZIndex = 2
 
 		local cam = Instance.new("Camera")
 		cam.Parent = button.CharacterViewer
@@ -85,15 +84,16 @@ function AvatarSystem:Mount()
 		button.Parent = AvatarWidget.AvatarUI.CharacterSelector
 
 		Maid:Add(button.MouseButton1Click:Connect(function()
-			--Change the character value
+			--> Change the character value
 			Plugin:SetSetting("UserAvatar", displayChar.Name)
-			DevAvatarFolder:FindFirstChild(game.Players.LocalPlayer.Name).Value = displayChar.Name
+			DevAvatarFolder:FindFirstChild(self.LocalPlayer.Name).Value = displayChar.Name
 			AvatarWidget.AvatarUI.Title.Text = "Current Avatar: "..displayChar.Name
 		end))
 	end
 	
 	Maid:Add(DevAvatarFolder.ChildAdded:Connect(function(child)
-		self:createAvatar(child.Name)
+		--self:visualizeAvatar(child.Name)
+		ChatSystem:UpdatePlrList()
 	end))
 end
 
