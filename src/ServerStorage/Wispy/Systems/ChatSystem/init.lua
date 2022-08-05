@@ -233,7 +233,9 @@ function ChatSystem:Mount()
 	end))
 	
 	for _, value in pairs(DevAvatarFolder:GetChildren()) do
-		value.Changed:Connect(self:UpdatePlrList())
+		value.Changed:Connect(function()
+			self:UpdatePlrList()
+		end)
 	end
 end
 
