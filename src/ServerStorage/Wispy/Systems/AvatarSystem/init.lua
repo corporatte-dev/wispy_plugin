@@ -93,6 +93,7 @@ function AvatarSystem:Mount()
 	
 	for i, value in pairs(DevAvatarFolder:GetChildren()) do
 		Maid:Add(value.Changed:Connect(function()
+			ChatSystem:UpdateChat()
 			ChatSystem:UpdatePlrList()
 		end))
 	end
