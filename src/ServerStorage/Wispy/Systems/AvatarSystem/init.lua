@@ -38,11 +38,12 @@ end
 function AvatarSystem.VisualizeAvatar(playerName)
 	local avatarData = DevAvatarFolder[playerName].Value
 	local new_client = clientScript:Clone()
-	local avatar
 
 	if CamAvatarFolder:FindFirstChild("avatar_"..playerName) then
+
+		RunService:UnbindFromRenderStep("AvatarRuntime")
+
 		local old_avatar = CamAvatarFolder:FindFirstChild("avatar_"..playerName)
-		avatar = nil
 		old_avatar:Destroy()
 	end
 
@@ -52,10 +53,9 @@ function AvatarSystem.VisualizeAvatar(playerName)
 	new_avatar.Name = "avatar_"..playerName
 	new_avatar.Parent = CamAvatarFolder
 	new_avatar.PrimaryPart.CFrame = workspace.CurrentCamera.CFrame
-	avatar = new_avatar
 
 	RunService:BindToRenderStep("AvatarRuntime", Enum.RenderPriority.Camera, function()
-		updateAvatar(avatar, workspace.CurrentCamera.CFrame)
+		updateAvatar(new_avatar, workspace.CurrentCamera.CFrame)
 	end)
 end
 
