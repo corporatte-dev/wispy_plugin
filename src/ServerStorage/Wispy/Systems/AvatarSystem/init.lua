@@ -12,18 +12,20 @@ local DevAvatarFolder: Folder
 local CamAvatarFolder: Folder
 
 function updateAvatar(avatar, goal)
-	--local currentTime = tick()
-	local offsets = {
-		HMR = Vector3.new(0, -1, 0),
-		["Left Arm"] = {Position = CFrame.new(Vector3.new(1, -0.5, 1)), Orientation = CFrame.Angles(math.rad(-22.13), 0, 0)},
-		["Right Arm"] = {Position = CFrame.new(Vector3.new(-1, -0.5, 1)), Orientation = CFrame.Angles(math.rad(-22.13), 0, 0)},
-	}
+	while avatar do 
+		--local currentTime = tick()
+		local offsets = {
+			["Torso"] = {Position = CFrame.new(Vector3.new(0, 0.25, 0)), Rotation = CFrame.Angles(math.rad(-11.067), -math.pi, -0)},
+			["Left Arm"] = {Position = CFrame.new(Vector3.new(1, -0.5, 1))},
+			["Right Arm"] = {Position = CFrame.new(Vector3.new(-1, -0.5, 1))}
+		}
 
-	avatar.Torso.CFrame = avatar.Torso.CFrame:Lerp(CFrame.new(goal.Position, Vector3.new(goal.LookVector, 0, 0)))
-
-    avatar.Head.CFrame = goal
-	avatar["Left Arm"].CFrame = avatar["Left Arm"].CFrame:Lerp(goal + offsets["Left Arm"].Position, 0.75)
-	avatar["Right Arm"].CFrame = avatar["Right Arm"].CFrame:Lerp(goal + offsets["Right Arm"].Position, 0.75)
+		avatar.Torso.CFrame = avatar.Torso.CFrame:Lerp(CFrame.new(goal.Position + offsets.Torso.Position, Vector3.new(goal.LookVector.X + offsets.Torso.Rotation.X, 0, 0)), 0.75)
+		avatar.Head.CFrame = CFrame.new(avatar.Head.CFrame, goal.LookVector.Y)
+		avatar["Left Arm"].CFrame = avatar["Left Arm"].CFrame:Lerp(goal + offsets["Left Arm"].Position, 0.75)
+		avatar["Right Arm"].CFrame = avatar["Right Arm"].CFrame:Lerp(goal + offsets["Right Arm"].Position, 0.75)
+		task.wait()
+	end
 end
 
 function AvatarSystem:createAvatar(playerName)
@@ -33,13 +35,23 @@ end
 
 function AvatarSystem.visualizeAvatar(playerName)
 	local avatarData = DevAvatarFolder[playerName].Value
-	local avatar = characterFolder:FindFirstChild(avatarData):Clone() or CamAvatarFolder:FindFirstChild("avatar_"..playerName)
-	avatar.Name = "avatar_"..playerName
-	avatar.Parent = CamAvatarFolder
+	local avatar
 
-	local updateCoro = coroutine.wrap(updateAvatar(avatar, workspace.CurrentCamera.CFrame))
-	
-	updateCoro()
+	Maid:Add(game["Run Service"].UnbindFromRenderStep:Connect(updateAvatar(avatar, workspace.CurrentCamera.CFrame)))
+
+	if CamAvatarFolder:FindFirstChild("avatar_"..playerName) then
+		local old_avatar = CamAvatarFolder:FindFirstChild("avatar_"..playerName)
+		avatar = nil
+		old_avatar:Destroy()
+	end
+
+	local new_avatar = characterFolder:FindFirstChild(avatarData):Clone()
+	new_avatar.Name = "avatar_"..playerName
+	new_avatar.Parent = CamAvatarFolder
+	new_avatar.PrimaryPart.CFrame = workspace.CurrentCamera.CFrame
+	avatar = new_avatar
+
+	Maid:Add(game["Run Service"].BindToRenderStep:Connect(updateAvatar(avatar, workspace.CurrentCamera.CFrame)))
 end
 
 function AvatarSystem:Mount()

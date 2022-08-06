@@ -31,7 +31,7 @@ function FileSystem:Preload()
         WispyChat = CreateFolder("Wispy", game.Chat),
         Messages = CreateFolder("message_logs", game.Chat.Wispy),
         DevAvatars = CreateFolder("dev_avatars", game.Chat.Wispy),
-        CamAvatars = CreateFolder("cam_avatars", workspace.Camera)
+        CamAvatars = CreateFolder("cam_avatars", workspace.Terrain)
     }
 end
 
