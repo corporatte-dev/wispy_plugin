@@ -92,7 +92,7 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	local textObject = RichText:New(messageTemplate.TextBox, filtered)
 
 	messageContainer.CanvasSize = UDim2.new(0, 0, 0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
-	messageContainer.CanvasPosition = Vector2.new(0, math.huge)
+	messageContainer.CanvasPosition = Vector2.new(0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
 	textObject:Animate(true)
 	task.wait(#filtered / 100)
 	
@@ -156,7 +156,7 @@ function ChatSystem:UpdateChat()
 		messageTemplate.Author.TextColor3 = Constants.ColorShortcuts[DevAvatarFolder:FindFirstChild(player).Value]
 		LoadAvatar(player, messageTemplate.Viewport)
 		messageContainer.CanvasSize = UDim2.new(0, 0, 0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
-		messageContainer.CanvasPosition = Vector2.new(0, math.huge)
+		messageContainer.CanvasPosition = Vector2.new(0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
 	end
 end
 
