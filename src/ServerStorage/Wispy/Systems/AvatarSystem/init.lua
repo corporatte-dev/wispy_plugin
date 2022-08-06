@@ -22,8 +22,8 @@ function updateAvatar(avatar, goal)
 			["Right Arm"] = {Position = CFrame.new(Vector3.new(-1, -0.5, 1))}
 		}
 
-		avatar.Torso.CFrame = avatar.Torso.CFrame:Lerp(CFrame.new(goal.Position + offsets.Torso.Position), Vector3.new(goal.LookVector.X + offsets.Torso.Rotation.X, 0, 0), 0.75)
-		avatar.Head.CFrame = CFrame.new(avatar.Head.CFrame, goal.LookVector.Y)
+		avatar.PrimaryPart.CFrame = CFrame.new(avatar.PrimaryPart.Position, Vector3.new(goal.Position.X, avatar.PrimaryPart.Position.Y, goal.Position.Z))
+		avatar.Head.CFrame = CFrame.new(avatar.Head.CFrame, Vector3.new(avatar.Head.Position.X, goal.LookVector.Y, avatar.Head.Position.Z))
 		avatar["Left Arm"].CFrame = avatar["Left Arm"].CFrame:Lerp(goal + offsets["Left Arm"].Position, 0.75)
 		avatar["Right Arm"].CFrame = avatar["Right Arm"].CFrame:Lerp(goal + offsets["Right Arm"].Position, 0.75)
 		task.wait()
