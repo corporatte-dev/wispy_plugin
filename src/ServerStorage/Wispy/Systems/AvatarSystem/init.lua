@@ -54,7 +54,7 @@ function AvatarSystem.VisualizeAvatar(playerName)
 	new_avatar.Parent = CamAvatarFolder
 	new_avatar.PrimaryPart.CFrame = workspace.CurrentCamera.CFrame
 
-	RunService:BindToRenderStep("AvatarRuntime", Enum.RenderPriority.Camera, function()
+	RunService:BindToRenderStep("AvatarRuntime", Enum.RenderPriority.Camera.Value, function()
 		updateAvatar(new_avatar, workspace.CurrentCamera.CFrame)
 	end)
 end
