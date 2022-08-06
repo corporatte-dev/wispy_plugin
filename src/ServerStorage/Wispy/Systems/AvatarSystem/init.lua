@@ -4,6 +4,7 @@ local AvatarSystem = {} :: Types.AvatarSystem
 
 local avatar_template = script.Parent.Parent.Assets.UITemplates.CharacterTemplate
 local characterFolder = script.Parent.Parent.Assets.Characters
+local clientScript = script.clientAvatar
 
 local ChatSystem: Types.ChatSystem
 local PluginUI: Types.PluginUI
@@ -36,6 +37,7 @@ end
 
 function AvatarSystem.VisualizeAvatar(playerName)
 	local avatarData = DevAvatarFolder[playerName].Value
+	local new_client = clientScript:Clone()
 	local avatar
 
 	if CamAvatarFolder:FindFirstChild("avatar_"..playerName) then
@@ -45,6 +47,8 @@ function AvatarSystem.VisualizeAvatar(playerName)
 	end
 
 	local new_avatar = characterFolder:FindFirstChild(avatarData):Clone()
+	new_client.Parent = new_avatar
+	new_client.Disabled = false
 	new_avatar.Name = "avatar_"..playerName
 	new_avatar.Parent = CamAvatarFolder
 	new_avatar.PrimaryPart.CFrame = workspace.CurrentCamera.CFrame
@@ -113,7 +117,7 @@ function AvatarSystem:Mount()
 	end
 
 	Maid:Add(DevAvatarFolder.ChildAdded:Connect(function(child)
-		--self:visualizeAvatar(child.Name)
+		self.VisualizeAvatar(child.Name)
 		ChatSystem:UpdatePlrList()
 	end))
 end
