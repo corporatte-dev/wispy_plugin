@@ -1,3 +1,4 @@
+local RunService = game:GetService("RunService")
 local Types = require(script.Parent.Parent.Types)
 local AvatarSystem = {} :: Types.AvatarSystem
 
@@ -37,8 +38,6 @@ function AvatarSystem.visualizeAvatar(playerName)
 	local avatarData = DevAvatarFolder[playerName].Value
 	local avatar
 
-	Maid:Add(game["Run Service"].UnbindFromRenderStep:Connect(updateAvatar(avatar, workspace.CurrentCamera.CFrame)))
-
 	if CamAvatarFolder:FindFirstChild("avatar_"..playerName) then
 		local old_avatar = CamAvatarFolder:FindFirstChild("avatar_"..playerName)
 		avatar = nil
@@ -51,7 +50,9 @@ function AvatarSystem.visualizeAvatar(playerName)
 	new_avatar.PrimaryPart.CFrame = workspace.CurrentCamera.CFrame
 	avatar = new_avatar
 
-	Maid:Add(game["Run Service"].BindToRenderStep:Connect(updateAvatar(avatar, workspace.CurrentCamera.CFrame)))
+	RunService:BindToRenderStep("AvatarRuntime", Enum.RenderPriority.Camera, function()
+		updateAvatar(avatar, workspace.CurrentCamera.CFrame)
+	end)
 end
 
 function AvatarSystem:Mount()
@@ -117,7 +118,7 @@ function AvatarSystem:Mount()
 end
 
 function AvatarSystem:OnClose()
-    
+	RunService:UnbindFromRenderStep("AvatarRuntime")
 end
 
 return AvatarSystem
