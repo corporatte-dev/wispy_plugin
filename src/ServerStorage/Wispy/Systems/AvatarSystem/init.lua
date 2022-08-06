@@ -22,7 +22,7 @@ function updateAvatar(avatar, goal)
 			["Right Arm"] = {Position = Vector3.new(-1, -0.5, 1)}
 		}
 
-		avatar.PrimaryPart.CFrame = CFrame.new(avatar.PrimaryPart.Position, Vector3.new(goal.Position.X, avatar.PrimaryPart.Position.Y, goal.Position.Z))
+		avatar.PrimaryPart.CFrame = CFrame.new(avatar.PrimaryPart.Position, Vector3.new(goal.Position.X, avatar.PrimaryPart.Position.Y, avatar.PrimaryPart.Position.Z))
 		avatar.Head.CFrame = CFrame.new(avatar.Head.Position, Vector3.new(avatar.Head.Position.X, goal.LookVector.Y, avatar.Head.Position.Z))
 		avatar["Left Arm"].CFrame = avatar["Left Arm"].CFrame:Lerp(goal + offsets["Left Arm"].Position, 0.75)
 		avatar["Right Arm"].CFrame = avatar["Right Arm"].CFrame:Lerp(goal + offsets["Right Arm"].Position, 0.75)
