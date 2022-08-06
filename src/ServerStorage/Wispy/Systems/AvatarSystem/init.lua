@@ -23,7 +23,7 @@ function updateAvatar(avatar, goal)
 		}
 
 		avatar.PrimaryPart.CFrame = CFrame.new(avatar.PrimaryPart.Position, Vector3.new(goal.Position.X, avatar.PrimaryPart.Position.Y, goal.Position.Z))
-		avatar.Head.CFrame = CFrame.new(avatar.Head.CFrame, Vector3.new(avatar.Head.Position.X, goal.LookVector.Y, avatar.Head.Position.Z))
+		avatar.Head.CFrame = CFrame.new(avatar.Head.Position, Vector3.new(avatar.Head.Position.X, goal.LookVector.Y, avatar.Head.Position.Z))
 		avatar["Left Arm"].CFrame = avatar["Left Arm"].CFrame:Lerp(goal + offsets["Left Arm"].Position, 0.75)
 		avatar["Right Arm"].CFrame = avatar["Right Arm"].CFrame:Lerp(goal + offsets["Right Arm"].Position, 0.75)
 		task.wait()
@@ -49,10 +49,10 @@ function AvatarSystem.VisualizeAvatar(playerName)
 
 	local new_avatar = characterFolder:FindFirstChild(avatarData):Clone()
 	new_client.Parent = new_avatar
-	new_client.Disabled = false
 	new_avatar.Name = "avatar_"..playerName
 	new_avatar.Parent = CamAvatarFolder
 	new_avatar.PrimaryPart.CFrame = workspace.CurrentCamera.CFrame
+	new_client.Disabled = false
 
 	RunService:BindToRenderStep("AvatarRuntime", Enum.RenderPriority.Camera.Value, function()
 		updateAvatar(new_avatar, workspace.CurrentCamera.CFrame)
