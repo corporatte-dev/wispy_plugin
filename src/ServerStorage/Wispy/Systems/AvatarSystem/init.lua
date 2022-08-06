@@ -34,7 +34,7 @@ function AvatarSystem:createAvatar(playerName)
 	local avatar = characterFolder:FindFirstChild(avatarData):Clone()
 end
 
-function AvatarSystem.visualizeAvatar(playerName)
+function AvatarSystem.VisualizeAvatar(playerName)
 	local avatarData = DevAvatarFolder[playerName].Value
 	local avatar
 
@@ -106,6 +106,7 @@ function AvatarSystem:Mount()
 	
 	for i, value in pairs(DevAvatarFolder:GetChildren()) do
 		Maid:Add(value.Changed:Connect(function()
+			self.VisualizeAvatar(value.Name)
 			ChatSystem:UpdateChat()
 			ChatSystem:UpdatePlrList()
 		end))
@@ -115,6 +116,10 @@ function AvatarSystem:Mount()
 		--self:visualizeAvatar(child.Name)
 		ChatSystem:UpdatePlrList()
 	end))
+end
+
+function AvatarSystem:ClearAvatars()
+
 end
 
 function AvatarSystem:OnClose()
