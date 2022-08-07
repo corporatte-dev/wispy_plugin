@@ -13,7 +13,7 @@ local Plugin: Plugin
 local DevAvatarFolder: Folder
 local CamAvatarFolder: Folder
 
-function updateAvatar(avatar, goal)
+function updateAvatar(avatar: Model)
 	while avatar do 
 		--local currentTime = tick()
 		local offsets = {
@@ -22,9 +22,12 @@ function updateAvatar(avatar, goal)
 			["Right Arm"] = {Position = Vector3.new(-1, -0.5, 1)}
 		}
 
-		if avatar.PrimaryPart.CFrame == goal then
-			avatar.PrimaryPart.CFrame = goal
+		local CameraCFrame = game.Workspace.CurrentCamera.CFrame
+
+		if avatar.PrimaryPart.CFrame ~= CameraCFrame then
+			avatar:PivotTo(CameraCFrame)
 		end
+		
 		task.wait()
 	end
 end
@@ -54,7 +57,7 @@ function AvatarSystem.VisualizeAvatar(playerName)
 	new_client.Disabled = false
 
 	RunService:BindToRenderStep("AvatarRuntime", Enum.RenderPriority.Camera.Value, function()
-		updateAvatar(new_avatar, workspace.CurrentCamera.CFrame)
+		updateAvatar(new_avatar)
 	end)
 end
 

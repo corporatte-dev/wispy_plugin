@@ -87,6 +87,7 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	local messageContainer = chat_widget.ChatUI.MessageContainer
 	messageTemplate.Parent = messageContainer
 	messageTemplate.Author.Text = author.Name
+	
 	messageTemplate.Author.TextColor3 = Constants.ColorShortcuts[DevAvatarFolder:FindFirstChild(author.Name).Value]
 	LoadAvatar(author.Name, messageTemplate.Viewport)
 	local textObject = RichText:New(messageTemplate.TextBox, filtered)
@@ -148,7 +149,8 @@ function ChatSystem:UpdateChat()
 
 		--> Calculate the bounds of the text within it's container.
 		local bounds = TS:GetTextSize(message.Value, 20, Enum.Font.SourceSans, Vector2.new(Message.AbsoluteSize.X, math.huge))
-		
+		print (player)
+
 		--> Then, use the Y axis of bounds to calculate the new size for the message template.
 		messageTemplate.Size = UDim2.new(messageTemplate.Size.X.Scale, messageTemplate.Size.X.Offset, 0, math.clamp(bounds.Y + 40, 60, math.huge))
 		messageTemplate.Message.Text = message.Value
