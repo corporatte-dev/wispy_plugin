@@ -22,7 +22,9 @@ function updateAvatar(avatar, goal)
 			["Right Arm"] = {Position = Vector3.new(-1, -0.5, 1)}
 		}
 
-		avatar.PrimaryPart.CFrame = goal
+		if avatar.PrimaryPart.CFrame == goal then
+			avatar.PrimaryPart.CFrame = goal
+		end
 		task.wait()
 	end
 end
