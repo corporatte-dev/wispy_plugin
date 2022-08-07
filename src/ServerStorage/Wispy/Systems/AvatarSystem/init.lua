@@ -17,15 +17,15 @@ function updateAvatar(avatar: Model)
 	while avatar do 
 		--local currentTime = tick()
 		local offsets = {
-			["Torso"] = {Position = CFrame.new(Vector3.new(0, 0.25, 0)), Rotation = CFrame.Angles(math.rad(-11.067), -math.pi, -0)},
+			["Torso"] = {Position = Vector3.new(0, 0.25, 0), Rotation = CFrame.Angles(math.rad(-11.067), -math.pi, -0)},
 			["Left Arm"] = {Position = Vector3.new(1, -0.5, 1)},
 			["Right Arm"] = {Position = Vector3.new(-1, -0.5, 1)}
 		}
 
 		local CameraCFrame = game.Workspace.CurrentCamera.CFrame
 
-		if avatar.PrimaryPart.CFrame ~= CameraCFrame * offsets.Torso.Position then
-			avatar:PivotTo(CameraCFrame * offsets.Torso.Position)
+		if avatar.PrimaryPart.CFrame ~= CameraCFrame + offsets.Torso.Position then
+			avatar:PivotTo(CameraCFrame + offsets.Torso.Position)
 		end
 		
 		task.wait()
