@@ -24,8 +24,8 @@ function updateAvatar(avatar: Model)
 
 		local CameraCFrame = game.Workspace.CurrentCamera.CFrame
 
-		if avatar.PrimaryPart.CFrame ~= CameraCFrame then
-			avatar:PivotTo(CameraCFrame)
+		if avatar.PrimaryPart.CFrame ~= CameraCFrame + offsets.Torso.Position then
+			avatar:PivotTo(CameraCFrame + offsets.Torso.Position)
 		end
 		
 		task.wait()
