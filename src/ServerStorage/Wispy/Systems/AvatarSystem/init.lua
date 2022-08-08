@@ -125,8 +125,6 @@ function AvatarSystem:Mount()
 			end
 
 			self:SetAvatarModel(new_avatar)
-
-			script.HideModel:FireClient(self.LocalPlayer, new_avatar)
 		end))
 	end
 	
