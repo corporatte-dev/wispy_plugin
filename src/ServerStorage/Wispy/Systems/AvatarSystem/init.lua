@@ -13,23 +13,25 @@ local Plugin: Plugin
 local DevAvatarFolder: Folder
 local CamAvatarFolder: Folder
 
-function updateAvatar(avatar: Model)
-	while avatar do 
-		--local currentTime = tick()
-		local offsets = {
-			["Torso"] = {Position = Vector3.new(0, 0.25, 0), Rotation = CFrame.Angles(math.rad(-11.067), -math.pi, -0)},
-			["Left Arm"] = {Position = Vector3.new(1, -0.5, 1)},
-			["Right Arm"] = {Position = Vector3.new(-1, -0.5, 1)}
-		}
+local Avatar: Model
 
-		local CameraCFrame = game.Workspace.CurrentCamera.CFrame
+function updateAvatar()
+	if not Avatar then return end
 
-		if avatar.PrimaryPart.CFrame ~= CameraCFrame + offsets.Torso.Position then
-			avatar:PivotTo(CameraCFrame + offsets.Torso.Position)
-		end
-		
-		task.wait()
+	--local currentTime = tick()
+	local offsets = {
+		["Torso"] = {Position = Vector3.new(0, 0.25, 0), Rotation = CFrame.Angles(math.rad(-11.067), -math.pi, -0)},
+		["Left Arm"] = {Position = Vector3.new(1, -0.5, 1)},
+		["Right Arm"] = {Position = Vector3.new(-1, -0.5, 1)}
+	}
+
+	local CameraCFrame = game.Workspace.CurrentCamera.CFrame
+
+	if Avatar.PrimaryPart.CFrame ~= CameraCFrame + offsets.Torso.Position then
+		Avatar:PivotTo(CameraCFrame + offsets.Torso.Position)
 	end
+	
+	task.wait()
 end
 
 function AvatarSystem:createAvatar(playerName)
@@ -37,7 +39,7 @@ function AvatarSystem:createAvatar(playerName)
 	local avatar = characterFolder:FindFirstChild(avatarData):Clone()
 end
 
-function AvatarSystem.VisualizeAvatar(playerName)
+function AvatarSystem:VisualizeAvatar(playerName)
 	local avatarData = DevAvatarFolder[playerName].Value
 	local new_client = clientScript:Clone()
 
@@ -49,15 +51,8 @@ function AvatarSystem.VisualizeAvatar(playerName)
 		old_avatar:Destroy()
 	end
 
-	local new_avatar = characterFolder:FindFirstChild(avatarData):Clone()
-	new_client.Parent = new_avatar
-	new_avatar.Name = "avatar_"..playerName
-	new_avatar.Parent = CamAvatarFolder
-	new_avatar.PrimaryPart.CFrame = workspace.CurrentCamera.CFrame
-	new_client.Disabled = false
-
 	RunService:BindToRenderStep("AvatarRuntime", Enum.RenderPriority.Camera.Value, function()
-		updateAvatar(new_avatar)
+		updateAvatar()
 	end)
 end
 
@@ -68,7 +63,18 @@ function AvatarSystem:Preload()
 	print(DevAvatarFolder)
 end
 
+function AvatarSystem:SetAvatarModel(AvatarModel: Model)
+	if Avatar then
+		Avatar.Parent = nil
+		Avatar:Destroy()
+	end
+
+	Avatar = AvatarModel
+end
+
 function AvatarSystem:Mount()
+	script.clientAvatar.Disabled = true
+
     ChatSystem = self:GetSystem("ChatSystem")
     PluginUI = self:GetSystem("PluginUI")
 
@@ -109,21 +115,37 @@ function AvatarSystem:Mount()
 			Plugin:SetSetting("UserAvatar", displayChar.Name)
 			DevAvatarFolder:FindFirstChild(self.LocalPlayer.Name).Value = displayChar.Name
 			AvatarWidget.AvatarUI.Title.Text = "Current Avatar: "..displayChar.Name
+
+			local new_avatar: Model = characterFolder:FindFirstChild(displayChar.Name):Clone()
+			new_avatar.Name = "avatar_"..self.LocalPlayer.Name
+			new_avatar.Parent = CamAvatarFolder
+			new_avatar.PrimaryPart.CFrame = workspace.CurrentCamera.CFrame
+
+			for _, Object: Part in ipairs(new_avatar:GetDescendants()) do
+				if Object:IsA("BasePart") then
+					Object.LocalTransparencyModifier = 1
+					print 'ok invis'
+				end
+			end
+
+			self:SetAvatarModel(new_avatar)
+
+			script.HideModel:FireClient(self.LocalPlayer, new_avatar)
 		end))
 	end
 	
 	for i, value in pairs(DevAvatarFolder:GetChildren()) do
 		Maid:Add(value.Changed:Connect(function()
-			self.VisualizeAvatar(value.Name)
 			ChatSystem:UpdateChat()
 			ChatSystem:UpdatePlrList()
 		end))
 	end
 
-	Maid:Add(DevAvatarFolder.ChildAdded:Connect(function(child)
-		self.VisualizeAvatar(child.Name)
+	Maid:Add(DevAvatarFolder.ChildAdded:Connect(function()
 		ChatSystem:UpdatePlrList()
 	end))
+
+	self:VisualizeAvatar(charValue.Name)
 end
 
 function AvatarSystem:ClearAvatars()
@@ -132,6 +154,7 @@ end
 
 function AvatarSystem:OnClose()
 	RunService:UnbindFromRenderStep("AvatarRuntime")
+	print 'yo'
 end
 
 return AvatarSystem
