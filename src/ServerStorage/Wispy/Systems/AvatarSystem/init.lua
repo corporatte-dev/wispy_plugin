@@ -4,7 +4,6 @@ local AvatarSystem = {} :: Types.AvatarSystem
 
 local avatar_template = script.Parent.Parent.Assets.UITemplates.CharacterTemplate
 local characterFolder = script.Parent.Parent.Assets.Characters
-local clientScript = script.clientAvatar
 
 local ChatSystem: Types.ChatSystem
 local PluginUI: Types.PluginUI
@@ -41,7 +40,6 @@ end
 
 function AvatarSystem:VisualizeAvatar(playerName)
 	local avatarData = DevAvatarFolder[playerName].Value
-	local new_client = clientScript:Clone()
 
 	if CamAvatarFolder:FindFirstChild("avatar_"..playerName) then
 
@@ -73,8 +71,6 @@ function AvatarSystem:SetAvatarModel(AvatarModel: Model)
 end
 
 function AvatarSystem:Mount()
-	script.clientAvatar.Disabled = true
-
     ChatSystem = self:GetSystem("ChatSystem")
     PluginUI = self:GetSystem("PluginUI")
 
