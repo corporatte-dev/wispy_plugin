@@ -149,7 +149,6 @@ function ChatSystem:UpdateChat()
 
 		--> Calculate the bounds of the text within it's container.
 		local bounds = TS:GetTextSize(message.Value, 20, Enum.Font.SourceSans, Vector2.new(Message.AbsoluteSize.X, math.huge))
-		print (player)
 
 		--> Then, use the Y axis of bounds to calculate the new size for the message template.
 		messageTemplate.Size = UDim2.new(messageTemplate.Size.X.Scale, messageTemplate.Size.X.Offset, 0, math.clamp(bounds.Y + 40, 60, math.huge))
@@ -166,15 +165,14 @@ end
 function ChatSystem:Mount()
 	
 	--> Load Dependancies
-	local FileSystem = self:GetSystem("FileSystem")
 	PluginUI = self:GetSystem("PluginUI")
 	AvatarSystem = self:GetSystem("AvatarSystem")
 	RichText = self:GetLib("RichText")
     Plugin = self.Plugin
     Maid = self.Maid
 
-	MessagesFolder = FileSystem:Get("Messages")
-	DevAvatarFolder = FileSystem:Get("DevAvatars")
+	MessagesFolder = self:GetFolder("message_logs")
+	DevAvatarFolder = self:GetFolder("dev_avatars")
 
 	ChatWidget = PluginUI:GetWidget("Chat")
 

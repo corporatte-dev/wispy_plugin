@@ -10,6 +10,7 @@ export type Config = {
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --| Systems |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 export type System = {
     Preload: (self: System) -> nil,
     Mount: (self: System) -> nil,
@@ -17,6 +18,7 @@ export type System = {
 
     GetSystem: <SystemName>(self: System, SystemName: string) -> any,
     GetLib: <LibraryName>(self: System, LibraryName: string) -> any,
+    GetFolder: <FolderName>(self: System, FolderName: Locations) -> any,
 
     Plugin: Plugin,
     Maid: MaidObject,
@@ -33,10 +35,6 @@ export type ChatSystem = {
     ClearLogs: (self: ChatSystem) -> nil,
     UpdateChat: (self: ChatSystem) -> nil,
     UpdatePlrList: (self: ChatSystem) -> nil
-} & System
-
-export type FileSystem = {
-    Get: <Name>(self: PluginUI, Name: string) -> Folder,
 } & System
 
 export type PluginUI = {

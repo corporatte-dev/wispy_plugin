@@ -14,6 +14,7 @@ type Base = {}
 
 local Systems = {}
 local Libraries = {}
+local Locations = {}
 local Core = {}
 
 --> Check for Updates
@@ -56,12 +57,32 @@ function Core:GetLib(Name: string)
     return Libraries[Name]    
 end
 
+function Core:GetFolder(Name: string)
+    return Locations[Name]
+end
+
 --> Internal Methods
 function RegisterModule(Table: any, Module: ModuleScript)
     if not Module:IsA("ModuleScript") then return end
     local Object = require(Module)
     setmetatable(Object, {__index = Core})
     Table[Module.Name] = Object
+end
+
+function CreateFolder(Name: string, Location: any)
+    if Location:FindFirstChild(Name) then
+        return Location:FindFirstChild(Name)
+    else
+        local Folder = Instance.new("Folder")
+        Folder.Name = Name
+        Folder.Parent = Location
+        return Folder
+    end
+end
+
+--> Lets start by registering each location
+for Name, Location in pairs(Config.Locations) do
+    Locations[Name] = CreateFolder(Name, Location)
 end
 
 --> First, we load the libraries as the systems may need to use them.

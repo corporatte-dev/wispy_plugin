@@ -61,14 +61,16 @@ function AvatarSystem.VisualizeAvatar(playerName)
 	end)
 end
 
+function AvatarSystem:Preload()
+	DevAvatarFolder = self:GetFolder("dev_avatars")
+    CamAvatarFolder = self:GetFolder("cam_avatars")
+
+	print(DevAvatarFolder)
+end
+
 function AvatarSystem:Mount()
     ChatSystem = self:GetSystem("ChatSystem")
     PluginUI = self:GetSystem("PluginUI")
-
-    local FileSystem = self:GetSystem("FileSystem")
-
-	DevAvatarFolder = FileSystem:Get("DevAvatars")
-    CamAvatarFolder = FileSystem:Get("CamAvatars")
 
     local AvatarWidget = PluginUI:GetWidget("Avatar")
     
