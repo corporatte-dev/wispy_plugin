@@ -48,11 +48,11 @@ function VisualizeAvatar(playerName)
         end
 
 		if Avatar["Left Arm"].CFrame ~= CameraCFrame + offsets["Left Arm"].Position then
-			Avatar["Left Arm"].CFrame = Avatar["Left Arm"].CFrame:Lerp(CameraCFrame + offsets["Left Arm"].Position, 0.9)
+			Avatar["Left Arm"].CFrame = Avatar["Left Arm"].CFrame:Lerp(CameraCFrame + offsets["Left Arm"].Position, 0.25)
 		end
 
 		if Avatar["Right Arm"].CFrame ~= CameraCFrame + offsets["Right Arm"].Position then
-			Avatar["Right Arm"].CFrame = Avatar["Right Arm"].CFrame:Lerp(CameraCFrame + offsets["Right Arm"].Position, 0.9)
+			Avatar["Right Arm"].CFrame = Avatar["Right Arm"].CFrame:Lerp(CameraCFrame + offsets["Right Arm"].Position, 0.25)
 		end
 	end)
 end
