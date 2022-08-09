@@ -23,7 +23,7 @@ local Player = game.Players:GetPlayerByUserId(LocalUserID) or game.Players.Local
 
 --! Flags to prevent system from running when it isn't supposed to.
 if Player == nil then
-    warn("[Wispy] Please turn on Team Create to use this plugin.")
+    warn(("[%s] Please turn on Team Create to use this plugin."):format(Config.Name))
     return
 end
 

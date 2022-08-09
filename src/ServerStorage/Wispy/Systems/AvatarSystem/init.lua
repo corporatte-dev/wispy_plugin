@@ -41,12 +41,15 @@ function VisualizeAvatar(playerName)
             ["Right Arm"] = {Position = Vector3.new(-1, -0.5, 0.25)}
         }
 
-        local CameraCFrame = game.Workspace.CurrentCamera.CFrame
+																 -- For testing
+        local CameraCFrame = game.Workspace.CurrentCamera.CFrame --! + (game.Workspace.CurrentCamera.CFrame.LookVector * 10)
 
+		-- Due to the use of PivotTo, we would need to seperate the arms from this model. 
         if Avatar.PrimaryPart.CFrame ~= CameraCFrame + offsets.Torso.Position then
             Avatar:PivotTo(CameraCFrame + offsets.Torso.Position)
         end
 
+		-- This if statement will never return true as we are using PivotTo()
 		if Avatar["Left Arm"].CFrame ~= CameraCFrame + offsets["Left Arm"].Position then
 			Avatar["Left Arm"].CFrame = Avatar["Left Arm"].CFrame:Lerp(CameraCFrame + offsets["Left Arm"].Position, 0.9)
 		end
@@ -127,7 +130,8 @@ function AvatarSystem:Mount()
 
 			for _, Object: Part in ipairs(new_avatar:GetDescendants()) do
 				if Object:IsA("BasePart") then
-					Object.LocalTransparencyModifier = 1
+					--! Disabled for Testing
+					continue --Object.LocalTransparencyModifier = 1
 				end
 			end
 
