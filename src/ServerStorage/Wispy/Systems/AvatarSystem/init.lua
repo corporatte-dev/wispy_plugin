@@ -36,9 +36,9 @@ function VisualizeAvatar(playerName)
 
         --local currentTime = tick()
         local offsets = {
-            ["Torso"] = {Position = Vector3.new(0, -0.5, 0), Rotation = CFrame.Angles(math.rad(-11.067), -math.pi, -0)},
-            ["Left Arm"] = {Position = Vector3.new(1, -0.5, 1)},
-            ["Right Arm"] = {Position = Vector3.new(-1, -0.5, 1)}
+            ["Torso"] = {Position = Vector3.new(0, -0.25, 0)},
+            ["Left Arm"] = {Position = Vector3.new(1, -0.5, 0.25)},
+            ["Right Arm"] = {Position = Vector3.new(-1, -0.5, 0.25)}
         }
 
         local CameraCFrame = game.Workspace.CurrentCamera.CFrame
@@ -46,8 +46,14 @@ function VisualizeAvatar(playerName)
         if Avatar.PrimaryPart.CFrame ~= CameraCFrame + offsets.Torso.Position then
             Avatar:PivotTo(CameraCFrame + offsets.Torso.Position)
         end
-        
-        task.wait()
+
+		if Avatar["Left Arm"].CFrame ~= CameraCFrame + offsets["Left Arm"].Position then
+			Avatar["Left Arm"].CFrame = Avatar["Left Arm"].CFrame:Lerp(CameraCFrame + offsets["Left Arm"].Position, 0.9)
+		end
+
+		if Avatar["Right Arm"].CFrame ~= CameraCFrame + offsets["Right Arm"].Position then
+			Avatar["Right Arm"].CFrame = Avatar["Right Arm"].CFrame:Lerp(CameraCFrame + offsets["Right Arm"].Position, 0.9)
+		end
 	end)
 end
 
