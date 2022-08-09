@@ -124,7 +124,6 @@ function PluginUI:Mount()
     ChatSystem = self:GetSystem("ChatSystem")
 
     DeferRefresh = DeferLib.new(function()
-        print 'refreshed'
         ChatSystem:UpdateChat()
     end, 0.5)
 end

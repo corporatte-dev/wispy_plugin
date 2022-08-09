@@ -2,6 +2,7 @@ local RunService = game:GetService("RunService")
 local StudioService = game:GetService("StudioService")
 
 local Config = require(script.Parent.Config)
+local Tree = require(script.Tree)
 
 --[=[
     |> Plugin Core
@@ -16,6 +17,20 @@ local Systems = {}
 local Libraries = {}
 local Locations = {}
 local Core = {}
+
+local LocalUserID = StudioService:GetUserId()
+local Player = game.Players:GetPlayerByUserId(LocalUserID) or game.Players.LocalPlayer
+
+--! Flags to prevent system from running when it isn't supposed to.
+if Player == nil then
+    warn("[Wispy] Please turn on Team Create to use this plugin.")
+    return
+end
+
+if RunService:IsRunning() then
+    print(("[%s] Disabled during Playtesting."):format(Config.Name))
+    return
+end
 
 --> Check for Updates
 if Config.AssetID then
@@ -43,11 +58,6 @@ if Config.AssetID then
     end)
 end
 
-if RunService:IsRunning() then
-    print(("[%s] Disabled during Playtesting."):format(Config.Name))
-    return
-end
-
 --> Core API to be Injected into Systems and Libraries
 function Core:GetSystem(Name: string)
     return Systems[Name]
@@ -69,21 +79,8 @@ function RegisterModule(Table: any, Module: ModuleScript)
     Table[Module.Name] = Object
 end
 
-function CreateFolder(Name: string, Location: any)
-    if Location:FindFirstChild(Name) then
-        return Location:FindFirstChild(Name)
-    else
-        local Folder = Instance.new("Folder")
-        Folder.Name = Name
-        Folder.Parent = Location
-        return Folder
-    end
-end
-
---> Lets start by registering each location
-for Name, Location in pairs(Config.Locations) do
-    Locations[Name] = CreateFolder(Name, Location)
-end
+--> Generate project structure (if it doesn't already exist)
+Locations = Tree:CreateStucture(Config.Structure)
 
 --> First, we load the libraries as the systems may need to use them.
 for _, Library: ModuleScript in ipairs(script.Parent.Library:GetChildren()) do
@@ -101,16 +98,8 @@ do
     local Maid = require(script.Parent.Library.Maid)
     Core.Maid = Maid.new()
 
-    --? Plugin
     Core.Plugin = plugin
-
-    --? Local Player
-    local LocalUserID = StudioService:GetUserId()
-    local Player = game.Players:GetPlayerByUserId(LocalUserID) or game.Players.LocalPlayer
-    assert(Player ~= nil, ("[%s] Local Developer not found."):format(Config.Name))
     Core.LocalPlayer = Player
-
-    --? Config
     Core.Config = Config
 end
 
@@ -120,7 +109,7 @@ for _, System: any in pairs(Systems) do
         System:Preload()
     end
 end
-    
+
 --> Finally, we call each system's :Run() method.
 for _, System: any in pairs(Systems) do
     if System.NoMount then continue end

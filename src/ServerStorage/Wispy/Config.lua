@@ -1,3 +1,4 @@
+local Workspace = game:GetService("Workspace")
 local Types = require(script.Parent.Types)
 
 --[=[
@@ -9,13 +10,23 @@ local Config: Types.Config = {
     Version = "1.0.0",
     AssetID = 10487121830, -- When published, put new asset ID here.
 
-    --> Core will create these folders on launch.
-    Locations = {
-        Wispy = game.Chat,
-        message_logs = game.Chat.Wispy,
-        dev_avatars = game.Chat.Wispy,
-        cam_avatars = workspace.Terrain
+    --> Here are the locations that our application will use
+    --> Chat and Workspace already exist and they are not folders, so they are not registered.
+    --| For example, message logs will be created at (game).Chat.Wispy.message_logs
+    Structure = {
+        Chat = {
+            Wispy = {
+                message_logs = {},
+                dev_avatars = {}
+            }
+        },
+        
+        Workspace = {
+            Terrain = {
+                cam_avatars = {}
+            }
+        }
     }
-}   
+}
 
 return Config

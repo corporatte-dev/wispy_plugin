@@ -53,7 +53,7 @@ local function LoadAvatar(player: string, template)
 	local hrp = wisp:FindFirstChild("HumanoidRootPart")
 	local cam = Instance.new("Camera")
 	
-	AvatarSystem:createAvatar(player)
+	--AvatarSystem:createAvatar(player)
 
 	cam.Parent = template
 	template.bg.BackgroundColor3 = Constants.ColorShortcuts[DevAvatarFolder:FindFirstChild(player).Value]
@@ -141,7 +141,7 @@ function ChatSystem:UpdateChat()
 	for _, message in pairs(MessagesFolder:GetChildren()) do
 		local TS = game:GetService("TextService")
 		local messageTemplate = script.Parent.Parent.Assets.UITemplates.MessageTemplate:Clone()
-		local player = message.author.Value
+		local player = message:WaitForChild("author").Value
 		local messageContainer: Frame = ChatWidget.ChatUI.MessageContainer
 
 		local Message: Frame = messageTemplate.Message

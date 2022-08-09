@@ -1,66 +1,63 @@
-local RunService = game:GetService("RunService")
 local Types = require(script.Parent.Parent.Types)
 local AvatarSystem = {} :: Types.AvatarSystem
 
-local avatar_template = script.Parent.Parent.Assets.UITemplates.CharacterTemplate
-local characterFolder = script.Parent.Parent.Assets.Characters
+--[=[
+    |> Avatar System
 
+
+]=]
+
+local RunService = game:GetService("RunService")
+
+--> Locations
+local AvatarTemplate = script.Parent.Parent.Assets.UITemplates.CharacterTemplate
+local CharacterFolder = script.Parent.Parent.Assets.Characters
+
+--> Variables
 local ChatSystem: Types.ChatSystem
 local PluginUI: Types.PluginUI
 local Maid: Types.MaidObject
 local Plugin: Plugin
 local DevAvatarFolder: Folder
 local CamAvatarFolder: Folder
+local AvatarWidget: any
 
 local Avatar: Model
 
-function updateAvatar()
-	if not Avatar then return end
-
-	--local currentTime = tick()
-	local offsets = {
-		["Torso"] = {Position = Vector3.new(0, -0.5, 0), Rotation = CFrame.Angles(math.rad(-11.067), -math.pi, -0)},
-		["Left Arm"] = {Position = Vector3.new(1, -0.5, 1)},
-		["Right Arm"] = {Position = Vector3.new(-1, -0.5, 1)}
-	}
-
-	local CameraCFrame = game.Workspace.CurrentCamera.CFrame
-
-	if Avatar.PrimaryPart.CFrame ~= CameraCFrame + offsets.Torso.Position then
-		Avatar:PivotTo(CameraCFrame + offsets.Torso.Position)
-	end
-	
-	task.wait()
-end
-
-function AvatarSystem:createAvatar(playerName)
-	local avatarData = DevAvatarFolder[playerName].Value
-	local avatar = characterFolder:FindFirstChild(avatarData):Clone()
-end
-
-function AvatarSystem:VisualizeAvatar(playerName)
-	local avatarData = DevAvatarFolder[playerName].Value
-
+--> Internal Methods
+function VisualizeAvatar(playerName)
 	if CamAvatarFolder:FindFirstChild("avatar_"..playerName) then
-
-		RunService:UnbindFromRenderStep("AvatarRuntime")
-
 		local old_avatar = CamAvatarFolder:FindFirstChild("avatar_"..playerName)
 		old_avatar:Destroy()
 	end
 
 	RunService:BindToRenderStep("AvatarRuntime", Enum.RenderPriority.Camera.Value, function()
-		updateAvatar()
+		if not Avatar then return end
+
+        --local currentTime = tick()
+        local offsets = {
+            ["Torso"] = {Position = Vector3.new(0, -0.5, 0), Rotation = CFrame.Angles(math.rad(-11.067), -math.pi, -0)},
+            ["Left Arm"] = {Position = Vector3.new(1, -0.5, 1)},
+            ["Right Arm"] = {Position = Vector3.new(-1, -0.5, 1)}
+        }
+
+        local CameraCFrame = game.Workspace.CurrentCamera.CFrame
+
+        if Avatar.PrimaryPart.CFrame ~= CameraCFrame + offsets.Torso.Position then
+            Avatar:PivotTo(CameraCFrame + offsets.Torso.Position)
+        end
+        
+        task.wait()
 	end)
 end
 
+--> Called before :Mount()
 function AvatarSystem:Preload()
 	DevAvatarFolder = self:GetFolder("dev_avatars")
     CamAvatarFolder = self:GetFolder("cam_avatars")
-
-	print(DevAvatarFolder)
 end
 
+--> Set the current avatar model to display in game.
 function AvatarSystem:SetAvatarModel(AvatarModel: Model)
 	if Avatar then
 		Avatar.Parent = nil
@@ -71,31 +68,36 @@ function AvatarSystem:SetAvatarModel(AvatarModel: Model)
 end
 
 function AvatarSystem:Mount()
+    --> Register Systems 
     ChatSystem = self:GetSystem("ChatSystem")
     PluginUI = self:GetSystem("PluginUI")
 
-    local AvatarWidget = PluginUI:GetWidget("Avatar")
-    
+    --> Widgets
+    AvatarWidget = PluginUI:GetWidget("Avatar")
+
+    --> Unpack variables into script scope
     Plugin = self.Plugin
     Maid = self.Maid
 
-	local characters = characterFolder:GetChildren()
-	local charValue = DevAvatarFolder:FindFirstChild(self.LocalPlayer.Name) or Instance.new("StringValue")
-	charValue.Parent = DevAvatarFolder
-	
-	--> Just sets the settings when a new player joins the team create and inits the plugin
-	charValue.Name = self.LocalPlayer.Name
-	charValue.Value = Plugin:GetSetting("UserAvatar")
-	
-	local info = TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.In, -1, false, 0)
+    --> Animate Background
+    local info = TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.In, -1, false, 0)
 	local tween = game:GetService("TweenService"):Create(AvatarWidget.AvatarUI.Background, info, {Position = UDim2.new(0, -100, 0, 0)})
 	tween:Play()
 
-	for i, char in pairs(characters) do
-		--> clones the template and adds it to the list
-		local displayChar = char:Clone()
-		local button = avatar_template:Clone()
-		button.Name = char.Name
+    --> Create a new Character Value within DevAvatarFolder
+	local charValue = DevAvatarFolder:FindFirstChild(self.LocalPlayer.Name) or Instance.new("StringValue")
+	charValue.Parent = DevAvatarFolder
+	charValue.Name = self.LocalPlayer.Name
+	charValue.Value = Plugin:GetSetting("UserAvatar")
+
+    --> Loop through each character model.
+    for i, Character in pairs(CharacterFolder:GetChildren()) do
+        --! In the future, lets change this to support the avatar system.
+
+        --> clones the template and adds it to the list
+		local displayChar = Character:Clone()
+		local button = AvatarTemplate:Clone()
+		button.Name = Character.Name
 
 		local cam = Instance.new("Camera")
 		cam.Parent = button.CharacterViewer
@@ -112,7 +114,7 @@ function AvatarSystem:Mount()
 			DevAvatarFolder:FindFirstChild(self.LocalPlayer.Name).Value = displayChar.Name
 			AvatarWidget.AvatarUI.Title.Text = "Current Avatar: "..displayChar.Name
 
-			local new_avatar: Model = characterFolder:FindFirstChild(displayChar.Name):Clone()
+			local new_avatar: Model = CharacterFolder:FindFirstChild(displayChar.Name):Clone()
 			new_avatar.Name = "avatar_"..self.LocalPlayer.Name
 			new_avatar.Parent = CamAvatarFolder
 			new_avatar.PrimaryPart.CFrame = workspace.CurrentCamera.CFrame
@@ -120,35 +122,32 @@ function AvatarSystem:Mount()
 			for _, Object: Part in ipairs(new_avatar:GetDescendants()) do
 				if Object:IsA("BasePart") then
 					Object.LocalTransparencyModifier = 1
-					print 'ok invis'
 				end
 			end
 
 			self:SetAvatarModel(new_avatar)
 		end))
-	end
-	
-	for i, value in pairs(DevAvatarFolder:GetChildren()) do
+    end
+
+    --> Update chat and Player list when Dev Avatars Change
+    for _, value in pairs(DevAvatarFolder:GetChildren()) do
 		Maid:Add(value.Changed:Connect(function()
 			ChatSystem:UpdateChat()
 			ChatSystem:UpdatePlrList()
 		end))
 	end
 
-	Maid:Add(DevAvatarFolder.ChildAdded:Connect(function()
+    --> Update the player list when a new player joins.
+    Maid:Add(DevAvatarFolder.ChildAdded:Connect(function()
 		ChatSystem:UpdatePlrList()
 	end))
 
-	self:VisualizeAvatar(charValue.Name)
+	VisualizeAvatar(charValue.Name)
 end
 
-function AvatarSystem:ClearAvatars()
-
-end
-
+--> Ran when plugin is stopped.
 function AvatarSystem:OnClose()
-	RunService:UnbindFromRenderStep("AvatarRuntime")
-	print 'yo'
+    RunService:UnbindFromRenderStep("AvatarRuntime")
 end
 
 return AvatarSystem
