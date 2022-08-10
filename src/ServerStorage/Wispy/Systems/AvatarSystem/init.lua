@@ -33,11 +33,11 @@ function VisualizeAvatar(playerName)
 
 	local character_folder = CamAvatarFolder:FindFirstChild("character_"..playerName)
 
-	local arm1 = script.Parent.Parent.Assets.ArmTemplate:Clone()
+	local arm1 = character_folder:FindFirstChild("LeftArm_"..playerName) or script.Parent.Parent.Assets.ArmTemplate:Clone()
 	arm1.Name = "LeftArm_"..playerName
 	arm1.Parent = character_folder
 
-	local arm2 = script.Parent.Parent.Assets.ArmTemplate:Clone()
+	local arm2 = character_folder:FindFirstChild("RightArm_"..playerName) or script.Parent.Parent.Assets.ArmTemplate:Clone()
 	arm2.Name = "RightArm_"..playerName
 	arm2.Parent = character_folder
 
