@@ -48,8 +48,8 @@ function VisualizeAvatar(playerName)
         --local currentTime = tick()
         local offsets = {
             ["Torso"] = {Position = Vector3.new(0, -0.25, 0)},
-            ["Left Arm"] = {Position = CFrame.new(Vector3.new(0.75, -0.25, 0.25))},
-            ["Right Arm"] = {Position = CFrame.new(Vector3.new(-0.75, -0.25, 0.25))}
+            ["Left Arm"] = {Position = CFrame.new(Vector3.new(-0.75, -0.25, -0.25))},
+            ["Right Arm"] = {Position = CFrame.new(Vector3.new(0.75, -0.25, -0.25))}
         }
 
 																 -- For testing
