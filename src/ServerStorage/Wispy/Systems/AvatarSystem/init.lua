@@ -65,11 +65,11 @@ function VisualizeAvatar(playerName)
 
 		-- This if statement will never return true as we are using PivotTo()
 		if arm1.CFrame ~= CameraCFrame * offsets["Left Arm"].Position then
-			arm1.CFrame = arm1.CFrame:Lerp((CameraCFrame * offsets["Left Arm"].Position), 0.1)
+			arm1.CFrame = arm1.CFrame:Lerp((CameraCFrame * offsets["Left Arm"].Position), 0.15)
 		end
 
 		if arm2.CFrame ~= CameraCFrame * offsets["Right Arm"].Position then
-			arm2.CFrame = arm2.CFrame:Lerp(CameraCFrame * offsets["Right Arm"].Position, 0.1)
+			arm2.CFrame = arm2.CFrame:Lerp(CameraCFrame * offsets["Right Arm"].Position, 0.15)
 		end
 	end)
 end
