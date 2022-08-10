@@ -47,9 +47,9 @@ function VisualizeAvatar(playerName)
 
         --local currentTime = tick()
         local offsets = {
-            ["Torso"] = {Position = Vector3.new(0, -0.25, 0)},
-            ["Left Arm"] = {Position = Vector3.new(1, -0.5, 0.25)},
-            ["Right Arm"] = {Position = Vector3.new(-1, -0.5, 0.25)}
+            ["Torso"] = {Position = CFrame.new(Vector3.new(0, -0.25, 0))},
+            ["Left Arm"] = {Position = CFrame.new(Vector3.new(0.75, -0.5, 0.25))},
+            ["Right Arm"] = {Position = CFrame.new(Vector3.new(-0.75, -0.5, 0.25))}
         }
 
 																 -- For testing
@@ -65,7 +65,7 @@ function VisualizeAvatar(playerName)
 
 		-- This if statement will never return true as we are using PivotTo()
 		if arm1.CFrame ~= CameraCFrame + offsets["Left Arm"].Position then
-			arm1.CFrame = arm1.CFrame:Lerp(CameraCFrame + offsets["Left Arm"].Position, 0.9)
+			arm1.CFrame = arm1.CFrame:Lerp((CameraCFrame * offsets["Left Arm"].Position), 0.9)
 		end
 
 		if arm2.CFrame ~= CameraCFrame + offsets["Right Arm"].Position then
