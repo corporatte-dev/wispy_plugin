@@ -95,7 +95,7 @@ function AvatarSystem:Mount()
     ChatSystem = self:GetSystem("ChatSystem")
     PluginUI = self:GetSystem("PluginUI")
 
-	local new_folder: Folder = Instance.new("Folder")
+	local new_folder: Folder = CamAvatarFolder:FindFirstChild("character_"..self.LocalPlayer.Name) or Instance.new("Folder")
 	new_folder.Parent = CamAvatarFolder
 	new_folder.Name = "character_"..self.LocalPlayer.Name
 
