@@ -26,10 +26,21 @@ local Avatar: Model
 
 --> Internal Methods
 function VisualizeAvatar(playerName)
-	if CamAvatarFolder:FindFirstChild("avatar_"..playerName) then
+	if CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName) then
 		local old_avatar = CamAvatarFolder:FindFirstChild("avatar_"..playerName)
 		old_avatar:Destroy()
 	end
+
+	local character_folder = CamAvatarFolder:FindFirstChild("character_"..playerName)
+
+	local arm1 = script.Parent.Parent.Assets.ArmTemplate:Clone()
+	arm1.Name = "LeftArm_"..playerName
+	arm1.Parent = character_folder
+
+	local arm2 = script.Parent.Parent.Assets.ArmTemplate:Clone()
+	arm2.Name = "RightArm_"..playerName
+	arm2.Parent = character_folder
+
 
 	RunService:BindToRenderStep("AvatarRuntime", Enum.RenderPriority.Camera.Value, function()
 		if not Avatar then return end
@@ -44,18 +55,21 @@ function VisualizeAvatar(playerName)
 																 -- For testing
         local CameraCFrame = game.Workspace.CurrentCamera.CFrame --! + (game.Workspace.CurrentCamera.CFrame.LookVector * 10)
 
+		arm1.Color = Avatar["Left Arm"].Color
+		arm2.Color = Avatar["Right Arm"].Color
+
 		-- Due to the use of PivotTo, we would need to seperate the arms from this model. 
         if Avatar.PrimaryPart.CFrame ~= CameraCFrame + offsets.Torso.Position then
             Avatar:PivotTo(CameraCFrame + offsets.Torso.Position)
         end
 
 		-- This if statement will never return true as we are using PivotTo()
-		if Avatar["Left Arm"].CFrame ~= CameraCFrame + offsets["Left Arm"].Position then
-			Avatar["Left Arm"].CFrame = Avatar["Left Arm"].CFrame:Lerp(CameraCFrame + offsets["Left Arm"].Position, 0.9)
+		if arm1.CFrame ~= CameraCFrame + offsets["Left Arm"].Position then
+			arm1.CFrame = arm1.CFrame:Lerp(CameraCFrame + offsets["Left Arm"].Position, 0.9)
 		end
 
-		if Avatar["Right Arm"].CFrame ~= CameraCFrame + offsets["Right Arm"].Position then
-			Avatar["Right Arm"].CFrame = Avatar["Right Arm"].CFrame:Lerp(CameraCFrame + offsets["Right Arm"].Position, 0.9)
+		if arm2.CFrame ~= CameraCFrame + offsets["Right Arm"].Position then
+			arm2.CFrame = arm2.CFrame:Lerp(CameraCFrame + offsets["Right Arm"].Position, 0.9)
 		end
 	end)
 end
@@ -124,14 +138,21 @@ function AvatarSystem:Mount()
 			AvatarWidget.AvatarUI.Title.Text = "Current Avatar: "..displayChar.Name
 
 			local new_avatar: Model = CharacterFolder:FindFirstChild(displayChar.Name):Clone()
+			local new_folder: Folder = Instance.new("Folder")
+			new_folder.Parent = CamAvatarFolder
+			new_folder.Name = "character_"..self.LocalPlayer.Name
 			new_avatar.Name = "avatar_"..self.LocalPlayer.Name
-			new_avatar.Parent = CamAvatarFolder
+			new_avatar.Parent = new_folder
 			new_avatar.PrimaryPart.CFrame = workspace.CurrentCamera.CFrame
 
 			for _, Object: Part in ipairs(new_avatar:GetDescendants()) do
 				if Object:IsA("BasePart") then
 					--! Disabled for Testing
-					continue --Object.LocalTransparencyModifier = 1
+					Object.LocalTransparencyModifier = 1
+
+					if Object.Name == "Left Arm" or Object.Name == "Right Arm" or Object.Name == "LeftArm2" or Object.Name == "RightArm2" then
+						Object.Transparency = 1
+					end
 				end
 			end
 
