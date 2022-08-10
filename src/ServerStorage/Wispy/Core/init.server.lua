@@ -18,17 +18,19 @@ local Libraries = {}
 local Locations = {}
 local Core = {}
 
+local Notify = require(script.Notify)
+
 local LocalUserID = StudioService:GetUserId()
 local Player = game.Players:GetPlayerByUserId(LocalUserID) or game.Players.LocalPlayer
 
 --! Flags to prevent system from running when it isn't supposed to.
-if Player == nil then
-    warn(("[%s] Please turn on Team Create to use this plugin."):format(Config.Name))
+if RunService:IsRunning() then
+    Notify:Say("💔", "Wispy disabled during playtesting.", 4)
     return
 end
 
-if RunService:IsRunning() then
-    print(("[%s] Disabled during Playtesting."):format(Config.Name))
+if Player == nil then
+    Notify:Say("💔", "Wispy can only be used in TeamCreate. Please enable it to use wispy.", 4)
     return
 end
 
@@ -38,10 +40,11 @@ if Config.AssetID then
         local S, E = pcall(function()
             local Copy = game:GetObjects(("rbxassetid://%i"):format(Config.AssetID))[1]
             local CopyConfig = require(Copy:FindFirstChild("Config"))
-    
+            
             if CopyConfig then
                 if CopyConfig.Version ~= Config.Version then
-                    warn(("[%s] Version %s is Released! Please update in your plugin manager."):format(Config.Name, CopyConfig.Version))
+                    local Version = CopyConfig.Version
+                    Notify:Say("💫", ("Version %s of %s is Released! Please update in your plugin manager."):format(Version, Config.Name), 3)
                     --> Do something here?...
                 end
             end
@@ -52,7 +55,7 @@ if Config.AssetID then
         end)
     
         if not S then
-            warn(("[%s] An internal error occurred when checking for updates."):format(Config.Name))
+            Notify:Say("⚠️", "An internal error occurred when checking for wispy updates!", 3)
             warn(E) --! TEST ONLY
         end
     end)
@@ -69,6 +72,11 @@ end
 
 function Core:GetFolder(Name: string)
     return Locations[Name]
+end
+
+function Core:Notify(Text: string, Emoji: string?, Duration: number?)
+    Emoji = Emoji or '🔮'
+    Notify:Say(Emoji, Text, Duration)
 end
 
 --> Internal Methods
@@ -127,3 +135,5 @@ plugin.Unloading:Connect(function()
         end)
     end
 end)
+
+Notify:Say("🌟", ("Wispy is setup and ready to go!"), 3)

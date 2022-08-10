@@ -19,6 +19,7 @@ export type System = {
     GetSystem: <SystemName>(self: System, SystemName: string) -> any,
     GetLib: <LibraryName>(self: System, LibraryName: string) -> any,
     GetFolder: <FolderName>(self: System, FolderName: Locations) -> any,
+    Notify: <Text, Emoji, Duration>(self: System, Text: string, Emoji: string?, Duration: number?) -> nil,
 
     Plugin: Plugin,
     Maid: MaidObject,

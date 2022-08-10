@@ -142,6 +142,7 @@ function ChatSystem:UpdateChat()
 		local TS = game:GetService("TextService")
 		local messageTemplate = script.Parent.Parent.Assets.UITemplates.MessageTemplate:Clone()
 		local player = message:WaitForChild("author").Value
+
 		local messageContainer: Frame = ChatWidget.ChatUI.MessageContainer
 
 		local Message: Frame = messageTemplate.Message
@@ -214,8 +215,13 @@ function ChatSystem:Mount()
 		ChatWidget.ChatUI.ChatBox.ChatBox2.Input:CaptureFocus()
 	end))
 	
-	Maid:Add(MessagesFolder.ChildAdded:Connect(function()
+	Maid:Add(MessagesFolder.ChildAdded:Connect(function(msg)
 		self:UpdateChat()
+
+		local Author = msg:WaitForChild("author", 3)
+		if Author and Author.Value ~= self.LocalPlayer.Name then
+			self:Notify(("%s sent a message!"):format(Author.Value), "✉️", 1)	
+		end
 	end))
 	
 	Maid:Add(MessagesFolder.ChildRemoved:Connect(function()

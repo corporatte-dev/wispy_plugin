@@ -49,7 +49,7 @@ function Maid:Clean()
 			Output = Output .. (" %i %s,"):format(Value, Key)
 		end
 	end
-	print(Output:sub(0, Output:len() - 1) .. ".")
+	--print(Output:sub(0, Output:len() - 1) .. ".")
 end
 
 return Maid

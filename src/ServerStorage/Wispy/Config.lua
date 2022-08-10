@@ -7,8 +7,8 @@ local Types = require(script.Parent.Types)
 
 local Config: Types.Config = {
     Name = "Wispy",
-    Version = "1.0.0",
-    AssetID = nil, -- When published, put new asset ID here.
+    Version = "1.0.0B",
+    AssetID = 10487121830, -- When published, put new asset ID here.
 
     --> Here are the locations that our application will use
     --> Chat and Workspace already exist and they are not folders, so they are not registered.
