@@ -24,6 +24,8 @@ local AvatarWidget: any
 
 local Avatar: Model
 
+local arm_sens = 0.25
+
 --> Internal Methods
 function VisualizeAvatar(playerName)
 	if CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName) then
@@ -36,10 +38,14 @@ function VisualizeAvatar(playerName)
 	local arm1 = character_folder:FindFirstChild("LeftArm_"..playerName) or script.Parent.Parent.Assets.ArmTemplate:Clone()
 	arm1.Name = "LeftArm_"..playerName
 	arm1.Parent = character_folder
+	arm1.LocalTransparencyModifier = 1
+	arm1.Shell.LocalTransparencyModifier = 1
 
 	local arm2 = character_folder:FindFirstChild("RightArm_"..playerName) or script.Parent.Parent.Assets.ArmTemplate:Clone()
 	arm2.Name = "RightArm_"..playerName
 	arm2.Parent = character_folder
+	arm2.LocalTransparencyModifier = 1
+	arm2.Shell.LocalTransparencyModifier = 1
 
 
 	RunService:BindToRenderStep("AvatarRuntime", Enum.RenderPriority.Camera.Value, function()
@@ -65,11 +71,11 @@ function VisualizeAvatar(playerName)
 
 		-- This if statement will never return true as we are using PivotTo()
 		if arm1.CFrame ~= CameraCFrame * offsets["Left Arm"].Position then
-			arm1.CFrame = arm1.CFrame:Lerp((CameraCFrame * offsets["Left Arm"].Position), 0.15)
+			arm1.CFrame = arm1.CFrame:Lerp((CameraCFrame * offsets["Left Arm"].Position), arm_sens)
 		end
 
 		if arm2.CFrame ~= CameraCFrame * offsets["Right Arm"].Position then
-			arm2.CFrame = arm2.CFrame:Lerp(CameraCFrame * offsets["Right Arm"].Position, 0.15)
+			arm2.CFrame = arm2.CFrame:Lerp(CameraCFrame * offsets["Right Arm"].Position, arm_sens)
 		end
 	end)
 end
