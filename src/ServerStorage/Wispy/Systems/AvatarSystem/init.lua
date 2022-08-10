@@ -69,7 +69,7 @@ function VisualizeAvatar(playerName)
 		end
 
 		if arm2.CFrame ~= CameraCFrame * offsets["Right Arm"].Position then
-			arm2.CFrame = arm2.CFrame:Lerp(CameraCFrame + offsets["Right Arm"].Position, 0.9)
+			arm2.CFrame = arm2.CFrame:Lerp(CameraCFrame * offsets["Right Arm"].Position, 0.9)
 		end
 	end)
 end
