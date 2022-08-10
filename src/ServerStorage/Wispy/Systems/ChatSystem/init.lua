@@ -220,7 +220,7 @@ function ChatSystem:Mount()
 
 		local Author = msg:WaitForChild("author", 3)
 		if Author and Author.Value ~= self.LocalPlayer.Name then
-			self:Notify(("%s sent a message!"):format(Author.Value), "✉️", 1)	
+			self:Notify(("%s sent a message!"):format(Author.Value), "✉️", 2)	
 		end
 	end))
 	
