@@ -27,7 +27,7 @@ local Avatar: Model
 --> Internal Methods
 function VisualizeAvatar(playerName)
 	if CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName) then
-		local old_avatar = CamAvatarFolder:FindFirstChild("avatar_"..playerName)
+		local old_avatar = CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName)
 		old_avatar:Destroy()
 	end
 
