@@ -95,6 +95,10 @@ function AvatarSystem:Mount()
     ChatSystem = self:GetSystem("ChatSystem")
     PluginUI = self:GetSystem("PluginUI")
 
+	local new_folder: Folder = Instance.new("Folder")
+	new_folder.Parent = CamAvatarFolder
+	new_folder.Name = "character_"..self.LocalPlayer.Name
+
     --> Widgets
     AvatarWidget = PluginUI:GetWidget("Avatar")
 
@@ -138,9 +142,6 @@ function AvatarSystem:Mount()
 			AvatarWidget.AvatarUI.Title.Text = "Current Avatar: "..displayChar.Name
 
 			local new_avatar: Model = CharacterFolder:FindFirstChild(displayChar.Name):Clone()
-			local new_folder: Folder = Instance.new("Folder")
-			new_folder.Parent = CamAvatarFolder
-			new_folder.Name = "character_"..self.LocalPlayer.Name
 			new_avatar.Name = "avatar_"..self.LocalPlayer.Name
 			new_avatar.Parent = new_folder
 			new_avatar.PrimaryPart.CFrame = workspace.CurrentCamera.CFrame
@@ -153,6 +154,9 @@ function AvatarSystem:Mount()
 					if Object.Name == "Left Arm" or Object.Name == "Right Arm" or Object.Name == "LeftArm2" or Object.Name == "RightArm2" then
 						Object.Transparency = 1
 					end
+				end
+				if Object:IsA("ParticleEmitter") then
+					Object.Enabled = false
 				end
 			end
 
