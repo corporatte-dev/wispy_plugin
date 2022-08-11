@@ -52,8 +52,10 @@ function VisualizeAvatar(playerName)
 
 	RunService:BindToRenderStep("AvatarRuntime", Enum.RenderPriority.Camera.Value, function()
 		if not Avatar then return end
+        local currentTime = tick()
 
-        --local currentTime = tick()
+		local bobble = CFrame.new(Vector3.new(0, math.sin(currentTime * 10) * 0.05, 0))
+
         local offsets = {
             ["Torso"] = {Position = Vector3.new(0, -0.25, 0)},
             ["Left Arm"] = {Position = CFrame.new(Vector3.new(-0.75, -0.25, -0.25))},
@@ -73,11 +75,11 @@ function VisualizeAvatar(playerName)
 
 		-- This if statement will never return true as we are using PivotTo()
 		if arm1.CFrame ~= CameraCFrame * offsets["Left Arm"].Position then
-			arm1.CFrame = arm1.CFrame:Lerp((CameraCFrame * offsets["Left Arm"].Position), arm_sens)
+			arm1.CFrame = arm1.CFrame:Lerp((CameraCFrame * offsets["Left Arm"].Position) * bobble, arm_sens)
 		end
 
 		if arm2.CFrame ~= CameraCFrame * offsets["Right Arm"].Position then
-			arm2.CFrame = arm2.CFrame:Lerp(CameraCFrame * offsets["Right Arm"].Position, arm_sens)
+			arm2.CFrame = arm2.CFrame:Lerp(CameraCFrame * offsets["Right Arm"].Position * bobble, arm_sens)
 		end
 	end)
 end
