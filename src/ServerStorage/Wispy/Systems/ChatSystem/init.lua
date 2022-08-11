@@ -77,8 +77,8 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	if not filtered then return end
 	
 	--> Create a new Chat Record
-	print(filtered)
 	local Record = ChatUtil:CreateRecord(filtered)
+	print(Record.Value)
 	
 	--[[
 		local messageTemplate = script.Parent.Parent.Assets.UITemplates.RecentMessageTemplate:Clone()
@@ -109,6 +109,8 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	--	soundClone:Destroy()
 	--end
 	
+	Record.Parent = MessagesFolder
+
 end
 
 function ChatSystem:UpdatePlrList()
@@ -151,7 +153,7 @@ function ChatSystem:UpdateChat()
 		local TS = game:GetService("TextService")
 		
 		local messageTemplate = script.Parent.Parent.Assets.UITemplates.MessageTemplate:Clone()
-		print(messageTemplate.Message.Size)
+		print(messageTemplate.Size)
 
 		RenderedIDs[MessageID] = messageTemplate
 

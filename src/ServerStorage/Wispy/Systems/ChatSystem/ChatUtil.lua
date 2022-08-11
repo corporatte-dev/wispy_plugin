@@ -9,7 +9,7 @@ function ChatUtil:CreateID(Digits: number)
     local Number = ""
 
     for _ = 1, Digits do
-        Number = Number .. RNG:NextInteger(1, 9)
+        Number ..= RNG:NextInteger(1, 9)
     end
     
     return tonumber(Number)    
@@ -54,8 +54,6 @@ function ChatUtil:CreateRecord(FilteredMessage: string)
 
     Timestamp.Parent = Message
 	Author.Parent = Message
-
-    Message.Parent = self:GetFolder("message_logs")
 
     return Message
 end
