@@ -67,6 +67,8 @@ end
 local function createMessage(chat_widget, text: string, author: Player, isMuted: boolean?)
 	isMuted = isMuted or false
 	local filtered
+	local currentTime = os.time()
+
 	pcall(function()
 		filtered = game:GetService("TextService"):FilterStringAsync(text, author.UserId)
 		filtered = filtered:GetNonChatStringForBroadcastAsync()
@@ -75,13 +77,17 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	
 	local str = Instance.new("StringValue")
 	local auth = Instance.new("StringValue")
+	local ts = Instance.new("NumberValue")
 	auth.Parent = str
 	
 	local newIndex = tostring(#MessagesFolder:GetChildren() + 1)
+
 	str.Name = "message_"..newIndex
-	auth.Name = "author"
 	str.Value = filtered
+	auth.Name = "author"
 	auth.Value = author.Name
+	ts.Name = "timestamp"
+	ts.Value = currentTime
 	
 	local messageTemplate = script.Parent.Parent.Assets.UITemplates.RecentMessageTemplate:Clone()
 	local messageContainer = chat_widget.ChatUI.MessageContainer
@@ -142,6 +148,7 @@ function ChatSystem:UpdateChat()
 		local TS = game:GetService("TextService")
 		local messageTemplate = script.Parent.Parent.Assets.UITemplates.MessageTemplate:Clone()
 		local player = message:WaitForChild("author").Value
+		local timestamp = message:WaitForChild("timestamp").Value
 
 		local messageContainer: Frame = ChatWidget.ChatUI.MessageContainer
 
