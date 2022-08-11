@@ -46,6 +46,21 @@ local ChatWidget: DockWidgetPluginGui
 local msg_bundle = {}
 
 --> Internal Methods
+local function CreateID()
+	local digit1 = math.random(1, 9)
+	local digit2 = math.random(1, 9)
+	local digit3 = math.random(1, 9)
+	local digit4 = math.random(1, 9)
+	local digit5 = math.random(1, 9)
+	local digit6 = math.random(1, 9)
+	local digit7 = math.random(1, 9)
+	local digit8 = math.random(1, 9)
+
+	local new_ID = digit1..""..digit2..""..digit3..""..digit4..""..digit5..""..digit6..""..digit7..""..digit8
+
+	return tonumber(new_ID)
+end
+
 local function LoadAvatar(player: string, template)
 	local playerData = DevAvatarFolder:FindFirstChild(player)
 	local wispData = playerData.Value
@@ -81,6 +96,9 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	auth.Parent = str
 	
 	local newIndex = tostring(#MessagesFolder:GetChildren() + 1)
+	local new_ID = CreateID()
+
+	str:SetAttribute("messageID", new_ID)
 
 	str.Name = "message_"..newIndex
 	str.Value = filtered
@@ -135,22 +153,36 @@ end
 
 function ChatSystem:UpdateChat()
 	local chatContainer = ChatWidget.ChatUI.MessageContainer
-	
-	--> clears the whole chat container of messages
+	local messageVarList = {}
+	local messageUIList = {}
+
+	--> creates the table of IDs from the messageUI side
 	for _, UI_msg in pairs(chatContainer:GetChildren()) do
-		if UI_msg:IsA("TextLabel") or UI_msg:IsA("Frame") then
-			UI_msg:Destroy()
-		end
+		local attribute_val = UI_msg:GetAttribute("messageID")
+		table.insert(messageUIList, attribute_val)
+
+		--if UI_msg:IsA("Frame") then
+		--	UI_msg:Destroy()
+		--end
 	end
 
 	--> remakes the messages from the message logs
 	for _, message in pairs(MessagesFolder:GetChildren()) do
+		local attribute_val = message:GetAttribute("messageID")
+		table.insert(messageVarList, attribute_val)
+
+
+		--> V V V for new message only V V V
+
 		local TS = game:GetService("TextService")
 		local messageTemplate = script.Parent.Parent.Assets.UITemplates.MessageTemplate:Clone()
 		local player = message:WaitForChild("author").Value
 		local timestamp = message:WaitForChild("timestamp").Value
 
+		local messageVar_ID = message:GetAttribute("messageID")
+
 		local messageContainer: Frame = ChatWidget.ChatUI.MessageContainer
+		local clonedAttribute = messageTemplate:SetAttribute("messageID", messageVar_ID)
 
 		local Message: Frame = messageTemplate.Message
 		messageTemplate.Parent = messageContainer
@@ -162,6 +194,7 @@ function ChatSystem:UpdateChat()
 		messageTemplate.Size = UDim2.new(messageTemplate.Size.X.Scale, messageTemplate.Size.X.Offset, 0, math.clamp(bounds.Y + 40, 60, math.huge))
 		messageTemplate.Message.Text = message.Value
 		messageTemplate.Author.Text = player
+		messageTemplate.Timestamp.Text = os.date("%c", timestamp)
 		messageTemplate.Author.TextColor3 = Constants.ColorShortcuts[DevAvatarFolder:FindFirstChild(player).Value]
 		LoadAvatar(player, messageTemplate.Viewport)
 		messageContainer.CanvasSize = UDim2.new(0, 0, 0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
