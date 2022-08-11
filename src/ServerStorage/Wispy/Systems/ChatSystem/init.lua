@@ -193,7 +193,11 @@ function ChatSystem:UpdateChat()
 		--messageTemplate.Timestamp.Text = os.date("%c", timestamp)
 		messageTemplate.Author.TextColor3 = Constants.ColorShortcuts[DevAvatarFolder:FindFirstChild(player).Value]
 
+		--! Pretty bad but it works. Please fix this in the future lmao
+		messageTemplate.Viewport.Player.Image = game.Players:GetUserThumbnailAsync(game.Players:GetUserIdFromNameAsync(Author.Value), Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size180x180)
+
 		LoadAvatar(player, messageTemplate.Viewport)
+
 
 		--> Add the messageTemplate to our local RenderedIDs table.
 		RenderedIDs[MessageID] = messageTemplate
