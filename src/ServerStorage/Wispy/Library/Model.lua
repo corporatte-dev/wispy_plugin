@@ -24,6 +24,7 @@ function Model:Sanitize(Container: Folder | Model)
         if Object:IsA("BasePart") then
             PhysicsService:SetPartCollisionGroup(Object, CollisionGroupName)
             Object.Locked = true
+            Object.Archivable = false
         end
     end
 end

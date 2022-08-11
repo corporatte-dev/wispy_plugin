@@ -13,6 +13,7 @@ function CreateFolder(Name: string, Location: any)
         local Folder = Instance.new("Folder")
         Folder.Name = Name
         Folder.Parent = Location
+        Folder.Archivable = false
         return Folder
     end
 end
