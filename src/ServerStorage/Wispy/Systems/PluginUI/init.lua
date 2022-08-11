@@ -125,7 +125,7 @@ function PluginUI:Mount()
 
     DeferRefresh = DeferLib.new(function()
         ChatSystem:UpdateChat()
-    end, 0.5)
+    end, 0.2)
 end
 
 function PluginUI:OnClose()

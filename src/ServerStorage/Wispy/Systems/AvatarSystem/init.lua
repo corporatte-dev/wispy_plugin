@@ -48,6 +48,7 @@ function VisualizeAvatar(playerName)
 	arm2.LocalTransparencyModifier = 1
 	arm2.Shell.LocalTransparencyModifier = 1
 
+	Model:Sanitize(character_folder)
 
 	RunService:BindToRenderStep("AvatarRuntime", Enum.RenderPriority.Camera.Value, function()
 		if not Avatar then return end

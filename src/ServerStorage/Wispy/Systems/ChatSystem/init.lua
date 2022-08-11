@@ -1,5 +1,6 @@
 local Types = require(script.Parent.Parent.Types)
 local ChatSystem = {} :: Types.ChatSystem 
+local TS = game:GetService("TextService")
 
 --[=[
 	|> Chat System
@@ -8,6 +9,7 @@ local ChatSystem = {} :: Types.ChatSystem
 ]=]
 
 local HTTP = game:GetService("HttpService")
+local Util = require(script.Util)
 
 --> Constants
 local Constants = {
@@ -43,25 +45,16 @@ local DevAvatarFolder: Folder
 local ChatWidget: DockWidgetPluginGui
 
 --> Variables
+local RenderedIDs = {} -- [ID] = MessageTemplate
 local msg_bundle = {}
 
 --> Internal Methods
-local function CreateID()
-	local digit1 = math.random(1, 9)
-	local digit2 = math.random(1, 9)
-	local digit3 = math.random(1, 9)
-	local digit4 = math.random(1, 9)
-	local digit5 = math.random(1, 9)
-	local digit6 = math.random(1, 9)
-	local digit7 = math.random(1, 9)
-	local digit8 = math.random(1, 9)
-
-	local new_ID = digit1..""..digit2..""..digit3..""..digit4..""..digit5..""..digit6..""..digit7..""..digit8
-
-	return tonumber(new_ID)
+function RecalculateBounds(Template: Frame)
+	local bounds = TS:GetTextSize(Template.Message.Text, 20, Enum.Font.SourceSans, Vector2.new(Template.Message.AbsoluteSize.X, math.huge))
+	Template.Size = UDim2.new(Template.Size.X.Scale, Template.Size.X.Offset, 0, math.clamp(bounds.Y + 40, 60, math.huge))
 end
 
-local function LoadAvatar(player: string, template)
+function LoadAvatar(player: string, template)
 	local playerData = DevAvatarFolder:FindFirstChild(player)
 	local wispData = playerData.Value
 	local wisp = script.Parent.Parent.Assets.Characters[wispData]:Clone()
@@ -79,36 +72,21 @@ local function LoadAvatar(player: string, template)
 	wisp.Parent = template
 end
 
-local function createMessage(chat_widget, text: string, author: Player, isMuted: boolean?)
+function ChatSystem:CreateMessage(text: string, isMuted: boolean?)
 	isMuted = isMuted or false
+
+	local author = self.LocalPlayer
 	local filtered
-	local currentTime = os.time()
 
 	pcall(function()
 		filtered = game:GetService("TextService"):FilterStringAsync(text, author.UserId)
 		filtered = filtered:GetNonChatStringForBroadcastAsync()
 	end)
+
 	if not filtered then return end
-	
-	local str = Instance.new("StringValue")
-	local auth = Instance.new("StringValue")
-	local ts = Instance.new("NumberValue")
-	auth.Parent = str
-	
-	local newIndex = tostring(#MessagesFolder:GetChildren() + 1)
-	local new_ID = CreateID()
 
-	str:SetAttribute("messageID", new_ID)
-
-	str.Name = "message_"..newIndex
-	str.Value = filtered
-	auth.Name = "author"
-	auth.Value = author.Name
-	ts.Name = "timestamp"
-	ts.Value = currentTime
-	
 	local messageTemplate = script.Parent.Parent.Assets.UITemplates.RecentMessageTemplate:Clone()
-	local messageContainer = chat_widget.ChatUI.MessageContainer
+	local messageContainer = ChatWidget.ChatUI.MessageContainer
 	messageTemplate.Parent = messageContainer
 	messageTemplate.Author.Text = author.Name
 	
@@ -120,7 +98,10 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	messageContainer.CanvasPosition = Vector2.new(0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
 	textObject:Animate(true)
 	task.wait(#filtered / 100)
-	
+
+	messageTemplate:Destroy()
+	Util:CreateRecord(filtered)
+
 	--if isMuted == false then
 	--	local soundClone = script.Parent.Parent.Assets.SFX.TalkSound:Clone()
 	--	soundClone.Parent = game.SoundService
@@ -131,8 +112,7 @@ local function createMessage(chat_widget, text: string, author: Player, isMuted:
 	--	end
 	--	soundClone:Destroy()
 	--end
-	
-	str.Parent = MessagesFolder
+
 end
 
 function ChatSystem:UpdatePlrList()
@@ -152,59 +132,83 @@ function ChatSystem:UpdatePlrList()
 end
 
 function ChatSystem:UpdateChat()
-	local chatContainer = ChatWidget.ChatUI.MessageContainer
-	local messageVarList = {}
-	local messageUIList = {}
+	local messageContainer: Frame = ChatWidget.ChatUI.MessageContainer
 
-	--> creates the table of IDs from the messageUI side
-	for _, UI_msg in pairs(chatContainer:GetChildren()) do
-		local attribute_val = UI_msg:GetAttribute("messageID")
-		table.insert(messageUIList, attribute_val)
+	--[[
+		| Here is my rough draft of the UpdateChat() method.
 
-		--if UI_msg:IsA("Frame") then
-		--	UI_msg:Destroy()
-		--end
+		TODO: Change the object deletion to be handled on child remove, not every time the chat updates.
+			--| If we have 1000s of messages, this search can get real expensive real quick.
+
+		TODO: Consider creating a library for these avatar images so they auto-update on avatar change.
+	]]
+
+	--> Remove non-active messages
+	--! Can be a-lot more efficient. This is ONLY to get it working for the demo.
+	for ID, Template in pairs(RenderedIDs) do
+		if Util:FindID(ID) then continue end
+
+		if Template then
+			Template.Parent = nil
+			Template:Destroy()
+		end
 	end
 
 	--> remakes the messages from the message logs
 	for _, message in pairs(MessagesFolder:GetChildren()) do
-		local attribute_val = message:GetAttribute("messageID")
-		table.insert(messageVarList, attribute_val)
 
+		--> Get the message's ID
+		local MessageID = message:GetAttribute("MessageID") 
 
-		--> V V V for new message only V V V
+		--> If it doesn't exist, skip this entry.
+		if not MessageID then continue end
 
-		local TS = game:GetService("TextService")
+		--> If the object has already been rendered, re-calculate it's bounds.
+		if RenderedIDs[MessageID] ~= nil then
+			RecalculateBounds(RenderedIDs[MessageID])
+			continue
+		end
+
+		--> Await author and Timestamp
+		local Author = message:WaitForChild("author", 1)
+		local Timestamp = message:WaitForChild("timestamp", 1)
+
+		--> If either are not present, continue.
+		if not Author then continue end
+		if not Timestamp then continue end
+
+		--> Create the message template
 		local messageTemplate = script.Parent.Parent.Assets.UITemplates.MessageTemplate:Clone()
 		local player = message:WaitForChild("author").Value
-		local timestamp = message:WaitForChild("timestamp").Value
+		--local timestamp = message:WaitForChild("timestamp").Value
 
-		local messageVar_ID = message:GetAttribute("messageID")
-
-		local messageContainer: Frame = ChatWidget.ChatUI.MessageContainer
-		local clonedAttribute = messageTemplate:SetAttribute("messageID", messageVar_ID)
-
-		local Message: Frame = messageTemplate.Message
+		--> Remove newlines (may not want in cirtain scenarios) and set our text.
+		messageTemplate.Message.Text = message.Value:gsub("\n", "")
 		messageTemplate.Parent = messageContainer
 
-		--> Calculate the bounds of the text within it's container.
-		local bounds = TS:GetTextSize(message.Value, 20, Enum.Font.SourceSans, Vector2.new(Message.AbsoluteSize.X, math.huge))
+		--> Calculate size of message template with the current text.
+		RecalculateBounds(messageTemplate)
 
-		--> Then, use the Y axis of bounds to calculate the new size for the message template.
-		messageTemplate.Size = UDim2.new(messageTemplate.Size.X.Scale, messageTemplate.Size.X.Offset, 0, math.clamp(bounds.Y + 40, 60, math.huge))
-		messageTemplate.Message.Text = message.Value
 		messageTemplate.Author.Text = player
-		messageTemplate.Timestamp.Text = os.date("%c", timestamp)
+		--messageTemplate.Timestamp.Text = os.date("%c", timestamp)
 		messageTemplate.Author.TextColor3 = Constants.ColorShortcuts[DevAvatarFolder:FindFirstChild(player).Value]
+
 		LoadAvatar(player, messageTemplate.Viewport)
-		messageContainer.CanvasSize = UDim2.new(0, 0, 0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
-		messageContainer.CanvasPosition = Vector2.new(0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
+
+		--> Add the messageTemplate to our local RenderedIDs table.
+		RenderedIDs[MessageID] = messageTemplate
 	end
+
+	--> Finally, update the canvas size and position when all updates are performed. 
+	messageContainer.CanvasSize = UDim2.new(0, 0, 0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
+	messageContainer.CanvasPosition = Vector2.new(0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
 end
 
 --> Main method to 'Kick off' the modules functionality.
 function ChatSystem:Mount()
-	
+	--> Grant Util access to Core Methods
+	setmetatable(Util, {__index = self})
+
 	--> Load Dependancies
 	PluginUI = self:GetSystem("PluginUI")
 	AvatarSystem = self:GetSystem("AvatarSystem")
@@ -250,7 +254,7 @@ function ChatSystem:Mount()
 	
 	Maid:Add(ChatWidget.ChatUI.ChatBox.ChatBox2.Input.FocusLost:Connect(function(enterPressed)
 		if not enterPressed then return end
-		createMessage(ChatWidget, ChatWidget.ChatUI.ChatBox.ChatBox2.Input.Text, self.LocalPlayer)
+		self:CreateMessage(ChatWidget.ChatUI.ChatBox.ChatBox2.Input.Text)
 		ChatWidget.ChatUI.ChatBox.ChatBox2.Input.Text = ""
 		ChatWidget.ChatUI.ChatBox.ChatBox2.Input:CaptureFocus()
 	end))
@@ -267,6 +271,21 @@ function ChatSystem:Mount()
 	Maid:Add(MessagesFolder.ChildRemoved:Connect(function()
 		self:UpdateChat()
 	end))
+
+	local FadeUI = ChatWidget.ChatUI.Fade
+
+	--> Maybe one day canvas groups will be released :/
+	task.delay(1, function()
+		local FadeTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+		local FadeTween = game:GetService("TweenService"):Create(FadeUI, FadeTweenInfo, {GroupTransparency = 1})
+		FadeTween:Play()
+
+		for _, Object in ipairs(FadeUI:GetDescendants()) do
+			FadeTweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+			FadeTween = game:GetService("TweenService"):Create(Object, FadeTweenInfo, {TextTransparency = 1})
+			FadeTween:Play()
+		end
+	end)
 end
 
 function ChatSystem:ClearLogs()
