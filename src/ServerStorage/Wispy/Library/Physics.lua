@@ -1,5 +1,5 @@
 
-local Model = {}
+local Physics = {}
 local PhysicsService = game:GetService("PhysicsService")
 
 local CollisionGroupName = "Wispy_Ignore_Collide"
@@ -19,7 +19,7 @@ else
     CollisionGroupName = "Default"
 end
 
-function Model:Sanitize(Container: Folder | Model)
+function Physics:Sanitize(Container: Folder | Model)
     for _, Object in ipairs(Container:GetDescendants()) do
         if Object:IsA("BasePart") then
             PhysicsService:SetPartCollisionGroup(Object, CollisionGroupName)
@@ -28,4 +28,4 @@ function Model:Sanitize(Container: Folder | Model)
     end
 end
 
-return Model
+return Physics

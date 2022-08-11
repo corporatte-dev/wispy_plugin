@@ -21,7 +21,7 @@ local Plugin: Plugin
 local DevAvatarFolder: Folder
 local CamAvatarFolder: Folder
 local AvatarWidget: any
-local Model: Types.ModelLibrary
+local Physics: Types.Physics
 
 local Avatar: Model
 
@@ -94,7 +94,7 @@ function AvatarSystem:SetAvatarModel(AvatarModel: Model)
 		Avatar:Destroy()
 	end
 
-	Model:Sanitize(AvatarModel)
+	Physics:Sanitize(AvatarModel)
 	Avatar = AvatarModel
 end
 
@@ -110,7 +110,7 @@ function AvatarSystem:Mount()
     --> Widgets
     AvatarWidget = PluginUI:GetWidget("Avatar")
 
-	Model = AvatarSystem:GetLib("Model")
+	Physics = AvatarSystem:GetLib("Physics")
 
     --> Unpack variables into script scope
     Plugin = self.Plugin

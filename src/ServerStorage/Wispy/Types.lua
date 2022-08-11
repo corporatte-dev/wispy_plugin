@@ -64,7 +64,7 @@ export type RichText = {
     New: <frame, text, startingProperties, allowOverflow, prevTextObject>(self: RichText, frame: Frame, startingProperties: any, allowOverflow: boolean, prevTextObject: any) -> RichTextObject
 }
 
-export type ModelLibrary = {
+export type Physics = {
     Sanitize: <Model>(self: ModelLibrary, Model: Model) -> nil
 }
 
