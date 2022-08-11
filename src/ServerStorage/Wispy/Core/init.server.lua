@@ -1,5 +1,6 @@
 local RunService = game:GetService("RunService")
 local StudioService = game:GetService("StudioService")
+local HistoryService = game:GetService("ChangeHistoryService")
 
 local Config = require(script.Parent.Config)
 local Tree = require(script.Tree)
@@ -136,4 +137,5 @@ plugin.Unloading:Connect(function()
     end
 end)
 
+HistoryService:ResetWaypoints()
 Notify:Say("🌟", ("Wispy is setup and ready to go!"), 3)

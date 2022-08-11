@@ -14,7 +14,7 @@ local Config: Types.Config = {
     --> Chat and Workspace already exist and they are not folders, so they are not registered.
     --| For example, message logs will be created at (game).Chat.Wispy
     Structure = {
-        Chat = {
+        ServerStorage = {
             Wispy = {
                 message_logs = {},
                 dev_avatars = {}
