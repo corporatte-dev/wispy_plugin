@@ -1,5 +1,14 @@
 
 local Model = {}
+
+--[=[
+    |> "Model" Module
+
+    This handles sanitization of instances created by the plugin. 
+    
+    Not sure that "Model" is an appropriate name...
+]=]
+
 local PhysicsService = game:GetService("PhysicsService")
 
 local CollisionGroupName = "Wispy_Ignore_Collide"
@@ -24,6 +33,9 @@ function Model:Sanitize(Container: Folder | Model)
         if Object:IsA("BasePart") then
             PhysicsService:SetPartCollisionGroup(Object, CollisionGroupName)
             Object.Locked = true
+        end
+
+        if Object:IsA("Instance") then
             Object.Archivable = false
         end
     end

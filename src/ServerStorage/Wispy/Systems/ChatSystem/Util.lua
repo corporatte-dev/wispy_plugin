@@ -14,6 +14,7 @@ function ChatUtil:CreateID(Digits: number)
     return tonumber(Number)    
 end
 
+--> Find an ID in the message list.
 function ChatUtil:FindID(ID: number)
     for _, Message: StringValue in ipairs(self:GetFolder("message_logs"):GetChildren()) do
         local Hit = Message:GetAttribute("MessageID") 
@@ -26,6 +27,7 @@ function ChatUtil:FindID(ID: number)
     return nil
 end
 
+--> Create a new chat message record and place it in message_logs.
 function ChatUtil:CreateRecord(FilteredMessage: string)
     local Message = Instance.new("StringValue")
 	local Author = Instance.new("StringValue")

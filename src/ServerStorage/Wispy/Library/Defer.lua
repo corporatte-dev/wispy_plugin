@@ -45,7 +45,7 @@ function Defer:Call()
     self.Reset = true
 end
 
-function Defer:Clean()
+function Defer:Remove()
     self.Alive = false
     self = nil
 end

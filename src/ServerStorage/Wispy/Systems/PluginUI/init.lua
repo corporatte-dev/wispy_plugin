@@ -20,7 +20,7 @@ local chatUI_open = false
 local Maid: Types.MaidObject
 local Plugin: Plugin
 local ChatSystem: Types.ChatSystem
-local DeferRefresh: Types.DeferObject
+local OnChatScale: Types.DeferObject
 
 --> Internal Functions
 function CreateWidget(ID: string, WidgetInfo: DockWidgetPluginGuiInfo, Title: string, UI: ScreenGui)
@@ -29,8 +29,8 @@ function CreateWidget(ID: string, WidgetInfo: DockWidgetPluginGuiInfo, Title: st
     UI.Parent = Widget
 
     Maid:Add(UI:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
-        if DeferRefresh then
-            DeferRefresh:Call()
+        if OnChatScale then
+            OnChatScale:Call()
         end
     end))
     
@@ -120,16 +120,16 @@ function PluginUI:Preload()
 end
     
 function PluginUI:Mount()
-    local DeferLib: Types.Defer = self:GetLib("Defer")
+    local Defer: Types.Defer = self:GetLib("Defer")
     ChatSystem = self:GetSystem("ChatSystem")
 
-    DeferRefresh = DeferLib.new(function()
+    OnChatScale = Defer.new(function()
         ChatSystem:UpdateChat()
     end, 0.2)
 end
 
 function PluginUI:OnClose()
-    DeferRefresh:Clean()
+    OnChatScale:Remove()
 end
 
 return PluginUI

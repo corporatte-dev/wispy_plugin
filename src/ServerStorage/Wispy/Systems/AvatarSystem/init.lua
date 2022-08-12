@@ -62,7 +62,7 @@ function VisualizeAvatar(playerName)
             ["Right Arm"] = {Position = CFrame.new(Vector3.new(0.75, -0.25, -0.25))}
         }
 
-																 -- For testing
+		 -- For testing
         local CameraCFrame = game.Workspace.CurrentCamera.CFrame --! + (game.Workspace.CurrentCamera.CFrame.LookVector * 10)
 
 		arm1.Color = Avatar["Left Arm"].Color

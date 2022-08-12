@@ -35,7 +35,6 @@ local Constants = {
 --> Typed Modules to be Loaded on Mount
 local RichText: Types.RichText
 local Maid: Types.MaidObject
-local AvatarSystem: Types.AvatarSystem
 local Plugin: Plugin
 local PluginUI: Types.PluginUI
 
@@ -215,7 +214,6 @@ function ChatSystem:Mount()
 
 	--> Load Dependancies
 	PluginUI = self:GetSystem("PluginUI")
-	AvatarSystem = self:GetSystem("AvatarSystem")
 	RichText = self:GetLib("RichText")
     Plugin = self.Plugin
     Maid = self.Maid
@@ -304,7 +302,7 @@ function ChatSystem:OnClose()
 	avatar:Destroy()
 	
 	for i, msg in pairs(MessagesFolder:GetChildren()) do
-		local msgTable = {Message = msg.Value, Author = msg.Author.Value}
+		local msgTable = {Message = msg.Value, Author = msg.author.Value}
 		if i < Constants.messageLimit then
 			table.insert(msg_bundle, msgTable)
 		end

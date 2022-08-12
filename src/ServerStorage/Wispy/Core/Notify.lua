@@ -28,8 +28,6 @@ NotifyTemplate.Parent = NotifyGUI
 local Queue = {}
 local QueueRunning = false
 
---! In the future, make these notifications stack?
-
 function StepQueue(SelfCalled: boolean?)
     if QueueRunning and not SelfCalled then return end
     QueueRunning = true

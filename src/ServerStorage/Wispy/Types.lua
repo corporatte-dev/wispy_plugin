@@ -70,7 +70,7 @@ export type ModelLibrary = {
 
 export type DeferObject = {
     Call: (self: DeferObject) -> nil,
-    Clean: (self: DeferObject) -> nil
+    Remove: (self: DeferObject) -> nil
 }
 
 export type Defer = {

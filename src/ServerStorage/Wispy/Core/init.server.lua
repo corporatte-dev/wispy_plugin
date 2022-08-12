@@ -1,9 +1,10 @@
 local RunService = game:GetService("RunService")
 local StudioService = game:GetService("StudioService")
-local HistoryService = game:GetService("ChangeHistoryService")
 
 local Config = require(script.Parent.Config)
+local Notify = require(script.Notify)
 local Tree = require(script.Tree)
+local Maid = require(script.Maid)
 
 --[=[
     |> Plugin Core
@@ -12,26 +13,22 @@ local Tree = require(script.Tree)
     it yet.
 ]=]
 
-type Base = {}
-
+local Core = {}
 local Systems = {}
 local Libraries = {}
 local Locations = {}
-local Core = {}
 
-local Notify = require(script.Notify)
-
-local LocalUserID = StudioService:GetUserId()
-local Player = game.Players:GetPlayerByUserId(LocalUserID) or game.Players.LocalPlayer
-
---! Flags to prevent system from running when it isn't supposed to.
+--! Prevent Plugin from Working in RunMode
 if RunService:IsRunning() then
     Notify:Say("💔", "Wispy disabled during playtesting.", 4)
     return
 end
 
+--! Attempt to grab local player. If we cant, we are not in team create.
+local LocalUserID = StudioService:GetUserId()
+local Player = game.Players:GetPlayerByUserId(LocalUserID) or game.Players.LocalPlayer
 if Player == nil then
-    Notify:Say("💔", "Wispy can only be used in TeamCreate. Please enable it to use wispy.", 4)
+    Notify:Say("💔", "Wispy can only be used in Team Create! Please enable Team Create to use this plugin.", 4)
     return
 end
 
@@ -57,7 +54,7 @@ if Config.AssetID then
     
         if not S then
             Notify:Say("⚠️", "An internal error occurred when checking for wispy updates!", 3)
-            warn(E) --! TEST ONLY
+            warn(E) 
         end
     end)
 end
@@ -76,8 +73,7 @@ function Core:GetFolder(Name: string)
 end
 
 function Core:Notify(Text: string, Emoji: string?, Duration: number?)
-    Emoji = Emoji or '🔮'
-    Notify:Say(Emoji, Text, Duration)
+    Notify:Say(Emoji or '🔮', Text, Duration)
 end
 
 --> Internal Methods
@@ -104,7 +100,6 @@ end
 --> Almost there, lets manually inject other globals.
 do
     --? Maid Instance
-    local Maid = require(script.Parent.Library.Maid)
     Core.Maid = Maid.new()
 
     Core.Plugin = plugin
@@ -126,16 +121,16 @@ for _, System: any in pairs(Systems) do
 end
 
 --> When the plugin is unloaded
-plugin.Unloading:Connect(function()
+Core.Maid:Add(plugin.Unloading:Connect(function()
     Core.Maid:Clean()
 
     --> Attempt to call an :OnClose() method within each system. This is optional!
     for _, System: any in pairs(Systems) do
-        pcall(function() 
+        if typeof(System.OnClose) == "function" then
             System:OnClose()
-        end)
+        end
     end
-end)
+end))
 
-HistoryService:ResetWaypoints()
+--> Let our end user know that the plugin is ready to go.
 Notify:Say("🌟", ("Wispy is setup and ready to go!"), 3)
