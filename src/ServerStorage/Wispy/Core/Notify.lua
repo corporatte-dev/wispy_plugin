@@ -48,12 +48,12 @@ function StepQueue(SelfCalled: boolean?)
         NotifyTemplate.Emoji.Icon.Image = Next[2]
         NotifyTemplate.Content.Content.Text = Next[3]
 
-        NotifyTemplate.Progress.Value.Size = UDim2.new(0, 0, 0, 3)
+        NotifyTemplate.Progress.Value.Size = UDim2.new(1, 0, 0, 3)
         NotifyTemplate.Progress.Value.BackgroundColor3 = Next[1]
         
         --> Movement FX
         NotifyTemplate:TweenPosition(UDim2.new(0.5, 0, 0, 5), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
-        NotifyTemplate.Progress.Value:TweenSize(UDim2.new(1, 0, 0, 3), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, Next[4] + 0.3, true)
+        NotifyTemplate.Progress.Value:TweenSize(UDim2.new(0, 0, 0, 3), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, Next[4] + 0.3, true)
         task.wait(Next[4] + 0.3)
         NotifyTemplate:TweenPosition(UDim2.new(0.5, 0, 0, -NotifyTemplate.Size.Y.Offset - 5), Enum.EasingDirection.In, Enum.EasingStyle.Quad, 0.2, true)
         task.wait(0.2)
