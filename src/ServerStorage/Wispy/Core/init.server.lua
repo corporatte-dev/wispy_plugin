@@ -85,7 +85,7 @@ function Core:GetFolder(Name: string)
 end
 
 function Core:Notify(Text: string, Emoji: string?, Duration: number?)
-    Notify:Say(ColorTemplates.Standard, Emoji or IconTemplates.StandardIcon, Text, Duration)
+    Notify:Say("Standard", Emoji or IconTemplates.StandardIcon, Text, Duration)
 end
 
 --> Internal Methods

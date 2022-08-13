@@ -1,6 +1,24 @@
-local Notify = {}
+local Notify = {
+    NotificationDictionary = {
+		Warning = {
+            ProgressColor = Color3.fromHex("3edc7a"),
+            SoundEffect = script.Parent.Parent.Assets.SFX
+        },
+
+		Error = {
+            ProgressColor = Color3.fromHex("ed5730"),
+            SoundEffect = script.Parent.Parent.Assets.SFX
+        },
+
+		Standard = {
+            ProgressColor = Color3.fromHex("9c65d1"),
+            SoundEffect = script.Parent.Parent.Assets.SFX
+        },
+	}
+}
 local CoreGUI = game:GetService("CoreGui")
 local TextService = game:GetService("TextService")
+local Plugin: Plugin
 
 --[=[
     |> Noify Helper
@@ -12,7 +30,6 @@ local TextService = game:GetService("TextService")
 
 local NotifyGUI = CoreGUI:FindFirstChild("WispyNotifications")  
 local NotifyTemplate: Frame = script.Parent.Parent.Assets.UITemplates.NotificationTemplate:Clone()
-local NotifySFX: Sound = script.Parent.Parent.Assets.SFX.Notify
 
 --> If it doesn't exist, lets create it
 if not NotifyGUI then
@@ -50,17 +67,25 @@ function StepQueue(SelfCalled: boolean?)
         NotifyTemplate.Content.Content.Text = Next[3]
 
         NotifyTemplate.Progress.Value.Size = UDim2.new(1, 0, 0, 3)
-        NotifyTemplate.Progress.Value.BackgroundColor3 = Next[1]
         
+        for _, key in pairs(Notify.NotificationDictionary) do
+            if Next[1] ~= key then
+                warn("First Parameter does not correlate to any keys in the dictionary!")
+                break
+            end
+        end
+
+        local NotifySFX = Notify.NotificationDictionary[Next[1]].SoundEffect:Clone()
+        NotifyTemplate.Progress.Value.BackgroundColor3 = Notify.NotificationDictionary[Next[1]].ProgressColor
+
         --> Movement FX
         --! Might add more SFX options, but I don't want to make too many params into :Say()
-        if plugin:GetSetting("IsMuted") == true then
+        if Plugin:GetSetting("IsMuted") == true then
             local SFX = NotifySFX:Clone()
             SFX.Parent = game.SoundService
-
             game.SoundService:PlayLocalSound(NotifySFX)
             task.wait(SFX.TimeLength)
-            SFX:Destroy()
+           SFX:Destroy()
         end
         NotifyTemplate:TweenPosition(UDim2.new(0.5, 0, 0, 5), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
         NotifyTemplate.Progress.Value:TweenSize(UDim2.new(0, 0, 0, 3), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, Next[4] + 0.3, true)
@@ -76,9 +101,9 @@ function StepQueue(SelfCalled: boolean?)
     end
 end
 
-function Notify:Say(MessageColor: Color3, Emoji: string,  Text: string, Duration: number?)
+function Notify:Say(MessageType: string, Emoji: string,  Text: string, Duration: number?)
     task.spawn(function()
-        table.insert(Queue, {MessageColor, Emoji, Text, Duration or 2})
+        table.insert(Queue, {MessageType, Emoji, Text, Duration or 2})
         StepQueue()
     end)
 end
