@@ -295,9 +295,11 @@ function ChatSystem:Mount()
 		FadeTween:Play()
 
 		for _, Object in ipairs(FadeUI:GetDescendants()) do
-			FadeTweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-			FadeTween = game:GetService("TweenService"):Create(Object, FadeTweenInfo, {TextTransparency = 1})
-			FadeTween:Play()
+			if Object:IsA("TextLabel") then
+				FadeTweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+				FadeTween = game:GetService("TweenService"):Create(Object, FadeTweenInfo, {TextTransparency = 1})
+				FadeTween:Play()
+			end
 		end
 	end)
 end
