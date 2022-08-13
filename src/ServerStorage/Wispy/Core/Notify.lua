@@ -2,17 +2,17 @@ local Notify = {
     NotificationDictionary = {
 		Warning = {
             ProgressColor = Color3.fromHex("3edc7a"),
-            SoundEffect = script.Parent.Parent.Assets.SFX
+            SoundEffect = script.Parent.Parent.Assets.SFX.Notify
         },
 
 		Error = {
             ProgressColor = Color3.fromHex("ed5730"),
-            SoundEffect = script.Parent.Parent.Assets.SFX
+            SoundEffect = script.Parent.Parent.Assets.SFX.Notify
         },
 
 		Standard = {
             ProgressColor = Color3.fromHex("9c65d1"),
-            SoundEffect = script.Parent.Parent.Assets.SFX
+            SoundEffect = script.Parent.Parent.Assets.SFX.Notify
         },
 	}
 }
@@ -69,13 +69,12 @@ function StepQueue(SelfCalled: boolean?)
         NotifyTemplate.Progress.Value.Size = UDim2.new(1, 0, 0, 3)
         
         for _, key in pairs(Notify.NotificationDictionary) do
-            if Next[1] ~= key then
-                warn("First Parameter does not correlate to any keys in the dictionary!")
-                break
+            if Next[1] == key then
+                print(Next[1])
             end
         end
 
-        local NotifySFX = Notify.NotificationDictionary[Next[1]].SoundEffect:Clone()
+        local NotifySFX = Notify.NotificationDictionary[Next[1]].SoundEffect
         NotifyTemplate.Progress.Value.BackgroundColor3 = Notify.NotificationDictionary[Next[1]].ProgressColor
 
         --> Movement FX
