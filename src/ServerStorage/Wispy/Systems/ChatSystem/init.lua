@@ -29,6 +29,12 @@ local Constants = {
 		Spooky = Color3.fromRGB(0, 0, 0),
 		Wispy = Color3.fromRGB(170, 85, 255),
 		Willow = Color3.fromRGB(191, 118, 191)
+	},
+
+	NotifIconTemplates = {
+		WarningIcon = "rbxassetid://10573766832",
+		ErrorIcon = "rbxassetid://10573764025",
+		StandardIcon = "rbxassetid://10573754579"
 	}
 }
 
@@ -266,7 +272,7 @@ function ChatSystem:Mount()
 
 		local Author = msg:WaitForChild("author", 3)
 		if Author and Author.Value ~= self.LocalPlayer.Name then
-			self:Notify(("%s sent a message!"):format(Author.Value), ChatSystem.NotifIconTemplates.StandardIcon, 2)	
+			self:Notify(("%s sent a message!"):format(Author.Value), Constants.NotifIconTemplates.StandardIcon, 2)	
 		end
 	end))
 	

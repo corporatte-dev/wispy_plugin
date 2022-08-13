@@ -54,7 +54,7 @@ if Config.AssetID then
             if CopyConfig then
                 if CopyConfig.Version ~= Config.Version then
                     local Version = CopyConfig.Version
-                    Notify:Say(ColorTemplates.Error, IconTemplates.StandardIcon, ("Version %s of %s is Released! Please update in your plugin manager."):format(Version, Config.Name), 3)
+                    Notify:Say("Error", IconTemplates.StandardIcon, ("Version %s of %s is Released! Please update in your plugin manager."):format(Version, Config.Name), 3)
                     --> Do something here?...
                 end
             end
@@ -65,7 +65,7 @@ if Config.AssetID then
         end)
     
         if not S then
-            Notify:Say(ColorTemplates.Error, IconTemplates.ErrorIcon, "An internal error occurred when checking for wispy updates!", 3)
+            Notify:Say("Error", IconTemplates.ErrorIcon, "An internal error occurred when checking for wispy updates!", 3)
             warn(E) 
         end
     end)
@@ -145,4 +145,4 @@ Core.Maid:Add(plugin.Unloading:Connect(function()
 end))
 
 --> Let our end user know that the plugin is ready to go.
-Notify:Say(ColorTemplates.Standard, IconTemplates.StandardIcon, ("Wispy is setup and ready to go!"), 3)
+Notify:Say("Standard", IconTemplates.StandardIcon, ("Wispy is setup and ready to go!"), 3)

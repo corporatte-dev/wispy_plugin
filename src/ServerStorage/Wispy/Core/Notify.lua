@@ -85,7 +85,7 @@ function StepQueue(SelfCalled: boolean?)
             SFX.Parent = game.SoundService
             game.SoundService:PlayLocalSound(NotifySFX)
             task.wait(SFX.TimeLength)
-           SFX:Destroy()
+            SFX:Destroy()
         end
         NotifyTemplate:TweenPosition(UDim2.new(0.5, 0, 0, 5), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
         NotifyTemplate.Progress.Value:TweenSize(UDim2.new(0, 0, 0, 3), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, Next[4] + 0.3, true)
