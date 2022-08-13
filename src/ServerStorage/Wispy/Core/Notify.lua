@@ -12,6 +12,7 @@ local TextService = game:GetService("TextService")
 
 local NotifyGUI = CoreGUI:FindFirstChild("WispyNotifications")  
 local NotifyTemplate: Frame = script.Parent.Parent.Assets.UITemplates.NotificationTemplate:Clone()
+local NotifySFX: Sound = script.Parent.Parent.Assets.SFX.Notify
 
 --> If it doesn't exist, lets create it
 if not NotifyGUI then
@@ -52,6 +53,9 @@ function StepQueue(SelfCalled: boolean?)
         NotifyTemplate.Progress.Value.BackgroundColor3 = Next[1]
         
         --> Movement FX
+        if plugin:GetSetting("IsMuted") == true then
+            game.SoundService:PlayLocalSound(NotifySFX)
+        end
         NotifyTemplate:TweenPosition(UDim2.new(0.5, 0, 0, 5), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
         NotifyTemplate.Progress.Value:TweenSize(UDim2.new(0, 0, 0, 3), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, Next[4] + 0.3, true)
         task.wait(Next[4] + 0.3)
