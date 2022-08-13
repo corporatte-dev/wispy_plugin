@@ -30,6 +30,18 @@ local Constants = {
 		Wispy = Color3.fromRGB(170, 85, 255),
 		Willow = Color3.fromRGB(191, 118, 191)
 	},
+
+	NotifColorTemplates = {
+		Warning = Color3.fromHex("3edc7a"),
+		Error = Color3.fromHex("ed5730"),
+		Standard = Color3.fromHex("9c65d1")
+	},
+	
+	NotifIconTemplates = {
+		WarningIcon = "rbxassetid://10573766832",
+		ErrorIcon = "rbxassetid://10573764025",
+		StandardIcon = "rbxassetid://10573754579"
+	}
 }
 
 --> Typed Modules to be Loaded on Mount
@@ -266,7 +278,7 @@ function ChatSystem:Mount()
 
 		local Author = msg:WaitForChild("author", 3)
 		if Author and Author.Value ~= self.LocalPlayer.Name then
-			self:Notify(("%s sent a message!"):format(Author.Value), "✉️", 2)	
+			self:Notify(("%s sent a message!"):format(Author.Value), ChatSystem.NotifIconTemplates.StandardIcon, 2)	
 		end
 	end))
 	

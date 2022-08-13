@@ -18,9 +18,21 @@ local Systems = {}
 local Libraries = {}
 local Locations = {}
 
+local ColorTemplates = {
+    Warning = Color3.fromHex("3edc7a"),
+    Error = Color3.fromHex("ed5730"),
+    Standard = Color3.fromHex("9c65d1")
+}
+
+local IconTemplates = {
+    WarningIcon = "rbxassetid://10573766832",
+    ErrorIcon = "rbxassetid://10573764025",
+    StandardIcon = "rbxassetid://10573754579"
+}
+
 --! Prevent Plugin from Working in RunMode
 if RunService:IsRunning() then
-    Notify:Say("💔", "Wispy disabled during playtesting.", 4)
+    Notify:Say(ColorTemplates.Error, IconTemplates.ErrorIcon, "Wispy disabled during playtesting.", 4)
     return
 end
 
@@ -28,7 +40,7 @@ end
 local LocalUserID = StudioService:GetUserId()
 local Player = game.Players:GetPlayerByUserId(LocalUserID) or game.Players.LocalPlayer
 if Player == nil then
-    Notify:Say("💔", "Wispy can only be used in Team Create! Please enable Team Create to use this plugin.", 4)
+    Notify:Say(ColorTemplates.Error, IconTemplates.ErrorIcon, "Wispy can only be used in Team Create! Please enable Team Create to use this plugin.", 4)
     return
 end
 
@@ -42,7 +54,7 @@ if Config.AssetID then
             if CopyConfig then
                 if CopyConfig.Version ~= Config.Version then
                     local Version = CopyConfig.Version
-                    Notify:Say("💫", ("Version %s of %s is Released! Please update in your plugin manager."):format(Version, Config.Name), 3)
+                    Notify:Say(ColorTemplates.Error, IconTemplates.StandardIcon, ("Version %s of %s is Released! Please update in your plugin manager."):format(Version, Config.Name), 3)
                     --> Do something here?...
                 end
             end
@@ -53,7 +65,7 @@ if Config.AssetID then
         end)
     
         if not S then
-            Notify:Say("⚠️", "An internal error occurred when checking for wispy updates!", 3)
+            Notify:Say(ColorTemplates.Error, IconTemplates.ErrorIcon, "An internal error occurred when checking for wispy updates!", 3)
             warn(E) 
         end
     end)
@@ -73,7 +85,7 @@ function Core:GetFolder(Name: string)
 end
 
 function Core:Notify(Text: string, Emoji: string?, Duration: number?)
-    Notify:Say(Emoji or '🔮', Text, Duration)
+    Notify:Say(ColorTemplates.Standard, Emoji or IconTemplates.StandardIcon, Text, Duration)
 end
 
 --> Internal Methods
@@ -133,4 +145,4 @@ Core.Maid:Add(plugin.Unloading:Connect(function()
 end))
 
 --> Let our end user know that the plugin is ready to go.
-Notify:Say("🌟", ("Wispy is setup and ready to go!"), 3)
+Notify:Say(ColorTemplates.Standard, IconTemplates.StandardIcon, ("Wispy is setup and ready to go!"), 3)

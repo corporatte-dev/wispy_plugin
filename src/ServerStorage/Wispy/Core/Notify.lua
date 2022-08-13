@@ -11,7 +11,7 @@ local TextService = game:GetService("TextService")
 ]=]
 
 local NotifyGUI = CoreGUI:FindFirstChild("WispyNotifications")  
-local NotifyTemplate: Frame = script.Parent.Parent.Assets.NotificationTemplate:Clone()
+local NotifyTemplate: Frame = script.Parent.Parent.Assets.UITemplates.NotificationTemplate:Clone()
 
 --> If it doesn't exist, lets create it
 if not NotifyGUI then
@@ -45,14 +45,15 @@ function StepQueue(SelfCalled: boolean?)
         )
 
         --> Set its Properties
-        NotifyTemplate.Emoji.Emoji.Text = Next[1]
-        NotifyTemplate.Content.Content.Text = Next[2]
+        NotifyTemplate.Emoji.Icon.Image = Next[2]
+        NotifyTemplate.Content.Content.Text = Next[3]
 
         NotifyTemplate.Progress.Value.Size = UDim2.new(0, 0, 0, 3)
-
+        NotifyTemplate.Progress.Value.BackgroundColor3 = Next[1]
+        
         --> Movement FX
         NotifyTemplate:TweenPosition(UDim2.new(0.5, 0, 0, 5), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
-        NotifyTemplate.Progress.Value:TweenSize(UDim2.new(1, 0, 0, 3), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, Next[3] + 0.3, true)
+        NotifyTemplate.Progress.Value:TweenSize(UDim2.new(1, 0, 0, 3), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, Next[4] + 0.3, true)
         task.wait(Next[3] + 0.3)
         NotifyTemplate:TweenPosition(UDim2.new(0.5, 0, 0, -NotifyTemplate.Size.Y.Offset - 5), Enum.EasingDirection.In, Enum.EasingStyle.Quad, 0.2, true)
         task.wait(0.2)
@@ -65,9 +66,9 @@ function StepQueue(SelfCalled: boolean?)
     end
 end
 
-function Notify:Say(Emoji: string, Text: string, Duration: number?)
+function Notify:Say(MessageColor: Color3, Emoji: string,  Text: string, Duration: number?)
     task.spawn(function()
-        table.insert(Queue, {Emoji, Text, Duration or 2})
+        table.insert(Queue, {MessageColor, Emoji, Text, Duration or 2})
         StepQueue()
     end)
 end
