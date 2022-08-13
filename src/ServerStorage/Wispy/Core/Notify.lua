@@ -55,7 +55,12 @@ function StepQueue(SelfCalled: boolean?)
         --> Movement FX
         --! Might add more SFX options, but I don't want to make too many params into :Say()
         if plugin:GetSetting("IsMuted") == true then
+            local SFX = NotifySFX:Clone()
+            SFX.Parent = game.SoundService
+
             game.SoundService:PlayLocalSound(NotifySFX)
+            task.wait(SFX.TimeLength)
+            SFX:Destroy()
         end
         NotifyTemplate:TweenPosition(UDim2.new(0.5, 0, 0, 5), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
         NotifyTemplate.Progress.Value:TweenSize(UDim2.new(0, 0, 0, 3), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, Next[4] + 0.3, true)
