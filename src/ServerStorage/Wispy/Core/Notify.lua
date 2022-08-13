@@ -53,6 +53,7 @@ function StepQueue(SelfCalled: boolean?)
         NotifyTemplate.Progress.Value.BackgroundColor3 = Next[1]
         
         --> Movement FX
+        --! Might add more SFX options, but I don't want to make too many params into :Say()
         if plugin:GetSetting("IsMuted") == true then
             game.SoundService:PlayLocalSound(NotifySFX)
         end
