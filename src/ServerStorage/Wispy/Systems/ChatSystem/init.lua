@@ -105,9 +105,9 @@ function ChatSystem:CreateMessage(text: string, isMuted: boolean?)
 	if isMuted == false then
 		local soundClone = script.Parent.Parent.Assets.SFX.TalkSound:Clone()
 		soundClone.Parent = ChatWidget.ChatUI
-		for i = 1, #filtered, 1 do
+		for i = 1, #filtered / 2, 1 do
 			soundClone:Play()
-			task.wait(0.025)
+			task.wait(0.05)
 			soundClone.PitchShiftSoundEffect.Octave = math.random(5, 15) / 10
 		end
 		soundClone:Destroy()
@@ -260,7 +260,7 @@ function ChatSystem:Mount()
 	
 	Maid:Add(ChatWidget.ChatUI.ChatBox.ChatBox2.Input.FocusLost:Connect(function(enterPressed)
 		if not enterPressed then return end
-		self:CreateMessage(ChatWidget.ChatUI.ChatBox.ChatBox2.Input.Text)
+		self:CreateMessage(ChatWidget.ChatUI.ChatBox.ChatBox2.Input.Text, self.Plugin:GetSetting("IsMuted"))
 		ChatWidget.ChatUI.ChatBox.ChatBox2.Input.Text = ""
 		ChatWidget.ChatUI.ChatBox.ChatBox2.Input:CaptureFocus()
 	end))
