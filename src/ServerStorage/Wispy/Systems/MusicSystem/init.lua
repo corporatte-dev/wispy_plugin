@@ -105,6 +105,14 @@ function MusicSystem:Mount()
 	local tween = game:GetService("TweenService"):Create(MusicWidget.MusicUI.Background, info, {Position = UDim2.new(0, -100, 0, 0)})
 	tween:Play()
 
+    Maid:Add(music.Ended:Connect(function()
+        local currentSong = getCurrentSong(music)
+        music:Pause()
+        newSong(music, currentSong, "Forward")
+        music.TimePosition = 0
+        music:Play()
+    end))
+
     Maid:Add(slider.MouseButton1Down:Connect(function()
         movingSlider = true
     end))
