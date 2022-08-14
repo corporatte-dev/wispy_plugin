@@ -49,16 +49,24 @@ local function getCurrentSong(Music: Sound)
 end
 
 local function newSong(Music: Sound, currentSong: number, direction: string)
-    local newPosition
+    local newPosition: number
     Music.TimePosition = 0
 
     if direction == "Backward" then
-        newPosition = currentSong - 1
-
+        if currentSong == 1 then
+            newPosition = #playlist
+        else
+            newPosition = currentSong - 1
+        end
     elseif direction == "Forward" then
-        newPosition = currentSong + 1
-
+        if currentSong == #playlist then
+            newPosition = 1
+        else
+            newPosition = currentSong + 1
+        end
     end
+
+    Music.SoundId = playlist[newPosition]
 end
 
 local function updateTitle(Music: Sound)
@@ -77,7 +85,8 @@ function MusicSystem:Mount()
 
 	MusicWidget = PluginUI:GetWidget("Music")
 
-    local music = Instance.new("Sound")
+    local music = MusicWidget.MusicUI.Music or Instance.new("Sound")
+    music.Name = "Music"
     music.Parent = MusicWidget.MusicUI
 
     local playing = false
@@ -138,12 +147,12 @@ function MusicSystem:Mount()
     Maid:Add(MusicWidget.MusicUI.DiscFrame.Settings.RR.MouseButton1Click:Connect(function()
         local currentSong = getCurrentSong(music)
 
-        if debounce_2 then
-            debounce_2 = false
+        if debounce_3 then
+            debounce_3 = false
             newSong(music, currentSong, "Backward")
             updateTitle(music)
             task.wait(cooldown)
-            debounce_2 = true
+            debounce_3 = true
         end
     end))
 
