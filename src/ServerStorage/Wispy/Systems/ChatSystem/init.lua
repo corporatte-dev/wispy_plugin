@@ -107,7 +107,7 @@ function ChatSystem:CreateMessage(text: string, isMuted: boolean?)
 		soundClone.Parent = ChatWidget.ChatUI
 		for i = 1, #filtered, 1 do
 			soundClone:Play()
-			task.wait(0.125)
+			task.wait(0.025)
 			soundClone.PitchShiftSoundEffect.Octave = math.random(5, 15) / 10
 		end
 		soundClone:Destroy()
