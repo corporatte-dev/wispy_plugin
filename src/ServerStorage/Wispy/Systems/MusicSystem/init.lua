@@ -85,7 +85,7 @@ function MusicSystem:Mount()
 
 	MusicWidget = PluginUI:GetWidget("Music")
 
-    local music = script.Parent.Parent.Assets.SFX.TalkSound:Clone()
+    local music = Instance.new("Sound")
     music.Name = "Music"
     music.Parent = MusicWidget.MusicUI
     music.SoundId = playlist[1]

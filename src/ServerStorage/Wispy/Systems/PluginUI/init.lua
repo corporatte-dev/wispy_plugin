@@ -95,7 +95,7 @@ function PluginUI:Preload()
 
         Music = CreateWidget(
             "MusicUI",
-            DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Float, false, false, 350, 350, 350, 350),
+            DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Left, false, false, 350, 350, 350, 350),
             "Music Player",
             script.Parent.Parent.Assets.MusicUI
         )
