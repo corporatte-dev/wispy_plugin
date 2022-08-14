@@ -30,13 +30,11 @@ local playlist = {
     "rbxassetid://10032693585"
 }
 
-local function discUpdate(disc)
-    disc.Rotation = disc.Rotation + 3
-end
-
 local function spinDisc(discInstance, toggle)
     if toggle then
-        RS:BindToRenderStep("SpinningDisc", Enum.RenderPriority.First.Value, discUpdate(discInstance))
+        RS:BindToRenderStep("SpinningDisc", Enum.RenderPriority.Camera.Value, function()
+            discInstance.Rotation = discInstance.Rotation + 3
+        end)
     else
         RS:UnbindFromRenderStep("SpinningDisc")
     end
