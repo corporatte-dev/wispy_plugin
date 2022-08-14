@@ -68,7 +68,7 @@ function PluginUI:Preload()
     }
     
     if Plugin:GetSetting("IsMuted") == true then
-        Buttons.Mute.Icon = "rbxassetid://10410245041"
+        Buttons.Mute.Icon = "rbxassetid://10410244824"
     end
 
     --> Ensure that the plugin is usable in script editor mode.
@@ -104,12 +104,12 @@ function PluginUI:Preload()
         if muteToggle == true then
             muteToggle = false
             Plugin:SetSetting("IsMuted", false)
-            Buttons.Mute.Icon = "rbxassetid://10410244824"
+            Buttons.Mute.Icon = "rbxassetid://10410245041"
             self:Notify("Wispy is now unmuted!", NotifIconTemplates.StandardIcon, 2)
         else
             muteToggle = true
             Plugin:SetSetting("IsMuted", true)
-            Buttons.Mute.Icon = "rbxassetid://10410245041"
+            Buttons.Mute.Icon = "rbxassetid://10410244824"
             self:Notify("Wispy is now muted!", NotifIconTemplates.ErrorIcon, 2)
         end
     end))
