@@ -97,7 +97,7 @@ function MusicSystem:Mount()
     local cooldown = 0.125
 
     local slider = MusicWidget.MusicUI.DiscFrame.VolumeSlider.Slider
-    local sliderBG = MusicWidget.MusicUI.DiscFrame.VolumeSlider
+    local sliderBG = MusicWidget.MusicUI.DiscFrame.VolumeSlider.Frame
     local mouse = self.LocalPlayer:GetMouse()
 
     --> Animate Background

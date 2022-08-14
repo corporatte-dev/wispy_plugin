@@ -32,7 +32,7 @@ local IconTemplates = {
 
 --! Prevent Plugin from Working in RunMode
 if RunService:IsRunning() then
-    Notify:Say(ColorTemplates.Error, IconTemplates.ErrorIcon, "Wispy disabled during playtesting.", 4)
+    Notify:Say("Error", IconTemplates.ErrorIcon, "Wispy disabled during playtesting.", 4)
     return
 end
 
@@ -40,7 +40,7 @@ end
 local LocalUserID = StudioService:GetUserId()
 local Player = game.Players:GetPlayerByUserId(LocalUserID) or game.Players.LocalPlayer
 if Player == nil then
-    Notify:Say(ColorTemplates.Error, IconTemplates.ErrorIcon, "Wispy can only be used in Team Create! Please enable Team Create to use this plugin.", 4)
+    Notify:Say("Error", IconTemplates.ErrorIcon, "Wispy can only be used in Team Create! Please enable Team Create to use this plugin.", 4, Core.Plugin:GetSetting("IsMuted"))
     return
 end
 
@@ -54,7 +54,7 @@ if Config.AssetID then
             if CopyConfig then
                 if CopyConfig.Version ~= Config.Version then
                     local Version = CopyConfig.Version
-                    Notify:Say("Error", IconTemplates.StandardIcon, ("Version %s of %s is Released! Please update in your plugin manager."):format(Version, Config.Name), 3)
+                    Notify:Say("Error", IconTemplates.StandardIcon, ("Version %s of %s is Released! Please update in your plugin manager."):format(Version, Config.Name), 3, Core.Plugin:GetSetting("IsMuted"))
                     --> Do something here?...
                 end
             end
@@ -65,7 +65,7 @@ if Config.AssetID then
         end)
     
         if not S then
-            Notify:Say("Error", IconTemplates.ErrorIcon, "An internal error occurred when checking for wispy updates!", 3)
+            Notify:Say("Error", IconTemplates.ErrorIcon, "An internal error occurred when checking for wispy updates!", 3, Core.Plugin:GetSetting("IsMuted"))
             warn(E) 
         end
     end)
@@ -85,7 +85,7 @@ function Core:GetFolder(Name: string)
 end
 
 function Core:Notify(Text: string, Emoji: string?, Duration: number?)
-    Notify:Say("Standard", Emoji or IconTemplates.StandardIcon, Text, Duration)
+    Notify:Say("Standard", Emoji or IconTemplates.StandardIcon, Text, Duration, Core.Plugin:GetSetting("IsMuted"))
 end
 
 --> Internal Methods
@@ -145,4 +145,4 @@ Core.Maid:Add(plugin.Unloading:Connect(function()
 end))
 
 --> Let our end user know that the plugin is ready to go.
-Notify:Say("Standard", IconTemplates.StandardIcon, ("Wispy is setup and ready to go!"), 3)
+Notify:Say("Standard", IconTemplates.StandardIcon, ("Wispy is setup and ready to go!"), 3, Core.Plugin:GetSetting("IsMuted"))
