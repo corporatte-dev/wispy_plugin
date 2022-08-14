@@ -104,7 +104,6 @@ function MusicSystem:Mount()
 	local tween = game:GetService("TweenService"):Create(MusicWidget.MusicUI.Background, info, {Position = UDim2.new(0, -100, 0, 0)})
 	tween:Play()
 
-
     Maid:Add(slider.MouseButton1Down:Connect(function()
         movingSlider = true
     end))
@@ -119,11 +118,15 @@ function MusicSystem:Mount()
             if playing then
                 MusicWidget.MusicUI.DiscFrame.Settings.Play.Image = imageDictionary.PlayIcon
                 playing = false
-                music:Pause()
+                if music.IsLoaded then
+                    music:Pause()
+                end
             else
                 MusicWidget.MusicUI.DiscFrame.Settings.Play.Image = imageDictionary.PauseIcon
                 playing = true
-                music:Play()
+                if music.IsLoaded then
+                    music:Resume()
+                end
             end
             spinDisc(MusicWidget.MusicUI.DiscFrame.Disc, playing)
             updateTitle(music)
