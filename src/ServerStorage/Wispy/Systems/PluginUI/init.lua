@@ -16,6 +16,7 @@ local Toolbar = nil
 local muteToggle = true
 local avatarUI_open = false
 local chatUI_open = false
+local musicUI_open = false
 
 local Maid: Types.MaidObject
 local Plugin: Plugin
@@ -55,15 +56,16 @@ function PluginUI:Preload()
     --> Create Buttons
     Buttons = {
         Mute = Toolbar:CreateButton("Toggle Sounds", "Decides if you can hear the talking sounds", "rbxassetid://10410245041"),
-        Chat = Toolbar:CreateButton("Toggle Chat Window", "Opens and closes the chat widget", "rbxassetid://10417191274"),
+        Chat = Toolbar:CreateButton("Chat Window", "Opens and closes the chat widget", "rbxassetid://10417191274"),
         Avatar = Toolbar:CreateButton("Change Avatar", "Gives you a list of avatars to choose from", "rbxassetid://10417795038"),
-        Clear = Toolbar:CreateButton("Clear Log", "Wipes all messages from the message log", "rbxassetid://10429312452")
+        Clear = Toolbar:CreateButton("Clear Log", "Wipes all messages from the message log", "rbxassetid://10429312452"),
+        Music = Toolbar:CreateButton("Music Player", "Opens a widget to play music", "rbxassetid://10587406436")
     }
     
     --> Ensure that the plugin is usable in script editor mode.
     Buttons.Mute.ClickableWhenViewportHidden = true
     Buttons.Chat.ClickableWhenViewportHidden = true
-    Buttons.Avatar.ClickableWhenViewportHidden = true
+    Buttons.Music.ClickableWhenViewportHidden = true
     
     --> Generate Widgets
     Widgets = {
@@ -123,6 +125,16 @@ function PluginUI:Preload()
     
     Maid:Add(Buttons.Clear.Click:Connect(function()
         self:GetSystem("ChatSystem"):ClearLogs()
+    end))
+
+    Maid:Add(Buttons.Music.Click:Connect(function()
+        if musicUI_open then
+            musicUI_open = false
+            Widgets.Music.Enabled = false
+        else
+            musicUI_open = true
+            Widgets.Music.Enabled = true
+        end
     end))
 end
     

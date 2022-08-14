@@ -63,7 +63,7 @@ local function newSong(Music: Sound, currentSong: number, direction: string)
     end
 end
 
-local function updateUI(Music: Sound)
+local function updateTitle(Music: Sound)
     local success, info = pcall(MPS.GetProductInfo, MPS, tonumber(Music.SoundId))
 
     if success and info.AssetTypeId == Enum.AssetType.Audio then
@@ -113,6 +113,7 @@ function MusicSystem:Mount()
                 music:Play()
             end
             spinDisc(MusicWidget.MusicUI.DiscFrame.Disc, playing)
+            updateTitle(music)
             task.wait(cooldown)
             debounce_1 = true
         end
@@ -124,6 +125,7 @@ function MusicSystem:Mount()
         if debounce_2 then
             debounce_2 = false
             newSong(music, currentSong, "Forward")
+            updateTitle(music)
             task.wait(cooldown)
             debounce_2 = true
         end
@@ -135,6 +137,7 @@ function MusicSystem:Mount()
         if debounce_2 then
             debounce_2 = false
             newSong(music, currentSong, "Backward")
+            updateTitle(music)
             task.wait(cooldown)
             debounce_2 = true
         end
