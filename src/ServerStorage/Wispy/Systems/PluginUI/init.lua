@@ -69,6 +69,7 @@ function PluginUI:Preload()
     
     if Plugin:GetSetting("IsMuted") == true then
         Buttons.Mute.Icon = "rbxassetid://10410244824"
+        muteToggle = true
     end
 
     --> Ensure that the plugin is usable in script editor mode.
