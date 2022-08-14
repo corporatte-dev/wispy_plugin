@@ -104,11 +104,11 @@ function MusicSystem:Mount()
         if debounce_1 then
             debounce_1 = false
             if playing then
-                MusicWidget.MusicUI.Settings.Play.Image = imageDictionary.PlayIcon
+                MusicWidget.MusicUI.DiscFrame.Settings.Play.Image = imageDictionary.PlayIcon
                 playing = false
                 music:Pause()
             else
-                MusicWidget.MusicUI.Settings.Play.Image = imageDictionary.PauseIcon
+                MusicWidget.MusicUI.DiscFrame.Settings.Play.Image = imageDictionary.PauseIcon
                 playing = true
                 music:Play()
             end
@@ -161,7 +161,7 @@ function MusicSystem:Mount()
             local sliderValue = roundedOffsetClamped / roundedAbsSize
             
             music.Volume = sliderValue
-            MusicWidget.MusicUI.VolumeSlider.Amount.Text = tostring(sliderValue)
+            MusicWidget.MusicUI.DiscFrame.VolumeSlider.Amount.Text = tostring(sliderValue)
         end
     end))
 end
