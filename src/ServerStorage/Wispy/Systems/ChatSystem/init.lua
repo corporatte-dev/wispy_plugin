@@ -101,22 +101,19 @@ function ChatSystem:CreateMessage(text: string, isMuted: boolean?)
 	messageContainer.CanvasSize = UDim2.new(0, 0, 0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
 	messageContainer.CanvasPosition = Vector2.new(0, messageContainer.UIListLayout.AbsoluteContentSize.Y)
 	textObject:Animate(true)
-	task.wait(#filtered / 100)
-
+	
+	if isMuted == false then
+		local soundClone = script.Parent.Parent.Assets.SFX.TalkSound:Clone()
+		soundClone.Parent = ChatWidget.ChatUI
+		for i = 1, #filtered, 1 do
+			soundClone:Play()
+			task.wait(#filtered / 100)
+			soundClone.PitchShiftSoundEffect.Octave = math.random(5, 15) / 10
+		end
+		soundClone:Destroy()
+	end
 	messageTemplate:Destroy()
 	Util:CreateRecord(filtered)
-
-	--if isMuted == false then
-	--	local soundClone = script.Parent.Parent.Assets.SFX.TalkSound:Clone()
-	--	soundClone.Parent = game.SoundService
-	--	for i = 1, #filtered, 1 do
-	--		game.SoundService:PlayLocalSound(soundClone)
-	--		task.wait(0.125)
-	--		soundClone.PitchShiftSoundEffect.Octave = math.random(5, 15) / 10
-	--	end
-	--	soundClone:Destroy()
-	--end
-
 end
 
 function ChatSystem:UpdatePlrList()
