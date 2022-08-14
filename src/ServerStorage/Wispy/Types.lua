@@ -38,6 +38,12 @@ export type ChatSystem = {
     UpdatePlrList: (self: ChatSystem) -> nil
 } & System
 
+export type MusicSystem = {
+    Play: (self: MusicSystem) -> nil,
+    Stop: (self: MusicSystem) -> nil,
+    Pause: (self: MusicSystem) -> nil
+} & System
+
 export type PluginUI = {
     GetWidget: <Name>(self: PluginUI, Name: string) -> DockWidgetPluginGui,
     GetButton: <Name>(self: PluginUI, Name: string) -> PluginToolbarButton

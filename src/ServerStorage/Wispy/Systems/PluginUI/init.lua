@@ -69,7 +69,7 @@ function PluginUI:Preload()
     Widgets = {
         Avatar = CreateWidget(
             "AvatarUI",
-            DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Float, false, false, 300, 350, 300, 350),
+            DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Float, false, false, 350, 350, 350, 350),
             "Avatar Menu",
             script.Parent.Parent.Assets.AvatarUI
         ),
@@ -79,6 +79,13 @@ function PluginUI:Preload()
             DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Right, false, false, 400, 600, 200, 400),
             "Chat Window",
             script.Parent.Parent.Assets.ChatUI
+        ),
+
+        Music = CreateWidget(
+            "MusicUI",
+            DockWidgetPluginGuiInfo.new(Enum.InitialDockState.Float, false, false, 350, 350, 350, 350),
+            "Music Player",
+            script.Parent.Parent.Assets.MusicUI
         )
     }
 

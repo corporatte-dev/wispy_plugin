@@ -14,7 +14,6 @@ local Util = require(script.Util)
 --> Constants
 local Constants = {
     plugin_ID = 10422380892;
-	anim_Folder = script.Parent.Parent.Assets.Animations;
     messageLimit = 200;
 
 	ColorShortcuts = {
