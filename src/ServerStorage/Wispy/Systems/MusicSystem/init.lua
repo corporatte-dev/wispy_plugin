@@ -63,8 +63,12 @@ local function newSong(Music: Sound, currentSong: number, direction: string)
     end
 end
 
-local function updateUI()
+local function updateUI(Music: Sound)
+    local success, info = pcall(MPS.GetProductInfo, MPS, tonumber(Music.SoundId))
 
+    if success and info.AssetTypeId == Enum.AssetType.Audio then
+        MusicWidget.MusicUI.DiscFrame.Settings.Title.Text = info.Name
+    end
 end
 
 function MusicSystem:Mount()
@@ -84,8 +88,8 @@ function MusicSystem:Mount()
     local debounce_3 = true
     local cooldown = 0.125
 
-    local slider = MusicWidget.MusicUI.VolumeSlider.Slider
-    local sliderBG = MusicWidget.MusicUI.VolumeSlider
+    local slider = MusicWidget.MusicUI.DiscFrame.VolumeSlider.Slider
+    local sliderBG = MusicWidget.MusicUI.DiscFrame.VolumeSlider
     local mouse = self.LocalPlayer:GetMouse()
 
     Maid:Add(slider.MouseButton1Down:Connect(function()
@@ -96,7 +100,7 @@ function MusicSystem:Mount()
         movingSlider = false
     end))
 
-    Maid:Add(MusicWidget.MusicUI.Settings.Play.MouseButton1Click:Connect(function()
+    Maid:Add(MusicWidget.MusicUI.DiscFrame.Settings.Play.MouseButton1Click:Connect(function()
         if debounce_1 then
             debounce_1 = false
             if playing then
@@ -108,13 +112,13 @@ function MusicSystem:Mount()
                 playing = true
                 music:Play()
             end
-            spinDisc(MusicWidget.MusicUI.Disc, playing)
+            spinDisc(MusicWidget.MusicUI.DiscFrame.Disc, playing)
             task.wait(cooldown)
             debounce_1 = true
         end
     end))
 
-    Maid:Add(MusicWidget.MusicUI.Settings.Fast_Forward.MouseButton1Click:Connect(function()
+    Maid:Add(MusicWidget.MusicUI.DiscFrame.Settings.FF.MouseButton1Click:Connect(function()
         local currentSong = getCurrentSong(music)
 
         if debounce_2 then
@@ -125,12 +129,12 @@ function MusicSystem:Mount()
         end
     end))
 
-    Maid:Add(MusicWidget.MusicUI.Settings.Fast_Forward.MouseButton1Click:Connect(function()
+    Maid:Add(MusicWidget.MusicUI.DiscFrame.Settings.RR.MouseButton1Click:Connect(function()
         local currentSong = getCurrentSong(music)
 
         if debounce_2 then
             debounce_2 = false
-            newSong(music, currentSong, "Forward")
+            newSong(music, currentSong, "Backward")
             task.wait(cooldown)
             debounce_2 = true
         end
