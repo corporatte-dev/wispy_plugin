@@ -193,7 +193,8 @@ function ChatSystem:UpdateChat()
 		RecalculateBounds(messageTemplate)
 
 		messageTemplate.Author.Text = player
-		messageTemplate.Timestamp.Text = os.date("%x", Timestamp.Value)
+		messageTemplate.Date.Text = os.date("%x", Timestamp.Value)
+		messageTemplate.Time.Text = os.date("%X", Timestamp.Value)
 		messageTemplate.Author.TextColor3 = Constants.ColorShortcuts[DevAvatarFolder:FindFirstChild(player).Value]
 
 		--! Pretty bad but it works. Please fix this in the future lmao
