@@ -113,6 +113,10 @@ function MusicSystem:Mount()
         music:Play()
     end))
 
+    Maid:Add(music.Changed:Connect(function()
+        updateTitle(music)
+    end))
+
     Maid:Add(slider.MouseButton1Down:Connect(function()
         movingSlider = true
     end))
@@ -138,7 +142,6 @@ function MusicSystem:Mount()
                 end
             end
             spinDisc(MusicWidget.MusicUI.DiscFrame.Disc, playing)
-            updateTitle(music)
             task.wait(cooldown)
             debounce_1 = true
         end
@@ -150,7 +153,6 @@ function MusicSystem:Mount()
         if debounce_2 then
             debounce_2 = false
             newSong(music, currentSong, "Forward")
-            updateTitle(music)
             task.wait(cooldown)
             debounce_2 = true
         end
@@ -162,7 +164,6 @@ function MusicSystem:Mount()
         if debounce_3 then
             debounce_3 = false
             newSong(music, currentSong, "Backward")
-            updateTitle(music)
             task.wait(cooldown)
             debounce_3 = true
         end
