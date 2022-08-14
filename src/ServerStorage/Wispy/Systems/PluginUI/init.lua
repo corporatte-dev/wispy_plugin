@@ -13,7 +13,7 @@ local Buttons = {}
 local Widgets = {}
 local Toolbar = nil
 
-local muteToggle = true
+local muteToggle = false
 local avatarUI_open = false
 local chatUI_open = false
 local musicUI_open = false
