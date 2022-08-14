@@ -90,6 +90,12 @@ function MusicSystem:Mount()
     local sliderBG = MusicWidget.MusicUI.DiscFrame.VolumeSlider
     local mouse = self.LocalPlayer:GetMouse()
 
+    --> Animate Background
+    local info = TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.In, -1, false, 0)
+	local tween = game:GetService("TweenService"):Create(MusicWidget.MusicUI.Background, info, {Position = UDim2.new(0, -100, 0, 0)})
+	tween:Play()
+
+
     Maid:Add(slider.MouseButton1Down:Connect(function()
         movingSlider = true
     end))
