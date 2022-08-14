@@ -18,12 +18,6 @@ local Systems = {}
 local Libraries = {}
 local Locations = {}
 
-local ColorTemplates = {
-    Warning = Color3.fromHex("3edc7a"),
-    Error = Color3.fromHex("ed5730"),
-    Standard = Color3.fromHex("9c65d1")
-}
-
 local IconTemplates = {
     WarningIcon = "rbxassetid://10573766832",
     ErrorIcon = "rbxassetid://10573764025",

@@ -72,7 +72,7 @@ end
 local function updateTitle(Music: Sound)
     local success, info = pcall(MPS.GetProductInfo, MPS, tonumber(Music.SoundId))
 
-    if success and info.AssetTypeId == Enum.AssetType.Audio then
+    if success then
         MusicWidget.MusicUI.DiscFrame.Settings.Title.Text = info.Name
     end
 end
@@ -96,10 +96,6 @@ function MusicSystem:Mount()
     local debounce_3 = true
     local cooldown = 0.125
 
-    local slider = MusicWidget.MusicUI.DiscFrame.VolumeSlider.Slider
-    local sliderBG = MusicWidget.MusicUI.DiscFrame.VolumeSlider.Frame
-    local mouse = self.LocalPlayer:GetMouse()
-
     --> Animate Background
     local info = TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.In, -1, false, 0)
 	local tween = game:GetService("TweenService"):Create(MusicWidget.MusicUI.Background, info, {Position = UDim2.new(0, -100, 0, 0)})
@@ -115,14 +111,6 @@ function MusicSystem:Mount()
 
     Maid:Add(music.Changed:Connect(function()
         updateTitle(music)
-    end))
-
-    Maid:Add(slider.MouseButton1Down:Connect(function()
-        movingSlider = true
-    end))
-     
-    Maid:Add(slider.MouseButton1Up:Connect(function()
-        movingSlider = false
     end))
 
     Maid:Add(MusicWidget.MusicUI.DiscFrame.Settings.Play.MouseButton1Click:Connect(function()
@@ -166,28 +154,6 @@ function MusicSystem:Mount()
             newSong(music, currentSong, "Backward")
             task.wait(cooldown)
             debounce_3 = true
-        end
-    end))
-
-    Maid:Add(mouse.Button1Up:Connect(function()
-        movingSlider = false
-    end))
-     
-    Maid:Add(mouse.Move:Connect(function()
-        if movingSlider then
-            local xOffset = math.floor((mouse.X - sliderBG.AbsolutePosition.X) / Settings.snapAmount + 0.5) * Settings.snapAmount
-            local xOffsetClamped = math.clamp(xOffset, Settings.pixelsFromEdge, sliderBG.AbsoluteSize.X - Settings.pixelsFromEdge)
-            local sliderPosNew = UDim2.new(0, xOffsetClamped, slider.Position.Y)
-        
-            slider.Position = sliderPosNew
-            
-            local roundedAbsSize = math.floor(sliderBG.AbsoluteSize.X / Settings.snapAmount + 0.5) * Settings.snapAmount
-            local roundedOffsetClamped = math.floor(xOffsetClamped / Settings.snapAmount + 0.5) * Settings.snapAmount
-            
-            local sliderValue = roundedOffsetClamped / roundedAbsSize
-            
-            music.Volume = sliderValue
-            MusicWidget.MusicUI.DiscFrame.VolumeSlider.Amount.Text = tostring(sliderValue)
         end
     end))
 end
