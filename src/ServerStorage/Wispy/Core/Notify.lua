@@ -40,7 +40,6 @@ end
 
 --> Clear any stuck notifications
 NotifyGUI:ClearAllChildren()
-
 NotifyTemplate.Parent = NotifyGUI
 
 local Queue = {}
@@ -78,10 +77,10 @@ function StepQueue(SelfCalled: boolean?)
         NotifyTemplate.Progress.Value.BackgroundColor3 = Notify.NotificationDictionary[Next[1]].ProgressColor
 
         --> Movement FX
-        --! Might add more SFX options, but I don't want to make too many params into :Say()
-        if Plugin:GetSetting("IsMuted") == true then
+        
+        if Next[5] == true then
             local SFX = NotifySFX:Clone()
-            SFX.Parent = game.SoundService
+            SFX.Parent = NotifyTemplate
             game.SoundService:PlayLocalSound(NotifySFX)
             task.wait(SFX.TimeLength)
             SFX:Destroy()
@@ -100,9 +99,9 @@ function StepQueue(SelfCalled: boolean?)
     end
 end
 
-function Notify:Say(MessageType: string, Emoji: string,  Text: string, Duration: number?)
+function Notify:Say(MessageType: string, Emoji: string,  Text: string, Duration: number?, Muted: boolean?)
     task.spawn(function()
-        table.insert(Queue, {MessageType, Emoji, Text, Duration or 2})
+        table.insert(Queue, {MessageType, Emoji, Text, Duration or 2, Muted or false})
         StepQueue()
     end)
 end

@@ -22,6 +22,11 @@ local Maid: Types.MaidObject
 local Plugin: Plugin
 local ChatSystem: Types.ChatSystem
 local OnChatScale: Types.DeferObject
+local NotifIconTemplates = {
+    WarningIcon = "rbxassetid://10573766832",
+    ErrorIcon = "rbxassetid://10573764025",
+    StandardIcon = "rbxassetid://10573754579"
+}
 
 --> Internal Functions
 function CreateWidget(ID: string, WidgetInfo: DockWidgetPluginGuiInfo, Title: string, UI: ScreenGui)
@@ -62,6 +67,10 @@ function PluginUI:Preload()
         Music = Toolbar:CreateButton("Music Player", "Opens a widget to play music", "rbxassetid://10587406436")
     }
     
+    if Plugin:GetSetting("IsMuted") == true then
+        Buttons.Mute.Icon = "rbxassetid://10410245041"
+    end
+
     --> Ensure that the plugin is usable in script editor mode.
     Buttons.Mute.ClickableWhenViewportHidden = true
     Buttons.Chat.ClickableWhenViewportHidden = true
@@ -96,10 +105,12 @@ function PluginUI:Preload()
             muteToggle = false
             Plugin:SetSetting("IsMuted", false)
             Buttons.Mute.Icon = "rbxassetid://10410244824"
+            self:Notify("Wispy is now unmuted!", NotifIconTemplates.StandardIcon, 2)
         else
             muteToggle = true
             Plugin:SetSetting("IsMuted", true)
             Buttons.Mute.Icon = "rbxassetid://10410245041"
+            self:Notify("Wispy is now muted!", NotifIconTemplates.ErrorIcon, 2)
         end
     end))
     
