@@ -34,9 +34,9 @@ local function discUpdate(disc)
     disc.Rotation = disc.Rotation + 3
 end
 
-local function spinDisc(disc, toggle)
+local function spinDisc(discInstance, toggle)
     if toggle then
-        RS:BindToRenderStep("SpinningDisc", Enum.RenderPriority.Last.Value, discUpdate(disc))
+        RS:BindToRenderStep("SpinningDisc", Enum.RenderPriority.First.Value, discUpdate(discInstance))
     else
         RS:UnbindFromRenderStep("SpinningDisc")
     end
