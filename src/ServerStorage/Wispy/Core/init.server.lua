@@ -139,4 +139,4 @@ Core.Maid:Add(plugin.Unloading:Connect(function()
 end))
 
 --> Let our end user know that the plugin is ready to go.
-Notify:Say("Standard", IconTemplates.StandardIcon, ("Wispy is setup and ready to go!"), 3, Core.Plugin:GetSetting("IsMuted"))
+Notify:Say("Standard", IconTemplates.StandardIcon, ("Wispy is setup and ready to go!"), 3)
