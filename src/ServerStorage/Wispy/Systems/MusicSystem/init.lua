@@ -25,9 +25,9 @@ local imageDictionary = {
 }
 
 local playlist = {
-    "rbxassetid://",
-    "rbxassetid://",
-    "rbxassetid://"
+    "rbxassetid://10159111929",
+    "rbxassetid://6276207937",
+    "rbxassetid://10032693585"
 }
 
 local function discUpdate(disc)
