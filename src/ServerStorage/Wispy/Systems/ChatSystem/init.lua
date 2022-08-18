@@ -38,6 +38,7 @@ local Constants = {
 }
 
 --> Typed Modules to be Loaded on Mount
+local AvatarSystem: Types.AvatarSystem
 local RichText: Types.RichText
 local Maid: Types.MaidObject
 local Plugin: Plugin
@@ -218,6 +219,7 @@ function ChatSystem:Mount()
 	setmetatable(Util, {__index = self})
 
 	--> Load Dependancies
+	AvatarSystem = self:GetSystem("AvatarSystem")
 	PluginUI = self:GetSystem("PluginUI")
 	RichText = self:GetLib("RichText")
     Plugin = self.Plugin
@@ -272,6 +274,7 @@ function ChatSystem:Mount()
 		local Author = msg:WaitForChild("author", 3)
 		if Author and Author.Value ~= self.LocalPlayer.Name then
 			self:Notify(("%s sent a message!"):format(Author.Value), Constants.NotifIconTemplates.StandardIcon, 2)	
+			AvatarSystem:CreateBubble(Author.Value, msg.Value)
 		end
 	end))
 	

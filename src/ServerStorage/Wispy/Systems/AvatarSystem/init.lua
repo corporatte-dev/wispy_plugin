@@ -8,9 +8,11 @@ local AvatarSystem = {} :: Types.AvatarSystem
 ]=]
 
 local RunService = game:GetService("RunService")
+local TS = game:GetService("TweenService")
 
 --> Locations
 local AvatarTemplate = script.Parent.Parent.Assets.UITemplates.CharacterTemplate
+local chatBubbleTemplate = script.Parent.Parent.Assets.UITemplates.ChatBubble
 local CharacterFolder = script.Parent.Parent.Assets.Characters
 
 --> Variables
@@ -28,6 +30,17 @@ local Avatar: Model
 local arm_sens = 0.25
 
 --> Internal Methods
+function AvatarSystem:CreateBubble(playerName, newMessage)
+	local newChatBubble = chatBubbleTemplate:Clone()
+	newChatBubble.TextButton.Text = newMessage.Value
+	newChatBubble.Parent = CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName)
+
+	TS:Create(newChatBubble.TextButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In, 0, false, 0), {Position = UDim2.fromScale(0.5, 0.5)}):Play()
+	task.wait(5)
+	TS:Create(newChatBubble.TextButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In, 0, false, 0), {Position = UDim2.fromScale(0.5, 0.5)}):Play()
+	newChatBubble:Destroy()
+end
+
 function VisualizeAvatar(playerName)
 	if CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName) then
 		local old_avatar = CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName)
