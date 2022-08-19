@@ -7,10 +7,9 @@ local MPS = game:GetService("MarketplaceService")
 local Maid: Types.MaidObject
 local PluginUI: Types.PluginUI
 local MusicFolder: Folder
-
 local MusicWidget: DockWidgetPluginGui
 
-local playlist = MusicFolder:GetChildren()
+local playlist
 
 local imageDictionary = {
     PlayIcon = "rbxassetid://4918373417",
@@ -29,6 +28,17 @@ local function spinDisc(discInstance, toggle)
     end
 end
 
+local function newSong(NewValue: string)
+    local newEntry = "rbxassetid://"..NewValue
+    local sound = Instance.new("NumberValue")
+    sound.Value = newEntry
+    sound.Parent = MusicFolder
+end
+
+local function updatePlaylist()
+    playlist = MusicFolder:GetChildren()
+end
+
 local function getCurrentSong(Music: Sound)
     for i, song in pairs(playlist) do
         if Music.SoundId == song then
@@ -37,7 +47,7 @@ local function getCurrentSong(Music: Sound)
     end
 end
 
-local function newSong(Music: Sound, currentSong: number, direction: string)
+local function changePos(Music: Sound, currentSong: number, direction: string)
     local newPosition: number
     Music.TimePosition = 0
 
@@ -69,7 +79,6 @@ end
 function MusicSystem:Mount()
 	--> Load Dependancies
 	PluginUI = self:GetSystem("PluginUI")
-    Plugin = self.Plugin
     Maid = self.Maid
 
 	MusicWidget = PluginUI:GetWidget("Music")
@@ -91,10 +100,12 @@ function MusicSystem:Mount()
 	local tween = game:GetService("TweenService"):Create(MusicWidget.MusicUI.Background, info, {Position = UDim2.new(0, -100, 0, 0)})
 	tween:Play()
 
+    updatePlaylist()
+
     Maid:Add(music.Ended:Connect(function()
         local currentSong = getCurrentSong(music)
         music:Pause()
-        newSong(music, currentSong, "Forward")
+        changePos(music, currentSong, "Forward")
         music.TimePosition = 0
         music:Play()
     end))
@@ -130,7 +141,7 @@ function MusicSystem:Mount()
 
         if debounce_2 then
             debounce_2 = false
-            newSong(music, currentSong, "Forward")
+            changePos(music, currentSong, "Forward")
             task.wait(cooldown)
             debounce_2 = true
         end
@@ -141,11 +152,19 @@ function MusicSystem:Mount()
 
         if debounce_3 then
             debounce_3 = false
-            newSong(music, currentSong, "Backward")
+            changePos(music, currentSong, "Backward")
             task.wait(cooldown)
             debounce_3 = true
         end
     end))
+
+    Maid:Add(MusicWidget.MusicUI.DiscFrame.Settings.SoundBox.FocusLost:Connect(function(enterPressed)
+        if not enterPressed then return end
+        newSong(MusicWidget.MusicUI.DiscFrame.Settings.SoundBox.Text)
+        updatePlaylist()
+    end))
+
+    Maid:Add(MusicFolder.ChildRemoved:Connect(updatePlaylist))
 end
 
 return MusicSystem
