@@ -84,6 +84,8 @@ function MusicSystem:Mount()
 	MusicWidget = PluginUI:GetWidget("Music")
     MusicFolder = MusicSystem:GetFolder("music_folder")
 
+    updatePlaylist()
+
     local music = Instance.new("Sound")
     music.Name = "Music"
     music.Parent = MusicWidget.MusicUI
@@ -99,8 +101,6 @@ function MusicSystem:Mount()
     local info = TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.In, -1, false, 0)
 	local tween = game:GetService("TweenService"):Create(MusicWidget.MusicUI.Background, info, {Position = UDim2.new(0, -100, 0, 0)})
 	tween:Play()
-
-    updatePlaylist()
 
     Maid:Add(music.Ended:Connect(function()
         local currentSong = getCurrentSong(music)
