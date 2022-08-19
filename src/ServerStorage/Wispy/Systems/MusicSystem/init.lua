@@ -87,7 +87,7 @@ function MusicSystem:Mount()
     local music = Instance.new("Sound")
     music.Name = "Music"
     music.Parent = MusicWidget.MusicUI
-    music.SoundId = playlist[1]
+    music.SoundId = playlist[1] or "rbxassetid://142376088"
 
     local playing = false
     local debounce_1 = true
