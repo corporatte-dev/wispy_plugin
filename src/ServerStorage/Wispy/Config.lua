@@ -24,6 +24,10 @@ local Config: Types.Config = {
             Terrain = {
                 cam_avatars = {}
             }
+        },
+
+        SoundService = {
+            music_folder = {}
         }
     }
 }

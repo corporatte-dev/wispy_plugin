@@ -5,29 +5,18 @@ local MPS = game:GetService("MarketplaceService")
 
 --> Typed Modules to be Loaded on Mount
 local Maid: Types.MaidObject
-local Plugin: Plugin
 local PluginUI: Types.PluginUI
+local MusicFolder: Folder
 
 local MusicWidget: DockWidgetPluginGui
 
-local movingSlider = false
-
-local Settings = {
-    snapAmount = 100,
-    pixelsFromEdge = 10
-}
+local playlist = MusicFolder:GetChildren()
 
 local imageDictionary = {
     PlayIcon = "rbxassetid://4918373417",
     PauseIcon = "rbxassetid://3192517633",
     Fast_Forward = "rbxassetid://4458820527",
     Fast_Rewind = "rbxassetid://4458823312"
-}
-
-local playlist = {
-    "rbxassetid://10159111929",
-    "rbxassetid://6276207937",
-    "rbxassetid://10032693585"
 }
 
 local function spinDisc(discInstance, toggle)
@@ -84,6 +73,7 @@ function MusicSystem:Mount()
     Maid = self.Maid
 
 	MusicWidget = PluginUI:GetWidget("Music")
+    MusicFolder = MusicSystem:GetFolder("music_folder")
 
     local music = Instance.new("Sound")
     music.Name = "Music"
