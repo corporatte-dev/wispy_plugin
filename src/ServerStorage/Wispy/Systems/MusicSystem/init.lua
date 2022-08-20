@@ -79,11 +79,9 @@ local function changePos(Music: Sound, currentSong: number, direction: string)
 end
 
 local function updateTitle(Music: Sound)
-    local success, info = pcall(MPS.GetProductInfo, MPS, tonumber(Music.SoundId))
+    local index = getCurrentSong(Music)
 
-    if success then
-        MusicWidget.MusicUI.DiscFrame.Settings.Title.Text = info.Name
-    end
+    MusicWidget.MusicUI.DiscFrame.Settings.Title.Text = "Current Playlist Position: "..index
 end
 
 function MusicSystem:Mount()
