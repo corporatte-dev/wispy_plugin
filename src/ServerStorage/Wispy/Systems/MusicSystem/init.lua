@@ -96,9 +96,19 @@ function MusicSystem:Mount()
 
     updatePlaylist()
 
-    local music = Instance.new("Sound")
+    local mouse = self.LocalPlayer:GetMouse()
+
+    local music = MusicWidget.MusicUI.Music or Instance.new("Sound")
     music.Name = "Music"
     music.Parent = MusicWidget.MusicUI
+
+    local sliderBG = MusicWidget.MusicUI.DiscFrame.SliderBG
+    local slider = sliderBG:WaitForChild("Slider")
+    local sliderText = sliderBG:WaitForChild("Amount")
+
+    local snapAmount = 100
+    local pixelsFromEdge = 5
+    local movingSlider = false
 
     if MusicFolder:GetChildren()[1] ~= nil then
         music.SoundId = MusicFolder:GetChildren()[1].Value
@@ -185,7 +195,39 @@ function MusicSystem:Mount()
         if not enterPressed then return end
         newSong(MusicWidget.MusicUI.DiscFrame.Settings.SoundBox.Text)
         MusicWidget.MusicUI.DiscFrame.Settings.SoundBox.Text = ""
+        MusicSystem:Notify("Music entry has been added!", IconDictionary.StandardIcon, 2)
         updatePlaylist()
+    end))
+
+    Maid:Add(slider.MouseButton1Down:Connect(function()
+        movingSlider = true
+    end))
+     
+    Maid:Add(slider.MouseButton1Up:Connect(function()
+        movingSlider = false
+    end))
+
+    Maid:Add(mouse.Button1Up:Connect(function()
+        movingSlider = false
+    end))
+
+    Maid:Add(mouse.Move:Connect(function()
+        if movingSlider then
+            local yOffset = math.floor((mouse.Y - sliderBG.AbsolutePosition.Y) / snapAmount + 0.5) * snapAmount
+            local yOffsetClamped = math.clamp(yOffset, pixelsFromEdge, sliderBG.AbsoluteSize.Y - pixelsFromEdge)
+            
+            local sliderPosNew = UDim2.new(slider.Position.X, 0, yOffsetClamped)
+            
+            slider.Position = sliderPosNew
+            
+            local roundedAbsSize = math.floor(sliderBG.AbsoluteSize.X / snapAmount + 0.5) * snapAmount
+            local roundedOffsetClamped = math.floor(yOffsetClamped / snapAmount + 0.5) * snapAmount
+            
+            local sliderValue = roundedOffsetClamped / roundedAbsSize
+            
+            music.Volume = sliderValue
+            sliderText.Text = tostring(sliderValue)
+        end
     end))
 
     Maid:Add(MusicFolder.ChildRemoved:Connect(updatePlaylist))
