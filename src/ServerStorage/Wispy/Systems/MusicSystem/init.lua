@@ -18,6 +18,12 @@ local imageDictionary = {
     Fast_Rewind = "rbxassetid://4458823312"
 }
 
+local IconDictionary = {
+    WarningIcon = "rbxassetid://10573766832",
+    ErrorIcon = "rbxassetid://10573764025",
+    StandardIcon = "rbxassetid://10573754579"
+}
+
 local function spinDisc(discInstance, toggle)
     if toggle then
         RS:BindToRenderStep("SpinningDisc", Enum.RenderPriority.Camera.Value, function()
@@ -130,8 +136,10 @@ function MusicSystem:Mount()
             else
                 MusicWidget.MusicUI.DiscFrame.Settings.Play.Image = imageDictionary.PauseIcon
                 playing = true
-                if music.SoundId == "" then
+                if music.SoundId == "" and MusicFolder:GetChildren()[1] ~= nil then
                     music.SoundId = MusicFolder:GetChildren()[1].Value
+                else if music.SoundId == "" and MusicFolder:GetChildren()[1] == nil then
+                    MusicSystem:Notify("You need to add song entrys before playing music!", IconDictionary.ErrorIcon, 2)
                 end
                 if music.IsLoaded then
                     music:Resume()
