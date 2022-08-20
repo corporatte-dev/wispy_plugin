@@ -196,10 +196,10 @@ defaults.TextYAlignment = "Center" -- Alignment of the text on the line, only ma
 defaults.TextScaled = false
 defaults.TextScaleRelativeTo = "Frame" -- "Frame" or "Screen" If Frame, will scale relative to vertical size of the parent frame. If Screen, will scale relative to vertical size of the ScreenGui.
 defaults.TextScale = 0.5 -- If you want the frame to have a nominal count of n lines of text, make this value 1 / n. For four lines, 1 / 4 = 0.25.
-defaults.TextSize = 14 -- Only applicable if TextScaled = false
+defaults.TextSize = 20 -- Only applicable if TextScaled = false
 
 -- TextLabel default properties
-defaults.Font = "Code"
+defaults.Font = "SourceSans"
 defaults.TextColor3 = "White"
 defaults.TextStrokeColor3 = "White"
 defaults.TextTransparency = 0
