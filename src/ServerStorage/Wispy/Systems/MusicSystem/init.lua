@@ -163,6 +163,7 @@ function MusicSystem:Mount()
     Maid:Add(MusicWidget.MusicUI.DiscFrame.Settings.SoundBox.FocusLost:Connect(function(enterPressed)
         if not enterPressed then return end
         newSong(MusicWidget.MusicUI.DiscFrame.Settings.SoundBox.Text)
+        MusicWidget.MusicUI.DiscFrame.Settings.SoundBox.Text = ""
         updatePlaylist()
     end))
 
