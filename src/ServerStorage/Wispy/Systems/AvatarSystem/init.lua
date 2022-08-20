@@ -147,7 +147,7 @@ function AvatarSystem:Mount()
 	local charValue = DevAvatarFolder:FindFirstChild(self.LocalPlayer.Name) or Instance.new("StringValue")
 	charValue.Parent = DevAvatarFolder
 	charValue.Name = self.LocalPlayer.Name
-	charValue.Value = Plugin:GetSetting("UserAvatar")
+	charValue.Value = Plugin:GetSetting("UserAvatar") or "Wispy"
 
     --> Loop through each character model.
     for i, Character in pairs(CharacterFolder:GetChildren()) do
