@@ -36,7 +36,7 @@ function AvatarSystem:CreateBubble(playerName, newMessage)
 	end
 
 	local newChatBubble = chatBubbleTemplate:Clone()
-	newChatBubble.TextButton.Text = newMessage.Value
+	newChatBubble.TextButton.Text = newMessage
 	newChatBubble.Parent = CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName)
 	newChatBubble.HideFromPlayer = game.Players[playerName]
 
