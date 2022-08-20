@@ -55,19 +55,19 @@ local function changePos(Music: Sound, currentSong: number, direction: string)
 
     if direction == "Backward" then
         if currentSong == 1 then
-            newPosition = #playlist
+            newPosition = #MusicFolder:GetChildren()
         else
             newPosition = currentSong - 1
         end
     elseif direction == "Forward" then
-        if currentSong == #playlist then
+        if currentSong == #MusicFolder:GetChildren() then
             newPosition = 1
         else
             newPosition = currentSong + 1
         end
     end
 
-    Music.SoundId = playlist[newPosition]
+    Music.SoundId = MusicFolder:GetChildren()[newPosition]
 end
 
 local function updateTitle(Music: Sound)
