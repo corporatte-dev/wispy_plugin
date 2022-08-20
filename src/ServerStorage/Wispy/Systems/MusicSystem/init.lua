@@ -93,7 +93,7 @@ function MusicSystem:Mount()
     local music = Instance.new("Sound")
     music.Name = "Music"
     music.Parent = MusicWidget.MusicUI
-    music.SoundId = playlist[1] or "rbxassetid://142376088"
+    music.SoundId = playlist[1] or ""
 
     local playing = false
     local debounce_1 = true
@@ -130,6 +130,9 @@ function MusicSystem:Mount()
             else
                 MusicWidget.MusicUI.DiscFrame.Settings.Play.Image = imageDictionary.PauseIcon
                 playing = true
+                if music.SoundId == "" then
+                    music.SoundId = MusicFolder:GetChildren()[1].Value
+                end
                 if music.IsLoaded then
                     music:Resume()
                 end
