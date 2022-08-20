@@ -81,7 +81,9 @@ end
 local function updateTitle(Music: Sound)
     local index = getCurrentSong(Music)
 
-    MusicWidget.MusicUI.DiscFrame.Settings.Title.Text = "Current Playlist Position: "..index
+    if index ~= nil then
+        MusicWidget.MusicUI.DiscFrame.Settings.Title.Text = "Current Playlist Position: "..index
+    end
 end
 
 function MusicSystem:Mount()
