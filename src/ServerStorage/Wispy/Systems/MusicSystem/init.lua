@@ -99,7 +99,12 @@ function MusicSystem:Mount()
     local music = Instance.new("Sound")
     music.Name = "Music"
     music.Parent = MusicWidget.MusicUI
-    music.SoundId = MusicFolder:GetChildren()[1].Value or ""
+
+    if MusicFolder:GetChildren()[1] ~= nil then
+        music.SoundId = MusicFolder:GetChildren()[1].Value
+    else
+        music.SoundId = ""
+    end
 
     local playing = false
     local debounce_1 = true
