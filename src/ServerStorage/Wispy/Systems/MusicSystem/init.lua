@@ -30,7 +30,7 @@ end
 
 local function newSong(NewValue: string)
     local newEntry = "rbxassetid://"..NewValue
-    local sound = Instance.new("NumberValue")
+    local sound = Instance.new("StringValue")
     sound.Name = "Entry" .. #MusicFolder:GetChildren()
     sound.Value = newEntry
     sound.Archivable = false
