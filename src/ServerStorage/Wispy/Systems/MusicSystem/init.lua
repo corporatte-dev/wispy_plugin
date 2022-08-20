@@ -220,7 +220,7 @@ function MusicSystem:Mount()
             
             slider.Position = sliderPosNew
             
-            local roundedAbsSize = math.floor(sliderBG.AbsoluteSize.X / snapAmount + 0.5) * snapAmount
+            local roundedAbsSize = math.floor(sliderBG.AbsoluteSize.Y / snapAmount + 0.5) * snapAmount
             local roundedOffsetClamped = math.floor(yOffsetClamped / snapAmount + 0.5) * snapAmount
             
             local sliderValue = roundedOffsetClamped / roundedAbsSize
