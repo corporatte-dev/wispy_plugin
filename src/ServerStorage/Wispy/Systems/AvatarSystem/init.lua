@@ -31,10 +31,6 @@ local arm_sens = 0.25
 
 --> Internal Methods
 function AvatarSystem:CreateBubble(playerName, newMessage)
-	if CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName):FindFirstChild("ChatBubble_seen") then
-		CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName):FindFirstChild("ChatBubble_seen"):Destroy()
-	end
-
 	if CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName) then
 		local newChatBubble = chatBubbleTemplate:Clone()
 		newChatBubble.TextButton.Text = newMessage
