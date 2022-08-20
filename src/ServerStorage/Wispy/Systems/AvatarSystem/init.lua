@@ -38,6 +38,7 @@ function AvatarSystem:CreateBubble(playerName, newMessage)
 	local newChatBubble = chatBubbleTemplate:Clone()
 	newChatBubble.TextButton.Text = newMessage.Value
 	newChatBubble.Parent = CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName)
+	newChatBubble.HideFromPlayer = 
 
 	TS:Create(newChatBubble.TextButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In, 0, false, 0), {Position = UDim2.fromScale(0.5, 0.5)}):Play()
 	newChatBubble.Name = "ChatBubble_seen"

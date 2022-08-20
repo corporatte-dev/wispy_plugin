@@ -270,12 +270,12 @@ function ChatSystem:Mount()
 	
 	Maid:Add(MessagesFolder.ChildAdded:Connect(function(msg)
 		self:UpdateChat()
-
 		local Author = msg:WaitForChild("author", 3)
 		if Author and Author.Value ~= self.LocalPlayer.Name then
 			self:Notify(("%s sent a message!"):format(Author.Value), Constants.NotifIconTemplates.StandardIcon, 2)	
-			AvatarSystem:CreateBubble(Author.Value, msg.Value)
+			
 		end
+		AvatarSystem:CreateBubble(Author.Value, msg.Value)
 	end))
 	
 	Maid:Add(MessagesFolder.ChildRemoved:Connect(function()
