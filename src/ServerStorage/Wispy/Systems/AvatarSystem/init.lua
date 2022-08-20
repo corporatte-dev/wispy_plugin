@@ -35,16 +35,18 @@ function AvatarSystem:CreateBubble(playerName, newMessage)
 		CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName):FindFirstChild("ChatBubble_seen"):Destroy()
 	end
 
-	local newChatBubble = chatBubbleTemplate:Clone()
-	newChatBubble.TextButton.Text = newMessage
-	newChatBubble.Parent = CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName)
-	newChatBubble.HideFromPlayer = game.Players[playerName]
+	if CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName) then
+		local newChatBubble = chatBubbleTemplate:Clone()
+		newChatBubble.TextButton.Text = newMessage
+		newChatBubble.Parent = CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName)
+		newChatBubble.HideFromPlayer = game.Players[playerName]
 
-	TS:Create(newChatBubble.TextButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In, 0, false, 0), {Position = UDim2.fromScale(0.5, 0.5)}):Play()
-	newChatBubble.Name = "ChatBubble_seen"
-	task.wait(5)
-	TS:Create(newChatBubble.TextButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In, 0, false, 0), {Position = UDim2.fromScale(0.5, 1.5)}):Play()
-	newChatBubble:Destroy()
+		TS:Create(newChatBubble.TextButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In, 0, false, 0), {Position = UDim2.fromScale(0.5, 0.5)}):Play()
+		newChatBubble.Name = "ChatBubble_seen"
+		task.wait(5)
+		TS:Create(newChatBubble.TextButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In, 0, false, 0), {Position = UDim2.fromScale(0.5, 1.5)}):Play()
+		newChatBubble:Destroy()
+	end
 end
 
 function VisualizeAvatar(playerName)
