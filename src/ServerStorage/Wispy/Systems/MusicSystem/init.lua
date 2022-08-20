@@ -46,6 +46,8 @@ local function getCurrentSong(Music: Sound)
         if Music.SoundId == song.Value then
             return i
         end
+
+        if Music.SoundId == "rbxassetid://142376088" then return 1 end
     end
 end
 
