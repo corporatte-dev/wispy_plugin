@@ -134,11 +134,11 @@ function MusicSystem:Mount()
                     music:Pause()
                 end
             else
-                MusicWidget.MusicUI.DiscFrame.Settings.Play.Image = imageDictionary.PauseIcon
-                playing = true
                 if music.SoundId == "" and MusicFolder:GetChildren()[1] ~= nil then
+                    MusicWidget.MusicUI.DiscFrame.Settings.Play.Image = imageDictionary.PauseIcon
                     music.SoundId = MusicFolder:GetChildren()[1].Value
-                else if music.SoundId == "" and MusicFolder:GetChildren()[1] == nil then
+                    playing = true
+                elseif music.SoundId == "" and MusicFolder:GetChildren()[1] == nil then
                     MusicSystem:Notify("You need to add song entrys before playing music!", IconDictionary.ErrorIcon, 2)
                 end
                 if music.IsLoaded then
