@@ -69,7 +69,7 @@ local function changePos(Music: Sound, currentSong: number, direction: string)
         end
     end
 
-    Music.SoundId = MusicFolder:GetChildren()[newPosition]
+    Music.SoundId = MusicFolder:GetChildren()[newPosition].Value
 end
 
 local function updateTitle(Music: Sound)
