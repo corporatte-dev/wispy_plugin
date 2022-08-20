@@ -31,13 +31,18 @@ local arm_sens = 0.25
 
 --> Internal Methods
 function AvatarSystem:CreateBubble(playerName, newMessage)
+	if CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName):FindFirstChild("ChatBubble_seen") then
+		CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName):FindFirstChild("ChatBubble_seen"):Destroy()
+	end
+
 	local newChatBubble = chatBubbleTemplate:Clone()
 	newChatBubble.TextButton.Text = newMessage.Value
 	newChatBubble.Parent = CamAvatarFolder:FindFirstChild("character_"..playerName):FindFirstChild("avatar_"..playerName)
 
 	TS:Create(newChatBubble.TextButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In, 0, false, 0), {Position = UDim2.fromScale(0.5, 0.5)}):Play()
+	newChatBubble.Name = "ChatBubble_seen"
 	task.wait(5)
-	TS:Create(newChatBubble.TextButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In, 0, false, 0), {Position = UDim2.fromScale(0.5, 0.5)}):Play()
+	TS:Create(newChatBubble.TextButton, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In, 0, false, 0), {Position = UDim2.fromScale(0.5, 1.5)}):Play()
 	newChatBubble:Destroy()
 end
 
