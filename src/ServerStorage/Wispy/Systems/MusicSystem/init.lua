@@ -31,7 +31,9 @@ end
 local function newSong(NewValue: string)
     local newEntry = "rbxassetid://"..NewValue
     local sound = Instance.new("NumberValue")
+    sound.Name = "Entry" .. #MusicFolder:GetChildren()
     sound.Value = newEntry
+    sound.Archivable = false
     sound.Parent = MusicFolder
 end
 
@@ -40,8 +42,8 @@ local function updatePlaylist()
 end
 
 local function getCurrentSong(Music: Sound)
-    for i, song in pairs(playlist) do
-        if Music.SoundId == song then
+    for i, song in pairs(MusicFolder:GetChildren()) do
+        if Music.SoundId == song.Value then
             return i
         end
     end
