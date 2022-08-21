@@ -211,9 +211,10 @@ function MusicSystem:Mount()
         movingSlider = false
     end))
 
-    Maid:Add(MusicWidget.MusicUI.DiscFrame.MouseMoved:Connect(function()
+    Maid:Add(MusicWidget.MouseMoved:Connect(function()
+        local v2 = MusicWidget:GetRelativeMousePosition()
         if movingSlider then
-            local yOffset = math.floor((mouse.Y - sliderBG.AbsolutePosition.Y) / snapAmount + 0.5) * snapAmount
+            local yOffset = math.floor((v2.Y - sliderBG.AbsolutePosition.Y) / snapAmount + 0.5) * snapAmount
             local yOffsetClamped = math.clamp(yOffset, pixelsFromEdge, sliderBG.AbsoluteSize.Y - pixelsFromEdge)
             
             local sliderPosNew = UDim2.new(slider.Position.X, 0, yOffsetClamped)
