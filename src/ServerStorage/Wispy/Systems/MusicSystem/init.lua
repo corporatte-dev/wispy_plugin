@@ -106,7 +106,7 @@ function MusicSystem:Mount()
     local slider = sliderBG:WaitForChild("Slider")
     local sliderText = sliderBG:WaitForChild("Amount")
 
-    local snapAmount = 100
+    local snapAmount = 5
     local pixelsFromEdge = 5
     local movingSlider = false
 
