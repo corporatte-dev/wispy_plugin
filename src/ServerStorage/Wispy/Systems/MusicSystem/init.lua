@@ -211,7 +211,7 @@ function MusicSystem:Mount()
         movingSlider = false
     end))
 
-    Maid:Add(MusicWidget.MouseMoved:Connect(function()
+    Maid:Add(MusicWidget.MusicUI.MouseMoved:Connect(function()
         local v2 = MusicWidget:GetRelativeMousePosition()
         if movingSlider then
             local yOffset = math.floor((v2.Y - sliderBG.AbsolutePosition.Y) / snapAmount + 0.5) * snapAmount
