@@ -4,8 +4,6 @@
     |> Markdown Parser
 
     Parses markdown within a string to be displayed via RichText. 
-
-    frriend | 8/2/22
 ]=]
 
 local MarkdownParser = {}

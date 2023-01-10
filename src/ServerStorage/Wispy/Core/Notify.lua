@@ -88,7 +88,7 @@ function StepQueue(SelfCalled: boolean?)
         NotifyTemplate:TweenPosition(UDim2.new(0.5, 0, 0, 5), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
         NotifyTemplate.Progress.Value:TweenSize(UDim2.new(0, 0, 0, 3), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, Next[4] + 0.3, true)
         task.wait(Next[4] + 0.3)
-        NotifyTemplate:TweenPosition(UDim2.new(0.5, 0, 0, -NotifyTemplate.Size.Y.Offset - 5), Enum.EasingDirection.In, Enum.EasingStyle.Quad, 0.2, true)
+        NotifyTemplate:TweenPosition(UDim2.new(0.5, 0, -0.25, 0), Enum.EasingDirection.In, Enum.EasingStyle.Quad, 0.2, true)
         task.wait(0.2)
 
         if Queue[1] then

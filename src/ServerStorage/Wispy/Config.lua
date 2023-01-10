@@ -6,7 +6,7 @@ local Types = require(script.Parent.Types)
 
 local Config: Types.Config = {
     Name = "Wispy",
-    Version = "1.0.0",
+    Version = "1.0.1",
     AssetID = 10422380892, -- When published, put new asset ID here.
 
     --> Here are the locations that our application will use

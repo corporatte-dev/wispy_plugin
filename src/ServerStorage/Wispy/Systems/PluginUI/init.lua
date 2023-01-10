@@ -8,7 +8,6 @@ local PluginUI = {} :: Types.PluginUI
     to get these widgets and buttons for easy access.
 ]=]
 
-
 local Buttons = {}
 local Widgets = {}
 local Toolbar = nil
