@@ -1,7 +1,6 @@
 local Types = require(script.Parent.Parent.Types)
 local MusicSystem = {} :: Types.MusicSystem
 local RS = game:GetService("RunService")
-local MPS = game:GetService("MarketplaceService")
 
 --> Typed Modules to be Loaded on Mount
 local Maid: Types.MaidObject
@@ -9,11 +8,9 @@ local PluginUI: Types.PluginUI
 local MusicFolder: Folder
 local MusicWidget: DockWidgetPluginGui
 
-local playlist
-
 local imageDictionary = {
     PlayIcon = "rbxassetid://4918373417",
-    PauseIcon = "rbxassetid://3192517633",
+    PauseIcon = "rbxassetid://4458862495",
     Fast_Forward = "rbxassetid://4458820527",
     Fast_Rewind = "rbxassetid://4458823312"
 }
@@ -27,7 +24,7 @@ local IconDictionary = {
 local function spinDisc(discInstance, toggle)
     if toggle then
         RS:BindToRenderStep("SpinningDisc", Enum.RenderPriority.Camera.Value, function()
-            discInstance.Rotation = discInstance.Rotation + 3
+            discInstance.Rotation += 3
         end)
     else
         RS:UnbindFromRenderStep("SpinningDisc")
@@ -41,10 +38,6 @@ local function newSong(NewValue: string)
     sound.Value = newEntry
     sound.Archivable = false
     sound.Parent = MusicFolder
-end
-
-local function updatePlaylist()
-    playlist = MusicFolder:GetChildren()
 end
 
 local function getCurrentSong(Music: Sound)
@@ -62,12 +55,24 @@ local function changePos(Music: Sound, currentSong: number, direction: string)
     Music.TimePosition = 0
 
     if direction == "Backward" then
+
+        --[[ 
+            Move back to the last song if on the first song
+            Else move down the playlist by 1
+        ]]--
+
         if currentSong == 1 then
             newPosition = #MusicFolder:GetChildren()
         else
             newPosition = currentSong - 1
         end
     elseif direction == "Forward" then
+
+        --[[ 
+            Move back to the first song if on the last song
+            Else move up the playlist by 1
+        ]]--
+
         if currentSong == #MusicFolder:GetChildren() then
             newPosition = 1
         else
@@ -94,8 +99,6 @@ function MusicSystem:Mount()
 	MusicWidget = PluginUI:GetWidget("Music")
     MusicFolder = MusicSystem:GetFolder("music_folder")
 
-    updatePlaylist()
-
     local mouse = self.LocalPlayer:GetMouse()
 
     local music = MusicWidget.MusicUI.Music or Instance.new("Sound")
@@ -110,6 +113,8 @@ function MusicSystem:Mount()
     local pixelsFromEdge = 5
     local movingSlider = false
 
+    -->> Get First Song Loaded
+
     if MusicFolder:GetChildren()[1] ~= nil then
         music.SoundId = MusicFolder:GetChildren()[1].Value
     else
@@ -117,12 +122,13 @@ function MusicSystem:Mount()
     end
 
     local playing = false
-    local debounce_1 = true
-    local debounce_2 = true
-    local debounce_3 = true
+    local debounce_1 = true --> Play Music Debounce
+    local debounce_2 = true --> Fastforward Debounce
+    local debounce_3 = true --> Rewind Debounce
     local cooldown = 0.125
 
     --> Animate Background
+
     local info = TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.In, -1, false, 0)
 	local tween = game:GetService("TweenService"):Create(MusicWidget.MusicUI.Background, info, {Position = UDim2.new(0, -100, 0, 0)})
 	tween:Play()
@@ -154,7 +160,7 @@ function MusicSystem:Mount()
                     music.SoundId = MusicFolder:GetChildren()[1].Value
                     playing = true
                 elseif music.SoundId == "" and MusicFolder:GetChildren()[1] == nil then
-                    MusicSystem:Notify("You need to add song entrys before playing music!", IconDictionary.ErrorIcon, 2)
+                    MusicSystem:Notify("You need to add song entrys before playing music!", IconDictionary.WarningIcon, 2)
                 elseif music.SoundId ~= "" and MusicFolder:GetChildren()[1] ~= nil then
                     playing = true
                     MusicWidget.MusicUI.DiscFrame.Settings.Play.Image = imageDictionary.PauseIcon
@@ -196,7 +202,6 @@ function MusicSystem:Mount()
         newSong(MusicWidget.MusicUI.DiscFrame.Settings.SoundBox.Text)
         MusicWidget.MusicUI.DiscFrame.Settings.SoundBox.Text = ""
         MusicSystem:Notify("Music entry has been added!", IconDictionary.StandardIcon, 2)
-        updatePlaylist()
     end))
 
     Maid:Add(slider.MouseButton1Down:Connect(function()
@@ -230,8 +235,6 @@ function MusicSystem:Mount()
             sliderText.Text = tostring(sliderValue)
         end
     end))
-
-    Maid:Add(MusicFolder.ChildRemoved:Connect(updatePlaylist))
 end
 
 return MusicSystem
