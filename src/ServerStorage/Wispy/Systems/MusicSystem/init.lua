@@ -10,7 +10,7 @@ local MusicWidget: DockWidgetPluginGui
 
 local imageDictionary = {
     PlayIcon = "rbxassetid://4918373417",
-    PauseIcon = "rbxassetid://4458862495",
+    PauseIcon = "rbxassetid://12197950464",
     Fast_Forward = "rbxassetid://4458820527",
     Fast_Rewind = "rbxassetid://4458823312"
 }
@@ -29,6 +29,10 @@ local function spinDisc(discInstance, toggle)
     else
         RS:UnbindFromRenderStep("SpinningDisc")
     end
+end
+
+local function toggleLoop(Music: Sound, Value: BoolValue)
+    Music.Looped = Value
 end
 
 local function newSong(NewValue: string)
@@ -134,11 +138,13 @@ function MusicSystem:Mount()
 	tween:Play()
 
     Maid:Add(music.Ended:Connect(function()
-        local currentSong = getCurrentSong(music)
-        music:Pause()
-        changePos(music, currentSong, "Forward")
-        music.TimePosition = 0
-        music:Play()
+        if music.Looped == false then
+            local currentSong = getCurrentSong(music)
+            music:Pause()
+            changePos(music, currentSong, "Forward")
+            music.TimePosition = 0
+            music:Play()
+        end
     end))
 
     Maid:Add(music.Changed:Connect(function()
